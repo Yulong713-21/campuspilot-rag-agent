@@ -1,0 +1,5 @@
+# Offline Milvus Lite index build and hybrid-retrieval verification only.
+pymilvus==2.5.4
+milvus-lite==2.5.1
+rank-bm25==0.2.2
+sentence-transformers==4.1.0

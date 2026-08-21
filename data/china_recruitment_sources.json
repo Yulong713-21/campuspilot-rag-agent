@@ -1,0 +1,82 @@
+{
+  "updated_at": "2026-08-01",
+  "documents": [
+    {
+      "source_id": "bytedance-campus-2026",
+      "company": "字节跳动",
+      "batch": "2026校园招聘",
+      "status": "historical",
+      "application_window": "2025-08 至 2026-05-31",
+      "graduation_window": "2025-09 至 2026-08",
+      "content": "字节跳动2026校园招聘投递时间为2025年8月至2026年5月31日。招聘对象为2025年9月至2026年8月期间毕业，且最高学历毕业后无全职工作经验的学生；中国大陆地区以毕业证为准，非中国大陆地区以学位证为准。",
+      "tags": ["字节跳动", "字节", "2026届", "校招", "秋招", "春招", "投递时间", "毕业时间"],
+      "source_url": "https://jobs.bytedance.com/campus/page-6272Gc?spread=49TMNMC"
+    },
+    {
+      "source_id": "bytedance-intern-2027",
+      "company": "字节跳动",
+      "batch": "ByteIntern 2027届",
+      "status": "current",
+      "application_window": "全年招聘，岗位持续更新",
+      "graduation_window": "2026-09 至 2027-08",
+      "content": "字节跳动ByteIntern面向2027届毕业生，即2026年9月至2027年8月期间毕业的学生；官方说明实习生招聘全年进行，具体岗位以官网实时信息为准。日常实习面向全体在校生。",
+      "tags": ["字节跳动", "字节", "2027届", "实习", "ByteIntern", "转正实习", "投递时间", "毕业时间"],
+      "source_url": "https://jobs.bytedance.com/campus/page-6272Gc?spread=49TMNMC"
+    },
+    {
+      "source_id": "huawei-campus-2026",
+      "company": "华为",
+      "batch": "2026届应届生招聘",
+      "status": "historical_reference",
+      "application_window": "官网持续招聘，未公布统一截止日",
+      "graduation_window": "境内本硕2026-01至2026-12；境内博士及海外本硕博2025-01至2026-12",
+      "content": "华为2026届应届生招聘面向2026年1月1日至12月31日毕业的国内高校本科生和硕士研究生；国内高校博士生与海外高校本硕博的毕业范围为2025年1月1日至2026年12月31日。官方页面未给出所有岗位统一网申截止日，应以实时职位状态为准。",
+      "tags": ["华为", "2026届", "校招", "应届生", "海外留学生", "毕业时间", "投递时间"],
+      "source_url": "https://career.huawei.com/cn/campus-recruitment"
+    },
+    {
+      "source_id": "huawei-intern-2027",
+      "company": "华为",
+      "batch": "2027届实习生招聘",
+      "status": "current",
+      "application_window": "2026-03-15 启动，截止时间以岗位页为准",
+      "graduation_window": "主要面向2027届在校生",
+      "content": "华为官方招聘页显示，2027届实习生招聘于2026年3月15日正式启动，主要面向2027届毕业的在校学生。具体职位是否仍开放以及截止时间需要在华为招聘官网实时核对。",
+      "tags": ["华为", "2027届", "实习", "暑期实习", "转正实习", "启动时间", "投递时间"],
+      "source_url": "https://career.huawei.com/cn/campus-recruitment"
+    },
+    {
+      "source_id": "tencent-campus-2026",
+      "company": "腾讯",
+      "batch": "2026校园招聘",
+      "status": "historical_reference",
+      "application_window": "官网未展示统一截止日，岗位状态以实时页面为准",
+      "graduation_window": "海外应届岗位为2025-09至2026-12",
+      "content": "腾讯2026校园招聘面向2026应届毕业生；中国大陆以毕业证为准，中国港澳台及海外地区以学位证为准。官方海外应届岗位进一步注明毕业时间为2025年9月至2026年12月。官网未展示所有岗位统一截止日。",
+      "tags": ["腾讯", "2026届", "校招", "秋招", "春招", "海外留学生", "毕业时间", "投递时间"],
+      "source_url": "https://careers.tencent.com/campusrecruit.html"
+    },
+    {
+      "source_id": "tme-campus-2026",
+      "company": "腾讯音乐娱乐",
+      "batch": "2026校园招聘",
+      "status": "historical_reference",
+      "application_window": "不设置网申截止时间，招满即止",
+      "graduation_window": "2025-01 至 2026-12",
+      "content": "腾讯音乐娱乐2026校园招聘面向2025年1月至2026年12月期间毕业的同学。官方FAQ说明不设置网申截止时间、招满即止，线上面试预计8月上旬开始，Offer预计11月上旬开始，因此应尽早投递。",
+      "tags": ["腾讯音乐", "TME", "2026届", "校招", "秋招", "面试时间", "offer时间", "招满即止"],
+      "source_url": "https://join.tencentmusic.com/campus/faq/"
+    },
+    {
+      "source_id": "alibaba-campus-2027",
+      "company": "阿里巴巴",
+      "batch": "2027届校园招聘与实习招聘",
+      "status": "current",
+      "application_window": "岗位开放时间与截止时间以官网实时页面为准",
+      "graduation_window": "2026-11 至 2027-10",
+      "content": "阿里巴巴当前校园招聘官网面向2026年11月至2027年10月毕业的海内外应届生，中国大陆以毕业证为准，非中国大陆以学位证为准。官网同时开放2027届实习生、阿里星人才计划及面向全体在校生的研究型和日常实习岗位；具体截止日以岗位实时状态为准。",
+      "tags": ["阿里巴巴", "阿里", "阿里云", "2027届", "校招", "秋招", "实习", "毕业时间", "投递时间"],
+      "source_url": "https://campus-talent.alibaba.com/"
+    }
+  ]
+}

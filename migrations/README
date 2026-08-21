@@ -1,0 +1,3 @@
+CampusPilot 单数据库 Alembic 迁移目录。
+
+默认连接本地 SQLite；设置 CAMPUSPILOT_DATABASE_URL 后可迁移 MySQL。

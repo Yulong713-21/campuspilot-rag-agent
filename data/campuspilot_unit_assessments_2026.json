@@ -1,0 +1,1164 @@
+{
+  "dataset_version": "monash-unit-details-2026-v1",
+  "source": "Monash University Handbook",
+  "unit_count": 18,
+  "units": [
+    {
+      "course_code": "FIT5032",
+      "course_name": "Internet applications development",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Studio assessment tasks",
+          "type": "portfolio",
+          "type_label": "Portfolio",
+          "weight_percent": 20,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "In-semester quizzes",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 30,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Assignment portfolio and demonstration ",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 50,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "作品集"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5032",
+      "source_sha256": "2c74893f9604cf4357c617751cd386c3de6f021e74d0ca69abe58bcbb0f30cda",
+      "captured_at": "2026-07-30T12:31:57.943267+00:00",
+      "source_id": "monash-fit5032-2026"
+    },
+    {
+      "course_code": "FIT5046",
+      "course_name": "Mobile and distributed computing systems",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Research Paper Presentation",
+          "type": "presentation",
+          "type_label": "Presentation",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Android App Design ",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 20,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Quiz",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 25,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 4,
+          "name": "Android App Development",
+          "type": "artefact",
+          "type_label": "Artefact",
+          "weight_percent": 40,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "Presentation"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5046",
+      "source_sha256": "41a21fae7ace0a8a24b6fa97e814e38804a91360a03998c8141bfcf5a2dbc39f",
+      "captured_at": "2026-07-30T12:32:00.959459+00:00",
+      "source_id": "monash-fit5046-2026"
+    },
+    {
+      "course_code": "FIT5057",
+      "course_name": "Project management",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Predictive Project Management and foundations",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 40,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Adaptive Project Management;",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 40,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Weekly Quizzes",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 20,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "项目考核"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5057",
+      "source_sha256": "307da2d0e3b066756dddc40ba19a9f130c6b199f2feb612c4cf18e6d41d13572",
+      "captured_at": "2026-07-30T12:32:03.922106+00:00",
+      "source_id": "monash-fit5057-2026"
+    },
+    {
+      "course_code": "FIT5120",
+      "course_name": "Industry experience studio project",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Project deliverables (team-based)",
+          "type": "work_integrated",
+          "type_label": "Work integrated",
+          "weight_percent": 75,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Reflection - Individual",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Content Knowledge - Individual",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "作业考核"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5120",
+      "source_sha256": "444a1788915891fd3b448dec50ed068acf49b436d86746da6ac5589e36a11a35",
+      "captured_at": "2026-07-30T12:32:06.870369+00:00",
+      "source_id": "monash-fit5120-2026"
+    },
+    {
+      "course_code": "FIT5122",
+      "course_name": "Professional practice",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Assignment 1 In class activities",
+          "type": "exercise",
+          "type_label": "Exercise",
+          "weight_percent": 40,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Assignment 2 Team-based application of theory",
+          "type": "demonstration",
+          "type_label": "Demonstration",
+          "weight_percent": 25,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Assignment 3 Resolution of a complex professional problem Issue",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 35,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "项目考核"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5122",
+      "source_sha256": "87cea14a61ad88a5802461d7be5c7b7ca448896cf9bea1cf03a554ee89d7a951",
+      "captured_at": "2026-07-30T12:32:09.436618+00:00",
+      "source_id": "monash-fit5122-2026"
+    },
+    {
+      "course_code": "FIT5125",
+      "course_name": "IT research and innovation methods",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": "You will demonstrate your understanding of key methods and skills through individual activities linked to each week’s active learning studio This may include reviews of research literature; qualitative and quantitative method research designs, applying analysis techniques; and communicating research.",
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Assignment 1 ",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 40,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Assignment 2",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 40,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Quizzes",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 20,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 4,
+          "name": "Assignment 1",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 45,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 5,
+          "name": "Assignment 2",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 45,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 6,
+          "name": "Weekly quizzes",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "作业考核"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5125",
+      "source_sha256": "631ae7b8f6b25971b44a44a3df852efc52b41d5169e4b0c233f389389a3a411d",
+      "captured_at": "2026-07-30T12:32:12.293454+00:00",
+      "source_id": "monash-fit5125-2026"
+    },
+    {
+      "course_code": "FIT5126",
+      "course_name": "Masters thesis part 1",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": "This unit forms part of the sequence of units comprising the Masters Thesis in the Faculty of Information Technology. The exit point is FIT5128 (18 credit points) or FIT5229 (24 credit points).",
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Literature review and interim presentation",
+          "type": "artefact",
+          "type_label": "Artefact",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Final presentation",
+          "type": "presentation",
+          "type_label": "Presentation",
+          "weight_percent": 5,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Thesis",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 80,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "Presentation"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5126",
+      "source_sha256": "81630bbf55480c19e18125a2b7e29a030eec57131ef53af330217e14b524bf92",
+      "captured_at": "2026-07-30T12:32:15.160663+00:00",
+      "source_id": "monash-fit5126-2026"
+    },
+    {
+      "course_code": "FIT5127",
+      "course_name": "Masters thesis part 2",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": "This unit forms part of the sequence of units comprising the Masters Thesis in the Faculty of Information Technology. The exit point is FIT5128 (18 credit points) or FIT5229 (24 credit points).",
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Literature review and interim presentation",
+          "type": "artefact",
+          "type_label": "Artefact",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Final presentation",
+          "type": "presentation",
+          "type_label": "Presentation",
+          "weight_percent": 5,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Thesis",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 80,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "Presentation"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5127",
+      "source_sha256": "cc65c6dada84f143071a2c830933700a5cba842a060c5286c3095214b8e8c41b",
+      "captured_at": "2026-07-30T12:32:18.079994+00:00",
+      "source_id": "monash-fit5127-2026"
+    },
+    {
+      "course_code": "FIT5128",
+      "course_name": "Masters thesis final",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": "This unit forms part of the sequence of units comprising the Masters Thesis in the Faculty of Information Technology. The exit point is FIT5128 (18 credit points).",
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Literature review  and interim presentation",
+          "type": "artefact",
+          "type_label": "Artefact",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Final Presentation",
+          "type": "presentation",
+          "type_label": "Presentation",
+          "weight_percent": 5,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Thesis",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 80,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "Presentation"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5128",
+      "source_sha256": "06f37b4f635e2841cc9021456e6460390d144024d9fb57f180edb153f769fe5a",
+      "captured_at": "2026-07-30T12:32:20.688244+00:00",
+      "source_id": "monash-fit5128-2026"
+    },
+    {
+      "course_code": "FIT5136",
+      "course_name": "Software engineering",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Assessment 1: Requirement Gathering and Analysis",
+          "type": "artefact",
+          "type_label": "Artefact",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Assessment 2: Software Design",
+          "type": "artefact",
+          "type_label": "Artefact",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Assessment 3: Development Process and Artifacts",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 40,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 4,
+          "name": "Assessment 4: Software Quality and Testing",
+          "type": "performance",
+          "type_label": "Performance",
+          "weight_percent": 30,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "项目考核"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5136",
+      "source_sha256": "8aa28c66e805f8613eef3741c956ee5d0a7fc9badb10883ab13b5fd12c61ae8a",
+      "captured_at": "2026-07-30T12:32:23.569645+00:00",
+      "source_id": "monash-fit5136-2026"
+    },
+    {
+      "course_code": "FIT5137",
+      "course_name": "Advanced database technology",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Assessment 1",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Assessment 2",
+          "type": "artefact",
+          "type_label": "Artefact",
+          "weight_percent": 40,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Assessment 3",
+          "type": "artefact",
+          "type_label": "Artefact",
+          "weight_percent": 35,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 4,
+          "name": "Assessment 4",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5137",
+      "source_sha256": "4344938f6b96fc4055dd0649c4632e12c69dacce714839a0f7198fcd114562a1",
+      "captured_at": "2026-07-30T12:32:26.501729+00:00",
+      "source_id": "monash-fit5137-2026"
+    },
+    {
+      "course_code": "FIT5152",
+      "course_name": "User interface design and usability",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Data gathering and user analysis report  ",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 25,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Low-fidelity prototyping report",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 25,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "High-Fidelity prototyping and evaluation report",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 30,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 4,
+          "name": "Presentation and Demo",
+          "type": "presentation",
+          "type_label": "Presentation",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 5,
+          "name": "In-class activities",
+          "type": "exercise",
+          "type_label": "Exercise",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "项目考核"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5152",
+      "source_sha256": "5ea82467d9cef611ccef71f2979a3e26bab89eab28b04021ecdeb0c4f5153368",
+      "captured_at": "2026-07-30T12:32:29.704109+00:00",
+      "source_id": "monash-fit5152-2026"
+    },
+    {
+      "course_code": "FIT5171",
+      "course_name": "System validation and verification, quality and standards",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": "This unit has threshold mark hurdles. You must achieve at least 45% of the available marks in the final scheduled assessment, at least 45% in total for in-semester assessments, and an overall unit mark of 50% or more to be able to pass the unit. If you do not achieve the threshold mark, you will receive a fail grade (NH) and a maximum mark of 45 for the unit.",
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Tutorial participation",
+          "type": "exercise",
+          "type_label": "Exercise",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": "threshold",
+          "hurdle_note": "This task is part of the in-semester assessment hurdle."
+        },
+        {
+          "number": 2,
+          "name": "Assignment 1",
+          "type": "exercise",
+          "type_label": "Exercise",
+          "weight_percent": 5,
+          "hurdle": true,
+          "hurdle_type": "threshold",
+          "hurdle_note": "This task is part of the in-semester assessment hurdle."
+        },
+        {
+          "number": 3,
+          "name": "Assignment 2",
+          "type": "demonstration",
+          "type_label": "Demonstration",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": "threshold",
+          "hurdle_note": "This task is part of the in-semester assessment hurdle."
+        },
+        {
+          "number": 4,
+          "name": "Assignment 3",
+          "type": "demonstration",
+          "type_label": "Demonstration",
+          "weight_percent": 20,
+          "hurdle": true,
+          "hurdle_type": "threshold",
+          "hurdle_note": "This task is part of the in-semester assessment hurdle."
+        },
+        {
+          "number": 5,
+          "name": "Scheduled final assessment (2 hours and 10 minutes)",
+          "type": "examination",
+          "type_label": "Examination",
+          "weight_percent": 50,
+          "hurdle": true,
+          "hurdle_type": "threshold",
+          "hurdle_note": "The scheduled final assessment is a hurdle."
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "考试合计 50%"
+      ],
+      "exam_weight_percent": 50,
+      "final_exam": true,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5171",
+      "source_sha256": "a0df8cbdc133efa0c44ee86da2a16b2b96afee8889767361d3b22d4607343ccc",
+      "captured_at": "2026-07-30T12:32:32.712947+00:00",
+      "source_id": "monash-fit5171-2026"
+    },
+    {
+      "course_code": "FIT5225",
+      "course_name": "Cloud computing and security",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Assignment 1",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 30,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Assignment 2",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 40,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Quiz 1",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 4,
+          "name": "Quiz 2",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "项目考核"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit5225",
+      "source_sha256": "8228ecfd320268916837697d5b3f335e3a5466e8da8f515bc6bb8625595971ae",
+      "captured_at": "2026-07-30T12:32:35.815920+00:00",
+      "source_id": "monash-fit5225-2026"
+    },
+    {
+      "course_code": "FIT9131",
+      "course_name": "Programming foundations in Java",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": "This unit has threshold mark hurdles. You must achieve at least 45% of the available marks in the combined mid-semester test and scheduled final assessment and at least 45% in total for Assignments A and B and weekly quizzes. You must achieve an overall unit mark of 50% or more to be able to pass the unit. If you do not achieve the threshold mark, you will receive a fail grade (NH) and a maximum mark of 45 for the unit.",
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Weekly quizzes",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": "threshold",
+          "hurdle_note": "This task is part of the in-semester assessment hurdle."
+        },
+        {
+          "number": 2,
+          "name": "Assignment A",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": "threshold",
+          "hurdle_note": "This task is part of the in-semester assessment hurdle."
+        },
+        {
+          "number": 3,
+          "name": "Assignment B",
+          "type": "written",
+          "type_label": "Written",
+          "weight_percent": 35,
+          "hurdle": true,
+          "hurdle_type": "threshold",
+          "hurdle_note": "This task is part of the in-semester assessment hurdle."
+        },
+        {
+          "number": 4,
+          "name": "Mid Semester Test",
+          "type": "examination",
+          "type_label": "Examination",
+          "weight_percent": 20,
+          "hurdle": true,
+          "hurdle_type": "threshold",
+          "hurdle_note": "The combined mid-semester test and scheduled final assessment are a hurdle."
+        },
+        {
+          "number": 5,
+          "name": "Scheduled final assessment",
+          "type": "examination",
+          "type_label": "Examination",
+          "weight_percent": 25,
+          "hurdle": true,
+          "hurdle_type": "threshold",
+          "hurdle_note": "The combined mid-semester test and scheduled final assessment are a hurdle."
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "考试合计 45%"
+      ],
+      "exam_weight_percent": 45,
+      "final_exam": true,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit9131",
+      "source_sha256": "f6bbe35b501f796d8a7c769de41cce8e0eb1a90f0b168cb43dcc695f6d767329",
+      "captured_at": "2026-07-30T12:32:38.761389+00:00",
+      "source_id": "monash-fit9131-2026"
+    },
+    {
+      "course_code": "FIT9132",
+      "course_name": "Introduction to databases",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Class test 1",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Assignment 1 - Database Design",
+          "type": "artefact",
+          "type_label": "Artefact",
+          "weight_percent": 35,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Class test  2",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 4,
+          "name": "Assignment 2 - Creating, Populating and Manipulating Databases",
+          "type": "artefact",
+          "type_label": "Artefact",
+          "weight_percent": 35,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit9132",
+      "source_sha256": "16e17abb15eea205858db309ad75c489715d57f390ff80ce8b301d3afcff3800",
+      "captured_at": "2026-07-30T12:32:41.594549+00:00",
+      "source_id": "monash-fit9132-2026"
+    },
+    {
+      "course_code": "FIT9136",
+      "course_name": "Introduction to Python programming",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Assignment 1 Project",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 20,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Assignment 2 Project",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 30,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "In-class test 1 ",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 5,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 4,
+          "name": "In-class test 2",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 5,
+          "name": "In-class test 3",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 6,
+          "name": "Discussion 1",
+          "type": "demonstration",
+          "type_label": "Demonstration",
+          "weight_percent": 5,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 7,
+          "name": "Discussion 2",
+          "type": "demonstration",
+          "type_label": "Demonstration",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 8,
+          "name": "Assignment 1 Project",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 25,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 9,
+          "name": "Assignment 1 In-class test",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 10,
+          "name": "Assignment 2 Project",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 30,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 11,
+          "name": "Assignment 2 In-class test",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 12,
+          "name": "Assignment 3 Project",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 15,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 13,
+          "name": "Assignment 3 In-class test",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 10,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "项目考核"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit9136",
+      "source_sha256": "4010121b040d41d6f45e39ff2d9e80f3f6f9c112e5809bb792d70aa40ea78844",
+      "captured_at": "2026-07-30T12:32:44.208974+00:00",
+      "source_id": "monash-fit9136-2026"
+    },
+    {
+      "course_code": "FIT9137",
+      "course_name": "Introduction to computer architecture and networks",
+      "handbook_year": 2026,
+      "attendance_status": "UNKNOWN",
+      "attendance_note": "官方 Handbook 未声明出勤计分或出勤门槛，请以开课学期 Unit Guide/Moodle 为准。",
+      "assessment_summary": null,
+      "assessments": [
+        {
+          "number": 1,
+          "name": "Assessment 1",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 20,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 2,
+          "name": "Assessment 2",
+          "type": "quiz_test",
+          "type_label": "Quiz / Test",
+          "weight_percent": 35,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        },
+        {
+          "number": 3,
+          "name": "Assessment 3",
+          "type": "project",
+          "type_label": "Project",
+          "weight_percent": 45,
+          "hurdle": true,
+          "hurdle_type": null,
+          "hurdle_note": null
+        }
+      ],
+      "assessment_tags": [
+        "考核门槛",
+        "项目考核"
+      ],
+      "exam_weight_percent": 0,
+      "final_exam": false,
+      "hurdle_status": "YES",
+      "source_url": "https://handbook.monash.edu/2026/units/fit9137",
+      "source_sha256": "7e9152ee41222c96b54a08dc9128f45416286e8987126290bd39ccd19f64173e",
+      "captured_at": "2026-07-30T12:32:46.832373+00:00",
+      "source_id": "monash-fit9137-2026"
+    }
+  ],
+  "errors": []
+}

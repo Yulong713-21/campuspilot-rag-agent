@@ -1,0 +1,190 @@
+{
+  "catalog_version": "2026.07.28-go8-directory-v1",
+  "retrieved_at": "2026-07-28",
+  "membership_source": {
+    "title": "Group of Eight - About the Go8",
+    "url": "https://go8.edu.au/about/the-go8"
+  },
+  "coverage_notice": "八校均已接入官方课程目录；只有完成课程规则解析和回归验证的项目才开放自动毕业路径。",
+  "disciplines": [
+    {
+      "discipline_id": "business",
+      "name": "商科",
+      "keywords": ["Business", "Commerce", "Accounting", "Finance", "Economics", "Management"]
+    },
+    {
+      "discipline_id": "computing",
+      "name": "计算机",
+      "keywords": ["Computer Science", "Information Technology", "Data Science", "Cyber Security", "Software Engineering"]
+    },
+    {
+      "discipline_id": "engineering",
+      "name": "工程",
+      "keywords": ["Engineering", "Civil", "Electrical", "Mechanical", "Chemical", "Biomedical"]
+    },
+    {
+      "discipline_id": "mathematics",
+      "name": "数学",
+      "keywords": ["Mathematics", "Statistics", "Actuarial Science", "Operations Research"]
+    },
+    {
+      "discipline_id": "physics",
+      "name": "物理",
+      "keywords": ["Physics", "Astrophysics", "Quantum Technology", "Mathematical Physics"]
+    }
+  ],
+  "universities": [
+    {
+      "university_id": "monash",
+      "name": "Monash University",
+      "short_name": "Monash",
+      "city": "Melbourne",
+      "state": "VIC",
+      "catalog_url": "https://www.monash.edu/study/courses",
+      "discipline_ids": ["business", "computing", "engineering", "mathematics", "physics"],
+      "coverage_status": "planning_verified",
+      "coverage_label": "规划已验证",
+      "representative_program": {
+        "name": "Master of Information Technology",
+        "program_code": "C6001",
+        "duration": "1.5-2 years",
+        "credit_value": "72/96 credit points",
+        "handbook_year": 2026,
+        "official_url": "https://handbook.monash.edu/2026/courses/C6001"
+      }
+    },
+    {
+      "university_id": "melbourne",
+      "name": "The University of Melbourne",
+      "short_name": "Melbourne",
+      "city": "Melbourne",
+      "state": "VIC",
+      "catalog_url": "https://study.unimelb.edu.au/find/courses/graduate/",
+      "discipline_ids": ["business", "computing", "engineering", "mathematics", "physics"],
+      "coverage_status": "official_catalog_connected",
+      "coverage_label": "官方目录已接入",
+      "representative_program": {
+        "name": "Master of Information Technology",
+        "program_code": null,
+        "duration": "1-2 years",
+        "credit_value": null,
+        "handbook_year": 2026,
+        "official_url": "https://study.unimelb.edu.au/find/courses/graduate/master-of-information-technology/structure"
+      }
+    },
+    {
+      "university_id": "sydney",
+      "name": "The University of Sydney",
+      "short_name": "Sydney",
+      "city": "Sydney",
+      "state": "NSW",
+      "catalog_url": "https://www.sydney.edu.au/courses/",
+      "discipline_ids": ["business", "computing", "engineering", "mathematics", "physics"],
+      "coverage_status": "official_catalog_connected",
+      "coverage_label": "官方目录已接入",
+      "representative_program": {
+        "name": "Master of Computer Science",
+        "program_code": "MACOMPSC1000",
+        "duration": "2 years",
+        "credit_value": "96 credit points",
+        "handbook_year": 2026,
+        "official_url": "https://www.sydney.edu.au/courses/courses/pc/master-of-computer-science.html"
+      }
+    },
+    {
+      "university_id": "unsw",
+      "name": "UNSW Sydney",
+      "short_name": "UNSW",
+      "city": "Sydney",
+      "state": "NSW",
+      "catalog_url": "https://www.unsw.edu.au/study/find-a-degree-or-course",
+      "discipline_ids": ["business", "computing", "engineering", "mathematics", "physics"],
+      "coverage_status": "official_catalog_connected",
+      "coverage_label": "官方目录已接入",
+      "representative_program": {
+        "name": "Master of Information Technology",
+        "program_code": "8543",
+        "duration": "2 years",
+        "credit_value": "96 UOC",
+        "handbook_year": 2026,
+        "official_url": "https://handbook.unsw.edu.au/postgraduate/programs/2026/8543"
+      }
+    },
+    {
+      "university_id": "anu",
+      "name": "The Australian National University",
+      "short_name": "ANU",
+      "city": "Canberra",
+      "state": "ACT",
+      "catalog_url": "https://programsandcourses.anu.edu.au/2026/",
+      "discipline_ids": ["business", "computing", "engineering", "mathematics", "physics"],
+      "coverage_status": "official_catalog_connected",
+      "coverage_label": "官方目录已接入",
+      "representative_program": {
+        "name": "Master of Computing",
+        "program_code": "7706XMCOMP",
+        "duration": "2 years",
+        "credit_value": "96 units",
+        "handbook_year": 2026,
+        "official_url": "https://programsandcourses.anu.edu.au/2026/program/7706XMCOMP"
+      }
+    },
+    {
+      "university_id": "uq",
+      "name": "The University of Queensland",
+      "short_name": "UQ",
+      "city": "Brisbane",
+      "state": "QLD",
+      "catalog_url": "https://study.uq.edu.au/study-options/programs",
+      "discipline_ids": ["business", "computing", "engineering", "mathematics", "physics"],
+      "coverage_status": "official_catalog_connected",
+      "coverage_label": "官方目录已接入",
+      "representative_program": {
+        "name": "Master of Information Technology",
+        "program_code": "5581",
+        "duration": "2 years",
+        "credit_value": null,
+        "handbook_year": 2026,
+        "official_url": "https://study.uq.edu.au/study-options/programs/master-information-technology-5581?year=2026"
+      }
+    },
+    {
+      "university_id": "uwa",
+      "name": "The University of Western Australia",
+      "short_name": "UWA",
+      "city": "Perth",
+      "state": "WA",
+      "catalog_url": "https://www.uwa.edu.au/study/explore-courses",
+      "discipline_ids": ["business", "computing", "engineering", "mathematics", "physics"],
+      "coverage_status": "official_catalog_connected",
+      "coverage_label": "官方目录已接入",
+      "representative_program": {
+        "name": "Master of Information Technology",
+        "program_code": "62510",
+        "duration": "1.5-2 years",
+        "credit_value": "72/96 points",
+        "handbook_year": 2026,
+        "official_url": "https://www.handbooks.uwa.edu.au/coursedetails?code=62510"
+      }
+    },
+    {
+      "university_id": "adelaide",
+      "name": "Adelaide University",
+      "short_name": "Adelaide",
+      "city": "Adelaide",
+      "state": "SA",
+      "catalog_url": "https://adelaide.edu.au/study/",
+      "discipline_ids": ["business", "computing", "engineering", "mathematics", "physics"],
+      "coverage_status": "official_catalog_connected",
+      "coverage_label": "官方目录已接入",
+      "representative_program": {
+        "name": "Master of Computer Science",
+        "program_code": "MACSC",
+        "duration": "2 years",
+        "credit_value": null,
+        "handbook_year": 2026,
+        "official_url": "https://adelaide.edu.au/study/degrees/master-of-computer-science/"
+      }
+    }
+  ]
+}

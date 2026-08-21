@@ -1,0 +1,135 @@
+# EduRAG Agent 评估方案
+
+## 评估层级
+
+```text
+组件测试
+  -> FAQ / RAG / Guard / Memory / Deadline
+
+单步评估
+  -> 工具选择 / 参数 / 安全决策
+
+轨迹评估
+  -> 节点与工具调用路径
+
+最终结果评估
+  -> 正确性 / 有据性 / 完整性 / 降级语义
+
+发布门禁
+  -> 安全 / 权限 / Deadline / 核心路径
+```
+
+## Day 30 指标
+
+- `answer_source`
+- `route_reason`
+- `next_action`
+- `trajectory`
+- `required_answer_terms`
+- `forbidden_answer_terms`
+- `document_count`
+- `selected_memory_count`
+- `quarantine`
+- `deadline`
+
+## Day 31：RAG 分层质量指标
+
+```text
+检索层
+  -> retrieval_precision：拿回来的资料有多少有用
+  -> retrieval_recall：该找的资料找回了多少
+  -> reciprocal_rank：第一份正确资料排得多靠前
+
+生成层
+  -> answer_completeness：该回答的必要事实覆盖了多少
+  -> answer_groundedness：说出的事实有多少能被资料支持
+```
+
+Day 31 使用 `eval/rag_quality_cases.json` 中的文档 ID 和事实 ID 做确定性基线。
+这套基线用于定位故障层，不替代自然语言语义评估。
+其中 `retrieval_precision` 是普通 ID Precision，排名由 `reciprocal_rank`
+单独衡量，不等同于 Ragas 排名敏感的 `Context Precision` 公式。
+
+诊断顺序：
+
+1. 先看检索召回，正确资料没回来时优先修检索。
+2. 资料齐全后再看答案有据率，低分表示模型加入无依据内容。
+3. 有据率合格后看完整度，低分表示模型漏答。
+4. 客观标签全部合格但语义 Judge 判错时，抽检评估器误判。
+
+## Day 32：LLM Judge 校准
+
+Judge 本身也需要用人工标签评估。当前校准集包含 20 条中文样例，合格与
+不合格各 10 条，覆盖原词回答、同义改写、否定、关键词堆砌和无依据扩展。
+
+```text
+alignment_rate   -> Judge 与人工标签一致的比例
+false_pass_rate  -> 人工判错的答案中，被 Judge 放行的比例
+false_reject_rate -> 人工判对的答案中，被 Judge 拒绝的比例
+```
+
+当前实验门禁：
+
+- 错误放行率为 0；
+- 错误拦截率不超过 10%；
+- 人工对齐率至少 90%；
+- 数据中必须同时存在正例和反例。
+
+门禁阈值属于 EduRAG 风险策略，不是通用标准。校准时修改 Judge rubric 或
+few-shot，最终验收应使用没有参与调试的留出集，避免对旧错题过拟合。
+
+## Day 33：真实本地 Judge
+
+Day 32 的 V1/V2 是固定标签回放，用于学习校准指标；Day 33 才调用真实本地
+`qwen3.5:0.8b`。评估拆成三个相互独立的层次：
+
+```text
+JSON Schema + 程序校验 -> 协议是否可解析
+20 条人工标签校准      -> 语义是否判对
+高风险样例重复运行     -> 结论是否稳定
+```
+
+`temperature=0` 用于降低随机性，但不能替代重复实验。Judge 返回的
+`confidence` 是模型自报值，不经置信度校准不能直接解释为真实正确概率。
+
+真实 `qwen3.5:0.8b` 修正版实验中，20 条请求有 1 条暂时性 HTTP 500；19 条
+成功判决的人工对齐率为 84.21%，错误放行率为 33.33%，发布门禁未通过。
+三个高风险样例各重复 3 次均一致，但稳定不等于正确。该模型当前只适合教学和
+低风险预筛，不得独立承担 EduRAG 发布门禁。
+
+## FastAPI Thread 授权门禁
+
+服务化回归必须覆盖：
+
+```text
+无认证访问 -> 401
+所有者创建/读取/恢复 -> 200
+其他用户读取/恢复 -> 404
+重复创建/重复恢复 -> 409
+应用重启后所有者仍可恢复
+```
+
+测试不仅检查状态码，还要验证越权尝试没有修改 `status`、`execution_count` 和
+待审批 Interrupt。`thread_id` 只用于定位 Checkpoint，不能替代认证用户身份。
+
+## 数据集
+
+```text
+eval/edurag_agent_regression.json
+```
+
+当前六条样例用于确定性回归。后续扩展：
+
+- 每个意图增加真实改写和边界问法；
+- 标注文档相关性与应召回文档；
+- 增加答案有据性、完整性和引用正确性；
+- 对真实模型重复运行，统计稳定性；
+- 将线上失败 Trace 回流到离线数据集。
+
+## 发布规则
+
+- 安全与跨用户隔离失败数必须为 0。
+- 核心 FAQ/RAG 路由必须全部通过。
+- Deadline 不得超过测试样例允许上限。
+- 质量指标使用分类结果，不用单一平均分替代。
+- 任何修改评估样例或期望值的提交都需要说明原因，防止为了通过而降低标准。

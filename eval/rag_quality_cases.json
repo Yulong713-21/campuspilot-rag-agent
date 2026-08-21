@@ -1,0 +1,44 @@
+[
+  {
+    "name": "一、图书管理员找错书",
+    "relevant_document_ids": ["course-outline"],
+    "retrieved_document_ids": ["tuition"],
+    "required_claim_ids": ["basic", "project", "career"],
+    "answer_claim_ids": [],
+    "document_claims": {
+      "course-outline": ["basic", "project", "career"],
+      "tuition": ["price"]
+    }
+  },
+  {
+    "name": "二、书找对了，但写作者加戏",
+    "relevant_document_ids": ["course-outline"],
+    "retrieved_document_ids": ["course-outline"],
+    "required_claim_ids": ["basic", "project", "career"],
+    "answer_claim_ids": ["basic", "project", "career", "guaranteed_job"],
+    "document_claims": {
+      "course-outline": ["basic", "project", "career"]
+    }
+  },
+  {
+    "name": "三、书找对了，但答案漏了一点",
+    "relevant_document_ids": ["course-outline"],
+    "retrieved_document_ids": ["course-outline"],
+    "required_claim_ids": ["basic", "project", "career"],
+    "answer_claim_ids": ["basic", "project"],
+    "document_claims": {
+      "course-outline": ["basic", "project", "career"]
+    }
+  },
+  {
+    "name": "四、答案没错，但阅卷器误判",
+    "relevant_document_ids": ["course-outline"],
+    "retrieved_document_ids": ["course-outline"],
+    "required_claim_ids": ["basic", "project", "career"],
+    "answer_claim_ids": ["basic", "project", "career"],
+    "document_claims": {
+      "course-outline": ["basic", "project", "career"]
+    },
+    "external_judge_passed": false
+  }
+]

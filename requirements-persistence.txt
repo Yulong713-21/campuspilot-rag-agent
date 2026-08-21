@@ -1,0 +1,8 @@
+# Compatible with the repository's langgraph==0.3.34 / checkpoint 2.x stack.
+langgraph-checkpoint-sqlite==2.0.11
+
+# CampusPilot deterministic domain core and MySQL migrations.
+SQLAlchemy>=2.0.39,<2.1
+alembic==1.18.5
+PyMySQL==1.1.1
+pydantic>=2.13.4,<3

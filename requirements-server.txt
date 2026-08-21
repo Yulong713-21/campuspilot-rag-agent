@@ -1,0 +1,8 @@
+-r requirements-app.txt
+-r requirements-persistence.txt
+
+# The showcase deployment uses local MiniLM, Milvus Lite and a cross encoder.
+pymilvus==2.5.4
+milvus-lite==2.5.1; platform_system == "Linux"
+rank-bm25==0.2.2
+sentence-transformers==4.1.0

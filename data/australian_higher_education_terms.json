@@ -1,0 +1,116 @@
+{
+  "dataset_version": "2026.07.31-v1",
+  "retrieved_at": "2026-07-31",
+  "terms": [
+    {
+      "term_id": "entry-level",
+      "term": "Entry Level",
+      "aliases": ["entry level 1", "entry level 2", "EL1", "EL2", "入学层级", "硕士一年级", "master第一年", "几年级"],
+      "definition": "在 Monash C6001 等项目中，Entry Level 表示基于既往学历认定的硕士入学路径，决定需要完成的学分和课程部分。",
+      "common_mistake": "Entry Level 1 不是硕士一年级；Entry Level 2 也不是硕士二年级。",
+      "planning_implication": "应使用项目版本、入学年份和当前第几个 Semester 描述进度。",
+      "source_url": "https://handbook.monash.edu/2026/courses/C6001",
+      "source_type": "official_handbook"
+    },
+    {
+      "term_id": "credit-points",
+      "term": "Credit points",
+      "aliases": ["credit point", "points", "学分"],
+      "definition": "用于表示课程和项目学习量的学分单位；具体总学分及每门 Unit 的 points 由学校规则规定。",
+      "common_mistake": "不能把澳洲 credit points 与国内学分按固定比例直接换算。",
+      "planning_implication": "毕业进度必须按当前 Program Version 的规则累计。",
+      "source_url": "https://handbook.monash.edu/2026/courses/C6001",
+      "source_type": "official_handbook"
+    },
+    {
+      "term_id": "unit",
+      "term": "Unit",
+      "aliases": ["units", "subject", "subjects", "课程", "单元"],
+      "definition": "学生实际注册学习的课程单元；不同学校也可能称为 subject 或 module。",
+      "common_mistake": "澳洲语境中的 course 往往指整个学位项目，不一定指一门课。",
+      "planning_implication": "排课对象是 Unit，毕业资格对象是 Course/Program。",
+      "source_url": "https://www.teqsa.gov.au/guides-resources/glossary-terms",
+      "source_type": "official_regulator_glossary"
+    },
+    {
+      "term_id": "program-course",
+      "term": "Course / Program",
+      "aliases": ["degree", "program", "course", "学位项目", "培养项目"],
+      "definition": "由多个 Units 和毕业要求组成、完成后授予学历资格的完整学习项目。",
+      "common_mistake": "不能看到英文 course 就一律翻译为一门课程。",
+      "planning_implication": "比较项目时必须区分 Program Code、Handbook Year 和 Entry Level。",
+      "source_url": "https://www.teqsa.gov.au/guides-resources/glossary-terms",
+      "source_type": "official_regulator_glossary"
+    },
+    {
+      "term_id": "semester-intake",
+      "term": "Semester / Intake",
+      "aliases": ["semester 1", "semester 2", "S1", "S2", "intake", "入学季", "学期", "第一年"],
+      "definition": "Semester 是教学学期，Intake 是入学批次；授课型硕士进度通常用入学年份和当前第几个学期描述。",
+      "common_mistake": "不要套用国内大一、大二来询问澳洲授课型硕士。",
+      "planning_implication": "规划问题应确认开始学期、已完成 Units 和目标完成时间。",
+      "source_url": "https://www.monash.edu/it/current-students/enrolment/postgraduate-enrolment/master-of-information-technology",
+      "source_type": "official_university_enrolment_guide"
+    },
+    {
+      "term_id": "course-map",
+      "term": "Course progression map",
+      "aliases": ["course map", "progression map", "培养计划", "课程地图"],
+      "definition": "学校按入学年份提供的建议修读顺序，用于指导每学期 Unit enrolment。",
+      "common_mistake": "Course map 是建议路径，不等于所有学生都能无条件照表选课。",
+      "planning_implication": "仍需校验先修、开课学期、个人 credit 和最新 Handbook。",
+      "source_url": "https://www.monash.edu/it/current-students/enrolment/postgraduate-enrolment/master-of-information-technology",
+      "source_type": "official_university_enrolment_guide"
+    },
+    {
+      "term_id": "handbook-unit-guide",
+      "term": "Handbook / Unit Guide",
+      "aliases": ["handbook", "unit guide", "课程手册", "教学大纲"],
+      "definition": "Handbook 主要给出项目和 Unit 规则；Unit Guide 提供具体教学期的教学活动与考核信息。",
+      "common_mistake": "不能用授课方式 on-campus 推断强制出勤，也不能用旧年份规则回答新入学批次。",
+      "planning_implication": "毕业规则按 Handbook Year 过滤，考核事实保留 Unit Guide 来源和抓取时间。",
+      "source_url": "https://handbook.monash.edu/2026/courses/C6001",
+      "source_type": "official_handbook"
+    },
+    {
+      "term_id": "wil",
+      "term": "Work-integrated learning (WIL)",
+      "aliases": ["WIL", "work integrated learning", "internship", "placement", "industry placement", "professional experience", "实习", "行业实践"],
+      "definition": "把理论与工作实践结合的结构化学习与考核活动，可包含 placement、internship、项目或模拟实践。",
+      "common_mistake": "WIL 不必然等于学校安排的带薪公司实习。",
+      "planning_implication": "必须核实是否为 credit-bearing、是否需要申请、名额和资格条件。",
+      "source_url": "https://www.teqsa.gov.au/guides-resources/glossary-terms",
+      "source_type": "official_regulator_glossary"
+    },
+    {
+      "term_id": "industry-experience-pathway",
+      "term": "Industry Experience pathway",
+      "aliases": ["industry experience", "industry pathway", "IT professional practice", "industry experience studio project", "行业经验路径"],
+      "definition": "Monash C6001 Advanced practice 中的一条培养路径，包含行业实践相关 Capstone Units。",
+      "common_mistake": "选择该 pathway 不代表学校保证提供外部企业实习岗位。",
+      "planning_implication": "应把课程内行业项目、校外 internship 和个人求职安排分开规划。",
+      "source_url": "https://www.monash.edu/it/current-students/enrolment/postgraduate-enrolment/master-of-information-technology",
+      "source_type": "official_university_enrolment_guide"
+    },
+    {
+      "term_id": "wam",
+      "term": "Weighted Average Mark (WAM)",
+      "aliases": ["WAM", "weighted average mark", "加权平均分"],
+      "definition": "按学校规则计算的加权平均成绩，可能用于研究路径、奖学金或其他资格判断。",
+      "common_mistake": "WAM 不是 GPA 的固定等价值，不能无依据直接换算。",
+      "planning_implication": "涉及资格门槛时必须引用当前项目和学校的具体规则。",
+      "source_url": "https://handbook.monash.edu/2026/courses/C6001",
+      "source_type": "official_handbook"
+    },
+    {
+      "term_id": "credit-rpl",
+      "term": "Credit / Recognition of prior learning",
+      "aliases": ["RPL", "credit transfer", "advanced standing", "学分减免", "转学分", "既往学习认定"],
+      "definition": "学校根据既往正式、非正式或非正规学习评估并授予相应 credit 的过程或结果。",
+      "common_mistake": "课程名称相同不代表必然获得 credit。",
+      "planning_implication": "只有学校已批准的 credit 才能进入毕业进度计算。",
+      "source_url": "https://www.teqsa.gov.au/guides-resources/resources/guidance-notes/guidance-note-credit-and-recognition-prior-learning",
+      "source_type": "official_regulator_guidance"
+    }
+  ]
+}

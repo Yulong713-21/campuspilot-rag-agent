@@ -1,0 +1,49 @@
+name: campuspilot
+
+services:
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    environment:
+      CAMPUSPILOT_DOMAIN: ${CAMPUSPILOT_DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      agent:
+        condition: service_healthy
+
+  agent:
+    image: ${CAMPUSPILOT_IMAGE}
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      CAMPUSPILOT_CORS_ORIGINS: https://${CAMPUSPILOT_DOMAIN}
+      CAMPUSPILOT_RETRIEVAL_MODE: hybrid
+      CAMPUSPILOT_VECTOR_SEARCH_ENABLED: "1"
+      CAMPUSPILOT_MILVUS_URI: /app/data/vector/campuspilot-handbook.db
+      CAMPUSPILOT_MILVUS_COLLECTION: campuspilot_handbook_v2
+      CAMPUSPILOT_EMBEDDING_BACKEND: sentence-transformer
+      CAMPUSPILOT_EMBEDDING_MODEL_PATH: /models/all-MiniLM-L6-v2
+      CAMPUSPILOT_RERANKER_ENABLED: "1"
+      CAMPUSPILOT_RERANKER_MODEL_PATH: /models/ms-marco-MiniLM-L6-v2
+      CAMPUSPILOT_CLOUD_LLM_ENABLED: "1"
+    expose:
+      - "8010"
+    volumes:
+      # BM25 corpus, Milvus Lite database and local lightweight models.
+      - ./runtime-data/official_sources:/app/data/official_sources
+      - ./runtime-data/vector:/app/data/vector
+      - ./runtime-data/models:/models:ro
+      - agent_logs:/app/logs
+
+volumes:
+  caddy_data:
+  caddy_config:
+  agent_logs:

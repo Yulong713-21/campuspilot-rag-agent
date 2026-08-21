@@ -1,0 +1,184 @@
+{
+  "catalog_version": "2026.07.28-official-sample",
+  "data_mode": "official_public_sample",
+  "retrieved_at": "2026-07-28",
+  "disclaimer": "数据来自公开官方材料并保留版本与抓取日期。课程安排可能变化，选课前应再次核对学校 Handbook 和 faculty advice；签证相关提示不构成移民或法律建议。",
+  "sources": [
+    {
+      "source_id": "MONASH-C6001-HANDBOOK-2026",
+      "title": "Monash University Handbook - C6001 Master of Information Technology",
+      "source_type": "official_handbook",
+      "handbook_year": 2026,
+      "effective_date": "2026-01-01",
+      "retrieved_at": "2026-07-28",
+      "url": "https://handbook.monash.edu/2026/courses/C6001"
+    },
+    {
+      "source_id": "MONASH-C6001-COURSE-MAP-2026",
+      "title": "Suggested Course Map - C6001 Master of Information Technology 2026",
+      "source_type": "official_course_map",
+      "handbook_year": 2026,
+      "effective_date": "2026-01-01",
+      "retrieved_at": "2026-07-28",
+      "url": "https://www.monash.edu/students/handbooks/maps/2026/map-c6001.pdf"
+    },
+    {
+      "source_id": "MONASH-C6001-INTL-2026",
+      "title": "Monash Master of Information Technology - International entry levels",
+      "source_type": "official_course_page",
+      "handbook_year": 2026,
+      "effective_date": "2026-01-01",
+      "retrieved_at": "2026-07-28",
+      "url": "https://www.monash.edu/study/courses/find-a-course/information-technology-c6001?international=true"
+    },
+    {
+      "source_id": "MONASH-FIT5120-2026",
+      "title": "Monash Handbook - FIT5120 Industry experience studio project",
+      "source_type": "official_unit_page",
+      "handbook_year": 2026,
+      "effective_date": "2026-01-01",
+      "retrieved_at": "2026-07-28",
+      "url": "https://handbook.monash.edu/2026/units/FIT5120"
+    },
+    {
+      "source_id": "HOME-AFFAIRS-485-2026",
+      "title": "Australian Department of Home Affairs - Temporary Graduate visa (subclass 485)",
+      "source_type": "official_government_policy",
+      "handbook_year": 2026,
+      "effective_date": "2026-03-01",
+      "retrieved_at": "2026-07-28",
+      "url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/temporary-graduate-485"
+    }
+  ],
+  "official_documents": [
+    {
+      "document_id": "DOC-C6001-STRUCTURE-2026",
+      "source_id": "MONASH-C6001-HANDBOOK-2026",
+      "handbook_year": 2026,
+      "title": "C6001 Entry Level 与课程结构",
+      "content": "Monash C6001 Master of Information Technology 的 2026 培养方案包含 Foundation、Core、Mastery knowledge 和 Application studies。Entry Level 1 需要完成 96 学分，Entry Level 2 需要完成 72 学分；具体 Entry Level 由学校根据既往学历背景评估。",
+      "tags": ["C6001", "entry level", "96 credit points", "72 credit points", "program structure"]
+    },
+    {
+      "document_id": "DOC-C6001-MAP-2026",
+      "source_id": "MONASH-C6001-COURSE-MAP-2026",
+      "handbook_year": 2026,
+      "title": "C6001 2026 建议课程路径",
+      "content": "2026 Suggested Course Map 给出了 C6001 各学期的建议课程顺序，并区分 Industry Experience 与 Research 路径。Course Map 是规划参考，实际开课和选课资格需要在选课前再次核对。",
+      "tags": ["C6001", "course map", "Industry Experience", "Research", "semester"]
+    },
+    {
+      "document_id": "DOC-FIT5120-2026",
+      "source_id": "MONASH-FIT5120-2026",
+      "handbook_year": 2026,
+      "title": "FIT5120 Industry experience studio project",
+      "content": "FIT5120 是 Industry Experience 路径的 Capstone。2026 年 S1 要求进入该项目后累计 72 学分，S2 起门槛为 66 学分；课程应安排在最终学期，并结合 FIT5122 的共同或先修关系核对。",
+      "tags": ["FIT5120", "capstone", "final semester", "72 credit points", "66 credit points", "FIT5122"]
+    },
+    {
+      "document_id": "DOC-HOME-AFFAIRS-485-2026",
+      "source_id": "HOME-AFFAIRS-485-2026",
+      "handbook_year": 2026,
+      "title": "Temporary Graduate visa planning boundary",
+      "content": "Temporary Graduate visa subclass 485 的要求由 Australian Department of Home Affairs 发布并可能变化。课程时长和学习模式只能作为规划约束，CampusPilot 不判断个人签证资格，也不提供移民或法律意见。",
+      "tags": ["subclass 485", "Home Affairs", "visa", "planning constraint", "policy"]
+    }
+  ],
+  "programs": [
+    {
+      "program_variant_id": "MONASH-C6001-EL1",
+      "program_code": "C6001",
+      "entry_level": 1,
+      "program_name": "Master of Information Technology",
+      "university": "Monash University",
+      "campus": "Clayton",
+      "handbook_year": 2026,
+      "duration_years": 2.0,
+      "credits_to_complete": 96,
+      "entry_credit_points": 0,
+      "study_streams": ["Industry Experience", "Research"],
+      "intakes": ["Semester 1", "Semester 2"],
+      "summary": "适用于任何专业背景的本科毕业生，包含 24 学分 Foundation studies。",
+      "source_ids": [
+        "MONASH-C6001-HANDBOOK-2026",
+        "MONASH-C6001-COURSE-MAP-2026",
+        "MONASH-C6001-INTL-2026"
+      ]
+    },
+    {
+      "program_variant_id": "MONASH-C6001-EL2",
+      "program_code": "C6001",
+      "entry_level": 2,
+      "program_name": "Master of Information Technology",
+      "university": "Monash University",
+      "campus": "Clayton",
+      "handbook_year": 2026,
+      "duration_years": 1.5,
+      "credits_to_complete": 72,
+      "entry_credit_points": 24,
+      "study_streams": ["Industry Experience", "Research"],
+      "intakes": ["Semester 1", "Semester 2"],
+      "summary": "适用于符合相关专业背景要求的申请人，从 Core studies 进入。",
+      "source_ids": [
+        "MONASH-C6001-HANDBOOK-2026",
+        "MONASH-C6001-INTL-2026"
+      ]
+    }
+  ],
+  "courses": [
+    {"course_code": "FIT9131", "course_name": "Programming foundations in Java", "credit_points": 6, "prerequisites": [], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT9132", "course_name": "Introduction to databases", "credit_points": 6, "prerequisites": [], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT9136", "course_name": "Introduction to Python programming", "credit_points": 6, "prerequisites": [], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT9137", "course_name": "Introduction to computer architecture and networks", "credit_points": 6, "prerequisites": [], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5057", "course_name": "Project management", "credit_points": 6, "prerequisites": [], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5125", "course_name": "IT research and innovation methods", "credit_points": 6, "prerequisites": [], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5136", "course_name": "Software engineering", "credit_points": 6, "prerequisites": [], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5137", "course_name": "Advanced database technology", "credit_points": 6, "prerequisites": [], "assumed_knowledge": ["Relational database principles including SQL"], "offerings": ["S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5046", "course_name": "Mobile and distributed computing systems", "credit_points": 6, "prerequisites": [], "offerings": ["S1"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5032", "course_name": "Internet applications development", "credit_points": 6, "prerequisites": [], "offerings": ["S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5122", "course_name": "IT professional practice", "credit_points": 6, "prerequisites": [], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5120", "course_name": "Industry experience studio project", "credit_points": 12, "prerequisites": [], "minimum_program_credits_by_semester": {"S1": 72, "S2": 66}, "must_be_final_semester": true, "offerings": ["S1", "S2"], "source_ids": ["MONASH-FIT5120-2026"]},
+    {"course_code": "FIT5126", "course_name": "Masters thesis part 1", "credit_points": 6, "prerequisites": ["FIT5125"], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5127", "course_name": "Masters thesis part 2", "credit_points": 6, "prerequisites": ["FIT5126"], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5128", "course_name": "Masters thesis final", "credit_points": 12, "prerequisites": ["FIT5127"], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5152", "course_name": "User interface design and usability", "credit_points": 6, "prerequisites": [], "offerings": ["S1"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5171", "course_name": "System validation and verification, quality and standards", "credit_points": 6, "prerequisites": [], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]},
+    {"course_code": "FIT5225", "course_name": "Cloud computing and security", "credit_points": 6, "prerequisites": [], "offerings": ["S1", "S2"], "source_ids": ["MONASH-C6001-COURSE-MAP-2026"]}
+  ],
+  "program_course_rules": [
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT9131", "rule_type": "FOUNDATION_CORE", "credit_group": "part_a"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT9132", "rule_type": "FOUNDATION_CORE", "credit_group": "part_a"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT9136", "rule_type": "FOUNDATION_CORE", "credit_group": "part_a"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT9137", "rule_type": "FOUNDATION_CORE", "credit_group": "part_a"},
+
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5057", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5125", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5136", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5137", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5046", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5032", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5122", "rule_type": "CORE", "credit_group": "part_c"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": "Industry Experience", "course_code": "FIT5120", "rule_type": "CAPSTONE", "credit_group": "part_c"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": "Research", "course_code": "FIT5126", "rule_type": "RESEARCH_CORE", "credit_group": "part_c"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": "Research", "course_code": "FIT5127", "rule_type": "RESEARCH_CORE", "credit_group": "part_c"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": "Research", "course_code": "FIT5128", "rule_type": "RESEARCH_CORE", "credit_group": "part_c"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5152", "rule_type": "PRESCRIBED_ELECTIVE", "credit_group": "elective"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5171", "rule_type": "PRESCRIBED_ELECTIVE", "credit_group": "elective"},
+    {"program_variant_id": "MONASH-C6001-EL1", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5225", "rule_type": "PRESCRIBED_ELECTIVE", "credit_group": "elective"},
+
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5057", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5125", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5136", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5137", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5046", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5032", "rule_type": "CORE", "credit_group": "part_b"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5122", "rule_type": "CORE", "credit_group": "part_c"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": "Industry Experience", "course_code": "FIT5120", "rule_type": "CAPSTONE", "credit_group": "part_c"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": "Research", "course_code": "FIT5126", "rule_type": "RESEARCH_CORE", "credit_group": "part_c"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": "Research", "course_code": "FIT5127", "rule_type": "RESEARCH_CORE", "credit_group": "part_c"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": "Research", "course_code": "FIT5128", "rule_type": "RESEARCH_CORE", "credit_group": "part_c"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5152", "rule_type": "PRESCRIBED_ELECTIVE", "credit_group": "elective"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5171", "rule_type": "PRESCRIBED_ELECTIVE", "credit_group": "elective"},
+    {"program_variant_id": "MONASH-C6001-EL2", "handbook_year": 2026, "study_stream": null, "course_code": "FIT5225", "rule_type": "PRESCRIBED_ELECTIVE", "credit_group": "elective"}
+  ]
+}

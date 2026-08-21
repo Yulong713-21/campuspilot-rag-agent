@@ -1,0 +1,266 @@
+{
+  "version": "2026-08-01",
+  "entries": [
+    {
+      "faq_id": "monash-entry-level",
+      "aliases": [
+        "entry level是什么意思",
+        "monash entry level是什么意思",
+        "master entry level是什么意思",
+        "entry level是master第一年吗",
+        "entry level 1是master第一年吗"
+      ],
+      "answer": "在 Monash 的授课型硕士项目中，Entry Level 不是“硕士第几年”，而是根据你的既往学历背景确定的入学路径。它会影响需要完成的总学分和课程结构；具体应以项目代码、Handbook Year 和录取通知书为准。",
+      "source_title": "Monash Handbook - Master of Information Technology C6001",
+      "source_url": "https://handbook.monash.edu/2026/courses/C6001"
+    },
+    {
+      "faq_id": "unit-vs-course",
+      "aliases": [
+        "unit和course有什么区别",
+        "澳洲大学unit和course有什么区别",
+        "unit是不是一门课",
+        "course是不是专业"
+      ],
+      "answer": "在澳洲高校语境中，Unit 通常指学生每学期注册的一门课程单元；Course 或 Program 通常指由多门 Units 和毕业要求组成的完整学位项目。不同学校用词可能略有差异，判断时仍要看该校 Handbook。",
+      "source_title": "TEQSA Glossary of terms",
+      "source_url": "https://www.teqsa.gov.au/guides-resources/glossary-terms"
+    },
+    {
+      "faq_id": "handbook-year",
+      "aliases": [
+        "handbook year是什么意思",
+        "为什么要选handbook year",
+        "handbook年份有什么用",
+        "培养方案年份是什么"
+      ],
+      "answer": "Handbook Year 表示你适用的培养方案版本。同一项目在不同年份可能调整总学分、必修课、方向和先修要求，因此不能把最新网页规则直接套到所有入学年份。实际规划应优先采用学校确认适用于你的版本。",
+      "source_title": "Monash University Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "campuspilot-capabilities",
+      "aliases": ["campuspilot能做什么", "pia能帮我做什么", "这个系统有什么功能", "怎么使用campuspilot"],
+      "answer": "CampusPilot 可以比较项目版本、解释澳洲高校术语、核对课程角色和毕业进度、生成并校验学习方案，以及基于官方资料回答 Handbook 和企业校招时间问题。规则型结论由确定性工具计算，资料型结论会附来源。",
+      "source_title": "CampusPilot README",
+      "source_url": "/docs"
+    },
+    {
+      "faq_id": "go8-definition",
+      "aliases": ["澳洲八大是什么", "go8是什么", "group of eight是什么意思"],
+      "answer": "Group of Eight（Go8）是澳大利亚八所研究型大学组成的联盟。Go8 身份不等于某个具体项目一定更适合你，项目比较仍应看课程结构、学制、费用、方向和个人目标。",
+      "source_title": "Group of Eight official website",
+      "source_url": "https://go8.edu.au/about/the-go8"
+    },
+    {
+      "faq_id": "supported-universities",
+      "aliases": ["支持哪些学校", "现在有哪些大学", "能查澳洲八大吗"],
+      "answer": "产品目录已接入澳洲八大基础信息；当前完成深度结构化规则和较完整 Handbook 语料的是 Monash 示例项目。其他学校只有通过来源与规则核验后才会开放规划能力。",
+      "source_title": "CampusPilot data coverage",
+      "source_url": "/api/catalog"
+    },
+    {
+      "faq_id": "credit-points",
+      "aliases": ["credit points是什么", "points就是学分吗", "澳洲大学学分怎么看"],
+      "answer": "Credit points 是学校用于表示 Unit 和项目学习量的学分单位。不同学校的换算体系可能不同，不能直接把某校 6 points 与另一校 6 points 视为完全相同。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "program-version",
+      "aliases": ["program version是什么", "项目版本是什么意思", "为什么同一专业有多个版本"],
+      "answer": "ProgramVersion 表示某个项目在特定 Handbook Year 下适用的一套规则。项目名称和代码可能不变，但总学分、核心课、方向或先修要求会随版本调整。",
+      "source_title": "CampusPilot domain model",
+      "source_url": "/docs"
+    },
+    {
+      "faq_id": "specialisation",
+      "aliases": ["specialisation是什么", "specialization是什么意思", "专业方向和项目有什么区别"],
+      "answer": "Specialisation 是项目内部的细分方向，不等同于完整学位项目。不同方向可能共享部分课程，也可能有各自的方向必修、限定选修和 Capstone 要求。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "course-role-context",
+      "aliases": ["同一门课为什么类型不同", "课程类型是固定的吗", "一门课能同时是必修和选修吗"],
+      "answer": "课程自身信息与课程在培养方案中的角色是两件事。同一 Unit 在不同项目版本或方向下，可能分别是核心课、限定选修、普通选修或不计入毕业要求。",
+      "source_title": "CampusPilot domain model",
+      "source_url": "/docs"
+    },
+    {
+      "faq_id": "core-vs-elective",
+      "aliases": ["core和elective有什么区别", "必修课和选修课有什么区别", "prescribed elective是什么"],
+      "answer": "Core 通常必须完成；Prescribed Elective 要从指定课程组中满足一定学分；General Elective 的选择空间更大。最终角色必须结合项目版本和方向判断。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "prerequisite",
+      "aliases": ["prerequisite是什么", "先修课是什么意思", "没修先修课可以选吗"],
+      "answer": "Prerequisite 是选修目标 Unit 前必须满足的条件，可能是已通过某门课、达到一定学分或获得院系批准。系统会按学期顺序校验，但最终 enrolment 资格以学校系统和院系审批为准。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "corequisite",
+      "aliases": ["corequisite是什么", "共修课是什么意思", "两门课可以同学期一起修吗"],
+      "answer": "Corequisite 表示某门 Unit 需要与另一门 Unit 同时修读，或已先完成后者。它与必须提前完成的 Prerequisite 不同。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "prohibition",
+      "aliases": ["prohibition是什么", "互斥课程是什么意思", "两门相似课程能都算学分吗"],
+      "answer": "Prohibition 或互斥规则表示两门内容高度重叠的 Unit 不能同时修读或重复计入学分。即使系统允许浏览课程，也不代表两门都能计入毕业要求。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "credit-rpl",
+      "aliases": ["rpl是什么", "学分减免怎么处理", "转学分算已修吗"],
+      "answer": "RPL/credit 是学校基于既往学习作出的学分认定。规划时可以计入已获批准的减免或转学分，但不能把尚未批准的申请当成确定学分。",
+      "source_title": "TEQSA guidance note on credit and RPL",
+      "source_url": "https://www.teqsa.gov.au/guides-resources/resources/guidance-notes/guidance-note-credit-and-recognition-prior-learning"
+    },
+    {
+      "faq_id": "failed-course",
+      "aliases": ["挂科算学分吗", "failed课程怎么处理", "课程没通过还能计入毕业吗"],
+      "answer": "未通过的 Unit 通常不能计入已完成学分，但会影响后续先修和学习计划。是否必须重修同一门课取决于它在适用培养方案中的角色。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "wam",
+      "aliases": ["wam是什么", "加权平均分是什么", "wam会影响选课吗"],
+      "answer": "WAM 是按学校规则计算的加权平均成绩，可能影响研究路径、奖学金或特定项目资格。具体计算和门槛应以学校当前政策为准。",
+      "source_title": "Monash University",
+      "source_url": "https://www.monash.edu/students/admin/assessments/results/wam"
+    },
+    {
+      "faq_id": "course-map",
+      "aliases": ["course map是什么", "课程地图有什么用", "一定要按course map选课吗"],
+      "answer": "Course Map 是学校按入学年份提供的建议修读顺序，用于安排每学期 Unit。它是重要规划依据，但个人减免、挂科、开课变化或方向选择可能需要调整。",
+      "source_title": "Monash postgraduate enrolment",
+      "source_url": "https://www.monash.edu/it/current-students/enrolment/postgraduate-enrolment"
+    },
+    {
+      "faq_id": "unit-guide",
+      "aliases": ["unit guide是什么", "unit guide和handbook有什么区别", "哪里看每学期教学安排"],
+      "answer": "Handbook 侧重项目和 Unit 的正式规则；Unit Guide 通常对应具体教学期，提供教学活动、考核和学习要求。做毕业规则判断优先看 Handbook，做当学期学习准备还要看 Unit Guide。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "course-offering",
+      "aliases": ["课程每学期都开吗", "怎么看课程开课学期", "今年不开课怎么办"],
+      "answer": "Unit 不一定每学期、每校区都开设。学习方案必须核对目标年份、教学期和校区；未来开课安排仍可能变化，应在 enrolment 前再次确认。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "assessment-source",
+      "aliases": ["怎么看课程考核方式", "哪里看期末考试占比", "项目考核比例在哪查"],
+      "answer": "课程页或具体教学期的 Unit Guide 可能列出考试、作业、项目和展示等考核。比例可能随教学期调整，CampusPilot 展示时会标明来源与适用年份。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "attendance",
+      "aliases": ["出勤要求怎么看", "不去上课会挂科吗", "attendance算平时分吗"],
+      "answer": "出勤是否计分、是否设置最低参与要求，要看具体 Unit Guide 和当期教学安排，不能仅凭课程名称推断。涉及强制出勤时应以教学团队发布的正式要求为准。",
+      "source_title": "Monash University unit information",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "double-pass",
+      "aliases": ["double pass是什么", "双过线是什么意思", "总分及格为什么还会挂"],
+      "answer": "Double pass 通常表示除总评达标外，某个关键考核部分也必须单独达到门槛。是否存在以及具体门槛必须查该教学期的正式考核规则。",
+      "source_title": "Monash University assessment information",
+      "source_url": "https://www.monash.edu/students/admin/assessments"
+    },
+    {
+      "faq_id": "capstone",
+      "aliases": ["capstone是什么", "毕业项目课是什么", "capstone一定最后修吗"],
+      "answer": "Capstone 是整合项目所学能力的高阶课程或项目，常有先修和学分进度要求。是否必须最后一学期修、由哪些 Units 组成，要看具体项目版本和方向。",
+      "source_title": "Monash Handbook",
+      "source_url": "https://handbook.monash.edu/"
+    },
+    {
+      "faq_id": "wil",
+      "aliases": ["wil是什么", "work integrated learning是什么", "行业实践就是实习吗"],
+      "answer": "WIL 是把理论与工作实践结合的结构化学习与考核活动，可包括 placement、industry project 或模拟实践；带有 Industry Experience 名称的 Unit 也不一定等于企业实习。",
+      "source_title": "TEQSA Glossary of terms",
+      "source_url": "https://www.teqsa.gov.au/guides-resources/glossary-terms"
+    },
+    {
+      "faq_id": "internship-pathway",
+      "aliases": ["industry experience pathway是什么", "实习方向保证有实习吗", "选行业实践方向就能进公司吗"],
+      "answer": "Industry Experience Pathway 是培养方案中的学习路径，不等于学校或企业保证提供实习岗位。应同时核对课程性质、申请条件、名额和当期项目说明。",
+      "source_title": "Monash IT postgraduate enrolment",
+      "source_url": "https://www.monash.edu/it/current-students/enrolment/postgraduate-enrolment"
+    },
+    {
+      "faq_id": "fastest-plan",
+      "aliases": ["怎么最快毕业", "能帮我压缩学期吗", "最快完成方案怎么生成"],
+      "answer": "最快方案会在总学分、必修、先修、开课学期和单学期负载约束下尽量压缩时间。它只表示规则上可行，不代表工作量最适合每个人。",
+      "source_title": "CampusPilot planning rules",
+      "source_url": "/docs"
+    },
+    {
+      "faq_id": "balanced-plan",
+      "aliases": ["怎么兼顾学习和实习", "如何让每学期负担均衡", "能生成均衡方案吗"],
+      "answer": "均衡方案会限制单学期课程数量，避免高负载课程过度集中，并为实习、面试或项目留出时间。课程顺序仍必须通过确定性规则校验。",
+      "source_title": "CampusPilot planning rules",
+      "source_url": "/docs"
+    },
+    {
+      "faq_id": "plan-validation",
+      "aliases": ["生成的方案会校验吗", "学习计划一定可行吗", "系统怎么检查选课方案"],
+      "answer": "系统会校验总学分、核心课、方向要求、选修组上下限、先修、互斥和重复计入。通过校验表示当前规则数据下可行，实际选课还受开班、容量和学校审批影响。",
+      "source_title": "CampusPilot rule engine",
+      "source_url": "/docs"
+    },
+    {
+      "faq_id": "evidence-citations",
+      "aliases": ["回答为什么有引用", "官方来源在哪里", "怎么核对agent的答案"],
+      "answer": "资料型回答会附本轮检索到的 evidence 和官方 URL。引用由后端编号并校验，模型不能自行创建来源；重要决定应打开原始页面核对。",
+      "source_title": "CampusPilot grounded answer design",
+      "source_url": "/docs"
+    },
+    {
+      "faq_id": "stale-information",
+      "aliases": ["资料会过期吗", "handbook更新了怎么办", "为什么要看更新时间"],
+      "answer": "Handbook、课程考核和政策都会更新。CampusPilot 按来源、年份和抓取时间管理资料，旧版本保留用于历史适用性判断，但不会自动当成当前规则。",
+      "source_title": "CampusPilot versioned knowledge design",
+      "source_url": "/docs"
+    },
+    {
+      "faq_id": "visa-boundary",
+      "aliases": ["能判断我符合签证吗", "可以保证485签证吗", "能给移民法律建议吗"],
+      "answer": "CampusPilot 只能检索官方政策并提示与学习时长、课程模式相关的规划约束，不能判断或保证个人签证资格，也不构成移民或法律建议。请以澳大利亚内政部和注册专业人士意见为准。",
+      "source_title": "Australian Department of Home Affairs",
+      "source_url": "https://immi.homeaffairs.gov.au/"
+    },
+    {
+      "faq_id": "ask-with-scope",
+      "aliases": ["怎么提问更准确", "问课程问题要提供什么", "为什么要补充项目代码"],
+      "answer": "最好同时提供学校、项目代码、Handbook Year、方向和课程代码。范围越明确，系统越能避免把同名项目、旧版本或其他方向的规则混在一起。",
+      "source_title": "CampusPilot query guide",
+      "source_url": "/docs"
+    },
+    {
+      "faq_id": "no-evidence",
+      "aliases": ["为什么agent不回答", "没有检索结果怎么办", "为什么只给可能有用的片段"],
+      "answer": "向量检索总能找到相对相似内容，但相似不代表足以支持结论。高相关资料可以生成答案，中相关只做有限总结并披露不完整，低相关则拒答并请你补充范围。",
+      "source_title": "CampusPilot retrieval quality policy",
+      "source_url": "/docs"
+    },
+    {
+      "faq_id": "knowledge-update",
+      "aliases": ["知识库多久更新", "企业招聘时间怎么更新", "新handbook什么时候入库"],
+      "answer": "知识库按来源类型独立更新：Handbook 按年份和页面变更采集，企业招聘按公司与届次追加公告。新资料需通过来源、正文完整性和回归检索检查后才进入可回答状态。",
+      "source_title": "CampusPilot ingestion policy",
+      "source_url": "/docs"
+    }
+  ]
+}

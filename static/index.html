@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+      name="description"
+      content="CampusPilot 海外高校课程与毕业路径规划 Agent"
+    >
+    <title>CampusPilot · 课程与毕业路径规划</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/static/app.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="CampusPilot 首页">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span>
+          <strong>CampusPilot</strong>
+          <small>海外高校课程与毕业路径规划</small>
+        </span>
+      </a>
+      <div class="top-actions">
+        <span class="data-chip">官方样本 · 2026</span>
+        <span class="service-state"><i></i><span id="serviceLabel">检查服务</span></span>
+        <a href="/docs" target="_blank" rel="noreferrer">API 文档</a>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <nav aria-label="主要功能">
+          <button class="nav-button active" type="button" data-view="planner">
+            <span>01</span>毕业路径
+          </button>
+          <button class="nav-button" type="button" data-view="compare">
+            <span>02</span>项目比较
+          </button>
+          <button class="nav-button" type="button" data-view="classifier">
+            <span>03</span>课程归属
+          </button>
+          <button class="nav-button" type="button" data-view="universities">
+            <span>04</span>院校专业
+          </button>
+        </nav>
+
+        <section class="source-summary">
+          <p class="overline">Knowledge status</p>
+          <dl>
+            <div><dt>院校目录</dt><dd>Go8 · 8 所</dd></div>
+            <div><dt>Handbook</dt><dd>2026</dd></div>
+            <div><dt>抓取日期</dt><dd id="retrievedDate">-</dd></div>
+            <div><dt>数据源</dt><dd id="sourceCount">-</dd></div>
+          </dl>
+        </section>
+
+        <div class="sidebar-notice">
+          <strong>规划边界</strong>
+          <p>课程与政策可能变化。结果用于方案比较，不代替学校确认或移民法律建议。</p>
+        </div>
+      </aside>
+
+      <main>
+        <section id="plannerView" class="view">
+          <div class="view-heading">
+            <div>
+              <p class="overline">Study plan agent</p>
+              <h1>设计你的毕业路径</h1>
+              <p>基于 Entry Level、Study Stream、已修课程与学习负荷生成可校验方案。</p>
+            </div>
+            <span id="catalogVersion" class="version-label">加载中</span>
+          </div>
+
+          <div class="planner-layout">
+            <form id="planForm" class="control-panel">
+              <div class="control-heading">
+                <h2>规划约束</h2>
+                <button id="resetPlanButton" class="text-button" type="button">重置</button>
+              </div>
+
+              <label for="programVariant">项目与 Entry Level</label>
+              <select id="programVariant" required></select>
+
+              <label for="studyStream">Study Stream</label>
+              <select id="studyStream" required></select>
+
+              <div class="two-columns">
+                <div>
+                  <label for="startSemester">开始学期</label>
+                  <select id="startSemester">
+                    <option value="2026-S2">2026 S2</option>
+                    <option value="2027-S1">2027 S1</option>
+                    <option value="2027-S2">2027 S2</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="maxLoad">每学期最多</label>
+                  <select id="maxLoad">
+                    <option value="4">4 门</option>
+                    <option value="3">3 门</option>
+                    <option value="2">2 门</option>
+                  </select>
+                </div>
+              </div>
+
+              <fieldset>
+                <legend>已完成课程</legend>
+                <div id="completedCourses" class="course-options"></div>
+              </fieldset>
+
+              <label class="toggle-row">
+                <input id="policyFlexibility" type="checkbox">
+                <span>
+                  <strong>保留毕业后规划弹性</strong>
+                  <small>只作为学习时长约束，不判断签证资格</small>
+                </span>
+              </label>
+
+              <button id="generateButton" class="primary-button" type="submit">
+                生成三套方案
+              </button>
+            </form>
+
+            <section class="result-canvas" aria-live="polite">
+              <div id="plannerEmpty" class="empty-state">
+                <img
+                  src="/static/campuspilot-journey.png"
+                  alt="从高校项目经过课程路径到毕业目标的规划示意图"
+                >
+                <h2>先设置你的规划约束</h2>
+                <p>Agent 会加载培养方案、计算学分、安排课程，并检查先修与 Capstone 条件。</p>
+              </div>
+
+              <div id="planResults" class="hidden">
+                <div class="summary-band">
+                  <div><span>Entry Level</span><strong id="summaryEntry">-</strong></div>
+                  <div><span>待完成学分</span><strong id="summaryCredits">-</strong></div>
+                  <div><span>有效方案</span><strong id="summaryValid">-</strong></div>
+                  <div><span>置信度</span><strong id="summaryConfidence">-</strong></div>
+                </div>
+
+                <div id="warningList" class="warning-list"></div>
+
+                <div class="plan-toolbar">
+                  <div id="planTabs" class="plan-tabs" role="tablist"></div>
+                  <button id="savePlanButton" class="secondary-button" type="button">
+                    保存此方案
+                  </button>
+                </div>
+
+                <div class="plan-intro">
+                  <div>
+                    <p class="overline">Selected route</p>
+                    <h2 id="selectedPlanName">-</h2>
+                    <p id="selectedPlanDescription">-</p>
+                  </div>
+                  <div class="plan-stat">
+                    <strong id="selectedPlanSemesters">-</strong>
+                    <span>预计学期</span>
+                  </div>
+                </div>
+
+                <div id="semesterTimeline" class="semester-timeline"></div>
+
+                <div class="evidence-grid">
+                  <section>
+                    <div class="subheading">
+                      <h3>Agent Trace</h3>
+                      <span id="traceCount">0 steps</span>
+                    </div>
+                    <ol id="traceList" class="trace-list"></ol>
+                  </section>
+                  <section>
+                    <div class="subheading">
+                      <h3>官方来源</h3>
+                      <span>可追溯</span>
+                    </div>
+                    <ul id="sourceList" class="source-list"></ul>
+                  </section>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section id="compareView" class="view hidden">
+          <div class="view-heading">
+            <div>
+              <p class="overline">Program comparison</p>
+              <h1>比较 Entry Level</h1>
+              <p>同一项目可能因既往背景进入不同起点，学分与完成时间随之变化。</p>
+            </div>
+          </div>
+
+          <form id="compareForm" class="inline-form">
+            <select id="compareFirst"></select>
+            <span>对比</span>
+            <select id="compareSecond"></select>
+            <select id="compareStream"></select>
+            <button class="primary-button" type="submit">开始比较</button>
+          </form>
+          <div id="compareResults" class="compare-results"></div>
+        </section>
+
+        <section id="classifierView" class="view hidden">
+          <div class="view-heading">
+            <div>
+              <p class="overline">Course role inspector</p>
+              <h1>判断课程在培养方案中的角色</h1>
+              <p>课程属性不是课程自身常量，而取决于 Entry Level、Stream 和 Handbook 年份。</p>
+            </div>
+          </div>
+
+          <form id="classifierForm" class="inline-form">
+            <select id="classifierProgram"></select>
+            <select id="classifierStream"></select>
+            <select id="classifierCourse"></select>
+            <button class="primary-button" type="submit">判断归属</button>
+          </form>
+          <div id="classifierResult" class="classifier-result">
+            <p>选择课程后查看它是 Foundation、Core、Capstone、Elective 或不计入当前路径。</p>
+          </div>
+        </section>
+
+        <section id="universitiesView" class="view hidden">
+          <div class="view-heading">
+            <div>
+              <p class="overline">Go8 program directory</p>
+              <h1>澳洲八大院校与常见专业</h1>
+              <p>覆盖商科、计算机、工程、数学和物理；目录接入不代表毕业路径已经验证。</p>
+            </div>
+            <a
+              class="source-link"
+              href="https://go8.edu.au/about/the-go8"
+              target="_blank"
+              rel="noreferrer"
+            >Go8 官方成员</a>
+          </div>
+
+          <div id="disciplineFilters" class="discipline-filters" role="tablist"></div>
+
+          <div class="coverage-band">
+            <div>
+              <span>当前成员</span>
+              <strong id="universityCount">8</strong>
+            </div>
+            <div>
+              <span>专业分类</span>
+              <strong id="disciplineCount">5</strong>
+            </div>
+            <div>
+              <span>规划已验证</span>
+              <strong id="verifiedUniversityCount">1</strong>
+            </div>
+            <p id="go8CoverageNotice">加载覆盖说明...</p>
+          </div>
+
+          <div id="universityGrid" class="university-grid" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="confirmDialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="overline">User confirmation</p>
+          <h2>确认保存学习方案</h2>
+        </div>
+        <button id="closeDialogButton" class="close-button" type="button" aria-label="关闭">×</button>
+      </div>
+      <div id="confirmPreview" class="confirm-preview"></div>
+      <p class="dialog-note">
+        工作流已在 LangGraph Interrupt 暂停。确认后才会执行保存动作。
+      </p>
+      <div class="dialog-actions">
+        <button id="rejectSaveButton" class="danger-button" type="button">放弃保存</button>
+        <button id="confirmSaveButton" class="primary-button" type="button">确认保存</button>
+      </div>
+    </dialog>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>

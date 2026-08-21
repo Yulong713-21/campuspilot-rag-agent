@@ -1,0 +1,2925 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6004",
+      "program_name": "Master of Banking and Finance",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time An Australian bachelor degree (or equivalent) and achieved at least a credit (60%) average or an equivalent grade point average (GPA).",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6004",
+      "source_sha256": "9d9c7fe774ed6634d1497b4b7a52c1789da9290413561e24ca9a3d95e725ed8c",
+      "captured_at": "2026-07-31T09:44:31.109516+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6004-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6004",
+      "program_name": "Master of Banking and Finance",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time An Australian bachelor degree (or equivalent) in a cognate discipline with at least a credit (60%) average, or equivalent qualification and experience approved by the faculty.\n\nor An Australian graduate certificate (or equivalent) in a cognate discipline with at least a credit (60%) average, or equivalent qualification and experience approved by the faculty.\n\nor A four-year Australian bachelor honours degree (or equivalent) with at least a credit (60%) average or equivalent qualification and experience approved by the faculty.\n\nor Successful completion of a Monash University Graduate Certificate of Business.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6004",
+      "source_sha256": "9d9c7fe774ed6634d1497b4b7a52c1789da9290413561e24ca9a3d95e725ed8c",
+      "captured_at": "2026-07-31T09:44:31.109516+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6004-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6004",
+      "program_name": "Master of Banking and Finance",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_3",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "48 points to complete Duration: 1 year full-time, 2 years part-time\n\nAn Australian bachelor honours degree (or equivalent) in a cognate discipline with at least a credit (60%) average, or equivalent qualification and experience approved by the faculty, which has not been used as a basis for entry to another course within the Monash Business School.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6004",
+      "source_sha256": "9d9c7fe774ed6634d1497b4b7a52c1789da9290413561e24ca9a3d95e725ed8c",
+      "captured_at": "2026-07-31T09:44:31.109516+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6004-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6005",
+      "program_name": "Master of Business",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time.\n\nAn Australian bachelor degree or an equivalent qualification, or an approved pathway, and achieved at least a credit (60%) average or an equivalent GPA. Entry level 2: 72 points to complete Duration: 1.5 years full-time, 3 years part-time.\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline with at least a credit (60%) average, or equivalent qualification and experience approved by the faculty.\n\nor\n\nA four-year Australian bachelor honours degree (or equivalent) with at least a credit (60%) average, or equivalent qualification and experience approved by the faculty.\n\nor\n\nSuccessful completion of a Monash University Graduate Certificate of Business Entry level 3: 48 points to complete Duration: 1 year full-time, 2 years part-time.\n\nAn Australian bachelor degree (or equivalent) and an Australian graduate certificate (or equivalent) in a cognate discipline with at least a credit (60%) average in both qualifications, or equivalent qualification and experience approved by the faculty.\n\nor\n\nAn Australian bachelor honours degree (or equivalent) in a cognate discipline with at least a credit (60%) average or equivalent qualification and experience approved by the faculty.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time.\n\nAn Australian bachelor degree or an equivalent qualification, or an approved pathway, and achieved at least a credit (60%) average or an equivalent GPA. Entry level 2: 72 points to complete Duration: 1.5 years full-time, 3 years part-time.\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline with at least a credit (60%) average, or equivalent qualification and experience approved by the faculty."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "A four-year Australian bachelor honours degree (or equivalent) with at least a credit (60%) average, or equivalent qualification and experience approved by the faculty."
+        },
+        {
+          "sequence": 3,
+          "criteria_text": "Successful completion of a Monash University Graduate Certificate of Business Entry level 3: 48 points to complete Duration: 1 year full-time, 2 years part-time.\n\nAn Australian bachelor degree (or equivalent) and an Australian graduate certificate (or equivalent) in a cognate discipline with at least a credit (60%) average in both qualifications, or equivalent qualification and experience approved by the faculty."
+        },
+        {
+          "sequence": 4,
+          "criteria_text": "An Australian bachelor honours degree (or equivalent) in a cognate discipline with at least a credit (60%) average or equivalent qualification and experience approved by the faculty."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6005",
+      "source_sha256": "7d905583bd5ae45c1b0a369d0a351f4730df7980add26cb9a4430e312de9f7cd",
+      "captured_at": "2026-07-31T09:44:37.082572+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6005-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6007",
+      "program_name": "Master of International Business",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 57.5,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time An Australian bachelor degree (or equivalent), with a minimum credit (57.5%) average.\n\nor\n\nAn Australian bachelor degree (or equivalent), with a minimum 50% average, and a minimum of three years relevant work experience*.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          50.0,
+          57.5
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time An Australian bachelor degree (or equivalent), with a minimum credit (57.5%) average."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent), with a minimum 50% average, and a minimum of three years relevant work experience*."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6007",
+      "source_sha256": "1cae39c86f52e337054ce432646223f36d6bf05b05d36d4d9a527b9d98247cc9",
+      "captured_at": "2026-07-31T09:44:41.997222+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6007-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6007",
+      "program_name": "Master of International Business",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 57.5,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent), in a cognate discipline with a minimum credit (57.5%) average.\n\nor\n\nAn Australian bachelor degree (or equivalent), with a minimum credit (57.5%) average and a minimum of two years relevant work experience*\n\nor\n\nAn Australian bachelor degree (or equivalent), in a cognate discipline with a minimum 50% average and a minimum of two years relevant work experience*",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          50.0,
+          57.5
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent), in a cognate discipline with a minimum credit (57.5%) average."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent), with a minimum credit (57.5%) average and a minimum of two years relevant work experience*"
+        },
+        {
+          "sequence": 3,
+          "criteria_text": "An Australian bachelor degree (or equivalent), in a cognate discipline with a minimum 50% average and a minimum of two years relevant work experience*"
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6007",
+      "source_sha256": "1cae39c86f52e337054ce432646223f36d6bf05b05d36d4d9a527b9d98247cc9",
+      "captured_at": "2026-07-31T09:44:41.997222+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6007-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6007",
+      "program_name": "Master of International Business",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_3",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 57.5,
+      "criteria_text": "48 points to complete Duration: 1 year full-time, 2 years part-time An Australian bachelor honours degree (or equivalent), in a cognate discipline with a minimum credit (57.5%) average.\n\n*Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          57.5
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6007",
+      "source_sha256": "1cae39c86f52e337054ce432646223f36d6bf05b05d36d4d9a527b9d98247cc9",
+      "captured_at": "2026-07-31T09:44:41.997222+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6007-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6008",
+      "program_name": "Master of International Business",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": null,
+      "criteria_text": "An Australian bachelor degree (or equivalent qualification) in economics management or other relevant discipline.\n\nFor SEU students: An equivalent score in the National Master Unified Entrance Examination will be utilised in place of the required WAM score of an undergraduate degree.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6008",
+      "source_sha256": "541e6a88215511fa6266168d35dac0a6335d2bf7b97bb029d247c3fc27b07fbc",
+      "captured_at": "2026-07-31T09:44:46.914986+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6008-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6011",
+      "program_name": "Master of Professional Accounting",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time.\n\nAn Australian bachelor degree (or equivalent) with at least a credit (60%) average or equivalent Grade Point Average (GPA).",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6011",
+      "source_sha256": "9b7d3bc15cdb165a667be1e70b2c40ba33bb1c03319e9dc76520b8c19125b9c8",
+      "captured_at": "2026-07-31T09:44:52.139942+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6011-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6011",
+      "program_name": "Master of Professional Accounting",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in Business, Economics, Commerce, Law, Humanities, Arts, Social Science or Science with at least a credit (60%) average or equivalent Grade Point Average (GPA)\n\nOR\n\nAn Australian bachelor degree (or equivalent) with at least a credit (60%) average or equivalent Grade Point Average (GPA) and an Australian graduate certificate (or equivalent)\n\nOR\n\nAn Australian bachelor honours degree (or equivalent) with at least a credit (60%) average or equivalent Grade Point Average (GPA)\n\nOR\n\nAn Australian bachelor degree (or equivalent) and two years relevant professional experience*. * Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.\n\nApplicants who have completed relevant discipline units in an Australian bachelor degree (or equivalent qualification) may be exempted from undertaking mastery knowledge units and will be able to choose an alternative unit, in consultation with the Course Director.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in Business, Economics, Commerce, Law, Humanities, Arts, Social Science or Science with at least a credit (60%) average or equivalent Grade Point Average (GPA)"
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent) with at least a credit (60%) average or equivalent Grade Point Average (GPA) and an Australian graduate certificate (or equivalent)"
+        },
+        {
+          "sequence": 3,
+          "criteria_text": "An Australian bachelor honours degree (or equivalent) with at least a credit (60%) average or equivalent Grade Point Average (GPA)"
+        },
+        {
+          "sequence": 4,
+          "criteria_text": "An Australian bachelor degree (or equivalent) and two years relevant professional experience*. * Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.\n\nApplicants who have completed relevant discipline units in an Australian bachelor degree (or equivalent qualification) may be exempted from undertaking mastery knowledge units and will be able to choose an alternative unit, in consultation with the Course Director."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6011",
+      "source_sha256": "9b7d3bc15cdb165a667be1e70b2c40ba33bb1c03319e9dc76520b8c19125b9c8",
+      "captured_at": "2026-07-31T09:44:52.139942+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6011-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6014",
+      "program_name": "Master of Actuarial Studies",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time\n\nAn Australian bachelor degree (or equivalent) with at least a high credit (65%) average or an equivalent GPA, and must have passed an introductory statistics unit or equivalent, and a 1st year Calculus or Algebra unit, or equivalent. Entry level 2: 72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline* with at least a high credit (65%) average or an Australian graduate certificate in a cognate discipline* with at least a high credit (65%) average or qualifications and experience approved by the faculty.\n\nStudents should be aware that the granting of exemptions from particular subjects may affect their ability to complete the subjects required for the Actuaries Institute accreditation.\n\n*Cognate disciplines include: Mathematics, Statistics, Econometrics, Financial Mathematics, Engineering, Economics, Finance, Accounting.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "mathematics",
+          "statistics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6014",
+      "source_sha256": "4e26ace0eb5e6dc4d397ddbf1350181146136a48e92bb26db36c6d4cfbbce8fe",
+      "captured_at": "2026-07-31T09:44:57.871688+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6014-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6022",
+      "program_name": "Master of Business Analytics",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "96 points to complete Duration: 2 years full time, 4 years part time\n\nAn Australian bachelor degree (or equivalent) with at least a high credit (65%) average, or an equivalent GPA.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6022",
+      "source_sha256": "dcdef88aa396a4d4d6366fdc2b8c9c654052ab78dd6893da8891b47527fbde94",
+      "captured_at": "2026-07-31T09:45:02.797270+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6022-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6022",
+      "program_name": "Master of Business Analytics",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full time, 3 years part time\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline with at least a high credit (65%) average, or an equivalent GPA.\n\nApplicants must have successfully completed a first year undergraduate statistics units, or provide evidence of qualifications/training or experience that the faculty considers to be a satisfactory substitute.\n\nApplicants must prepare a Candidate Statement in which they are required to demonstrate that they possess the motivation and academic skills required to successfully complete the program.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "statistics"
+        ],
+        "supplementary_evidence": [
+          "Candidate Statement"
+        ]
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6022",
+      "source_sha256": "dcdef88aa396a4d4d6366fdc2b8c9c654052ab78dd6893da8891b47527fbde94",
+      "captured_at": "2026-07-31T09:45:02.797270+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6022-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6025",
+      "program_name": "Master of Project Management",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "72 points to complete Duration: 2 years part-time\n\nAn Australian bachelor degree in a relevant discipline*, or equivalent qualification, with at least a credit (60%) average or equivalent Grade Point Average (GPA).\n\nOR\n\nAn Australian bachelor degree, or equivalent qualification, with with at least a credit (60%) or equivalent Grade Point Average (GPA) plus two years relevant work experience**.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "72 points to complete Duration: 2 years part-time\n\nAn Australian bachelor degree in a relevant discipline*, or equivalent qualification, with at least a credit (60%) average or equivalent Grade Point Average (GPA)."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree, or equivalent qualification, with with at least a credit (60%) or equivalent Grade Point Average (GPA) plus two years relevant work experience**."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6025",
+      "source_sha256": "2211b82f8398a19055828fe186a9d40ee05626f7686661007b48de539e774567",
+      "captured_at": "2026-07-31T09:45:07.742597+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6025-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6025",
+      "program_name": "Master of Project Management",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.4166666666666667年制项目",
+      "duration_months": 17,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "48 points to complete Duration: 1.4 years part-time\n\nA Monash University Graduate Certificate of Project Management with with at least a credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": false,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6025",
+      "source_sha256": "2211b82f8398a19055828fe186a9d40ee05626f7686661007b48de539e774567",
+      "captured_at": "2026-07-31T09:45:07.742597+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6025-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6025",
+      "program_name": "Master of Project Management",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_3",
+      "display_name": "0.6666666666666666年制项目",
+      "duration_months": 8,
+      "credits_to_complete": 24,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "24 points to complete Duration: 0.7 year part-time\n\nA Monash University Graduate Diploma of Project Management with with at least a credit (60%) average.\n\n*Relevant disciplines include: Project Management, Engineering, Construction, Information Technology.\n\n**Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience",
+      "requirements": {
+        "bachelor_degree_required": false,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6025",
+      "source_sha256": "2211b82f8398a19055828fe186a9d40ee05626f7686661007b48de539e774567",
+      "captured_at": "2026-07-31T09:45:07.742597+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6025-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6027",
+      "program_name": "Master of Business Innovation",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": null,
+      "criteria_text": "72 points to complete Duration: 1.5 years full time, 3.5 years part time\n\nAn Australian bachelor degree (or equivalent) and a minimum of three years relevant work experience*.\n\nor\n\nA four-year Australian undergraduate honours degree (or equivalent) or qualification and professional experience approved by the faculty.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "72 points to complete Duration: 1.5 years full time, 3.5 years part time\n\nAn Australian bachelor degree (or equivalent) and a minimum of three years relevant work experience*."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "A four-year Australian undergraduate honours degree (or equivalent) or qualification and professional experience approved by the faculty."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6027",
+      "source_sha256": "fa0e2df646228c597ca2d6787b3cef8dab6971010904ae5be04a53d908660de4",
+      "captured_at": "2026-07-31T09:45:12.767736+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6027-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6027",
+      "program_name": "Master of Business Innovation",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 72,
+      "minimum_average_percent": null,
+      "criteria_text": "48 points Duration: 1 year full time, 2 years part time\n\nA Monash University Graduate Certificate of Business Innovation.",
+      "requirements": {
+        "bachelor_degree_required": false,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6027",
+      "source_sha256": "fa0e2df646228c597ca2d6787b3cef8dab6971010904ae5be04a53d908660de4",
+      "captured_at": "2026-07-31T09:45:12.767736+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6027-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6027",
+      "program_name": "Master of Business Innovation",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_3",
+      "display_name": "0.5年制项目",
+      "duration_months": 6,
+      "credits_to_complete": 24,
+      "minimum_average_percent": null,
+      "criteria_text": "24 points to complete Duration: 0.5 year full time, 1 year part time\n\nA Monash University Graduate Diploma of Business Innovation.\n\n* Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.",
+      "requirements": {
+        "bachelor_degree_required": false,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6027",
+      "source_sha256": "fa0e2df646228c597ca2d6787b3cef8dab6971010904ae5be04a53d908660de4",
+      "captured_at": "2026-07-31T09:45:12.767736+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6027-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6028",
+      "program_name": "Master of Analytics",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "Entry level 1 - 72 points to complete Duration: 2 years part time\n\nAn Australian bachelor degree in a relevant discipline* or an equivalent qualification with at least a credit (60%) average or equivalent Grade Point Average (GPA)\n\nor\n\nAn Australian bachelor degree or equivalent qualification with at least a credit (60%) average or equivalent Grade Point Average plus at least two years relevant work experience**.\n\nEntry level 2 - 48 points to complete Duration: 1.4 years part time\n\nA Monash University Graduate Certificate of Analytics with at least a credit (60%) average.\n\n*Relevant disciplines include: Analytics, Business statistics, Econometrics, Mathematics and Business.\n\n**Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.\n\nApplicants must have successfully completed a first year undergraduate statistics units, or provide evidence of qualifications/training or experience that the faculty considers to be equivalent.\n\nApplicants must prepare a Candidate Statement in which they are required to demonstrate that they possess the motivation and academic skills required to successfully complete the program.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [
+          "mathematics",
+          "statistics"
+        ],
+        "supplementary_evidence": [
+          "Candidate Statement"
+        ]
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "Entry level 1 - 72 points to complete Duration: 2 years part time\n\nAn Australian bachelor degree in a relevant discipline* or an equivalent qualification with at least a credit (60%) average or equivalent Grade Point Average (GPA)"
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree or equivalent qualification with at least a credit (60%) average or equivalent Grade Point Average plus at least two years relevant work experience**.\n\nEntry level 2 - 48 points to complete Duration: 1.4 years part time\n\nA Monash University Graduate Certificate of Analytics with at least a credit (60%) average.\n\n*Relevant disciplines include: Analytics, Business statistics, Econometrics, Mathematics and Business.\n\n**Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.\n\nApplicants must have successfully completed a first year undergraduate statistics units, or provide evidence of qualifications/training or experience that the faculty considers to be equivalent.\n\nApplicants must prepare a Candidate Statement in which they are required to demonstrate that they possess the motivation and academic skills required to successfully complete the program."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6028",
+      "source_sha256": "34251c23f7d5cf64bb72bdb18c0caa3614c82a1de0927eafaa04ad686dcd5929",
+      "captured_at": "2026-07-31T09:45:17.650310+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6028-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6030",
+      "program_name": "Master of Economics",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part time\n\nAn Australian bachelor degree (or equivalent), with at least a high credit (65%) average or an equivalent GPA.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6030",
+      "source_sha256": "8d3c3dbde3727c5e9d1f90a4eb661afa271c25b38ec2ea1d2ae0f4d27a00d5b9",
+      "captured_at": "2026-07-31T09:45:22.642622+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6030-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6030",
+      "program_name": "Master of Economics",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part time\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline* with at least a high credit (65%) average, or equivalent qualification and experience approved by the faculty.\n\nor\n\nAn Australian bachelor degree (or equivalent) and an Australian graduate certificate (or equivalent) in a cognate discipline* with at least a high credit (65%) average in both qualifications, or equivalent qualification and experience approved by the faculty.\n\nor\n\nA four-year Australian bachelor honours degree (or equivalent) with at least a high credit (65%) average, or equivalent qualification and experience approved by the faculty.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part time\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline* with at least a high credit (65%) average, or equivalent qualification and experience approved by the faculty."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent) and an Australian graduate certificate (or equivalent) in a cognate discipline* with at least a high credit (65%) average in both qualifications, or equivalent qualification and experience approved by the faculty."
+        },
+        {
+          "sequence": 3,
+          "criteria_text": "A four-year Australian bachelor honours degree (or equivalent) with at least a high credit (65%) average, or equivalent qualification and experience approved by the faculty."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6030",
+      "source_sha256": "8d3c3dbde3727c5e9d1f90a4eb661afa271c25b38ec2ea1d2ae0f4d27a00d5b9",
+      "captured_at": "2026-07-31T09:45:22.642622+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6030-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6030",
+      "program_name": "Master of Economics",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_3",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete Duration: 1 year full-time, 2 years part time\n\nAn Australian bachelor honours degree (or equivalent) in a cognate discipline* with at least a high credit (65%) average, or equivalent qualification and experience approved by the faculty.\n\nStudents wishing to undertake the research pathway must maintain at least a distinction grade (70%) average and be accepted for entry by the Course Director.\n\n*Cognate disciplines include: Business, Commerce, Economics, Econometrics, Management.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0,
+          70.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6030",
+      "source_sha256": "8d3c3dbde3727c5e9d1f90a4eb661afa271c25b38ec2ea1d2ae0f4d27a00d5b9",
+      "captured_at": "2026-07-31T09:45:22.642622+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6030-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6033",
+      "program_name": "Master of Digital Business",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 57.5,
+      "criteria_text": "An Australian bachelor's degree (or equivalent) and at least a credit (57.5%) average or an equivalent GPA in a cognate discipline\n\nor\n\nAn Australian bachelor's degree (or equivalent) and at least a credit (57.5%) average or an equivalent GPA in a non-cognate discipline, and at least one year of work experience**\n\nor\n\nAn Australian bachelor's degree (or equivalent) and at least a 50% average or an equivalent GPA in a non cognate discipline and at least two years of relevant work experience**\n\n*cognate disciplines include business, technology, and computer science.\n\n**Applicants applying based on work experience are required to provide a detailed curriculum vitae outlining their employment history and professional experience for a rigorous internal assessment\n\nApplicants are required to submit a short personal statement and those applicants reaching the final application stage will be required to attend an interview.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          50.0,
+          57.5
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "An Australian bachelor's degree (or equivalent) and at least a credit (57.5%) average or an equivalent GPA in a cognate discipline"
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor's degree (or equivalent) and at least a credit (57.5%) average or an equivalent GPA in a non-cognate discipline, and at least one year of work experience**"
+        },
+        {
+          "sequence": 3,
+          "criteria_text": "An Australian bachelor's degree (or equivalent) and at least a 50% average or an equivalent GPA in a non cognate discipline and at least two years of relevant work experience**\n\n*cognate disciplines include business, technology, and computer science.\n\n**Applicants applying based on work experience are required to provide a detailed curriculum vitae outlining their employment history and professional experience for a rigorous internal assessment\n\nApplicants are required to submit a short personal statement and those applicants reaching the final application stage will be required to attend an interview."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6033",
+      "source_sha256": "902afc3738b8248e0269eaf797403f880ae70d3b5b8e2988ad806a7c78b3ad24",
+      "captured_at": "2026-07-31T09:45:28.004503+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6033-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6035",
+      "program_name": "Master of Human Resource Management",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "Entry level 1- 72 points to complete. Duration: 2 years part-time.\n\nAn Australian bachelor degree, or an equivalent qualification, with at least a credit (60%) average, or an equivalent Grade Point Average, plus two years relevant work experience*.\n\nEntry level 2 - 48 points to complete. Duration: 1.4 years part-time.\n\nA Monash University Graduate Certificate of Human Resource Management with at least a credit (60%) average.\n\n*Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6035",
+      "source_sha256": "1e6ce83776f7d15eca2e7d8739518fe94a80e3a01f27444539aa4e434cc95f53",
+      "captured_at": "2026-07-31T09:45:32.911005+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6035-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6036",
+      "program_name": "Master of Applied Econometrics",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) with at least a high credit (65%) average or equivalent Grade Point Average in a STEM or business area that includes a 1st year statistics or mathematics unit or equivalent.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "mathematics",
+          "statistics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6036",
+      "source_sha256": "2fa955695c6d36a153298427df9cfd033d04ffd622bb0e5103b060a5d317c05f",
+      "captured_at": "2026-07-31T09:45:37.917024+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6036-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6036",
+      "program_name": "Master of Applied Econometrics",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete Duration: 1 year full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with at least a high credit (65%) average or equivalent Grade Point Average (GPA) in a STEM or business area that includes an advanced unit on econometrics or statistics or equivalent and Australian graduate certificate / honours degree (or equivalent).\n\nOR\n\nAn Australian bachelor degree (or equivalent) in a STEM or business area that includes an advanced unit on econometrics or statistics or equivalent and two years relevant professional experience*.\n\n*Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.\n\nApplicants who have completed relevant discipline units in an Australian bachelor degree (or equivalent qualification) may be exempted from undertaking advanced preparatory units and will be able to choose an alternative unit, in consultation with the Course Director.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "statistics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "48 points to complete Duration: 1 year full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with at least a high credit (65%) average or equivalent Grade Point Average (GPA) in a STEM or business area that includes an advanced unit on econometrics or statistics or equivalent and Australian graduate certificate / honours degree (or equivalent)."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent) in a STEM or business area that includes an advanced unit on econometrics or statistics or equivalent and two years relevant professional experience*.\n\n*Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.\n\nApplicants who have completed relevant discipline units in an Australian bachelor degree (or equivalent qualification) may be exempted from undertaking advanced preparatory units and will be able to choose an alternative unit, in consultation with the Course Director."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6036",
+      "source_sha256": "2fa955695c6d36a153298427df9cfd033d04ffd622bb0e5103b060a5d317c05f",
+      "captured_at": "2026-07-31T09:45:37.917024+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6036-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6037",
+      "program_name": "Master of Regulation and Compliance",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete (1.5 years full-time, 3 years part-time)\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* with at least a high credit (65%) average or equivalent Grade Point Average (GPA).\n\nor\n\nAn Australian bachelor degree (or equivalent) and at least two years of relevant professional experience***.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "72 points to complete (1.5 years full-time, 3 years part-time)\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* with at least a high credit (65%) average or equivalent Grade Point Average (GPA)."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent) and at least two years of relevant professional experience***."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6037",
+      "source_sha256": "c70595ad728e50c629eecfc20f6c1e0c332bd2e1ead0fcfb7caa3ca6087947f7",
+      "captured_at": "2026-07-31T09:45:43.001563+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6037-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6037",
+      "program_name": "Master of Regulation and Compliance",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete (1 years full-time, 2 years part-time)\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and Australian graduate certificate / honours degree (or equivalent).\n\nor\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* and two years relevant professional experience***\n\n*Cognate disciplines include: arts, business, commerce, economics, engineering, law, management, humanities, science or social science disciplines. **A minor is at least four units (equivalent to 24 Monash credit points). ***Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "48 points to complete (1 years full-time, 2 years part-time)\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and Australian graduate certificate / honours degree (or equivalent)."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* and two years relevant professional experience***\n\n*Cognate disciplines include: arts, business, commerce, economics, engineering, law, management, humanities, science or social science disciplines. **A minor is at least four units (equivalent to 24 Monash credit points). ***Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6037",
+      "source_sha256": "c70595ad728e50c629eecfc20f6c1e0c332bd2e1ead0fcfb7caa3ca6087947f7",
+      "captured_at": "2026-07-31T09:45:43.001563+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6037-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6038",
+      "program_name": "Master of Accounting",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major in accounting with at least a high credit (65%) average or equivalent Grade Point Average (GPA).",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6038",
+      "source_sha256": "05d1a147a0459bafda6cd62b476faf291b9ffc4dad28b2179778e71cc4913e5e",
+      "captured_at": "2026-07-31T09:45:48.140542+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6038-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6038",
+      "program_name": "Master of Accounting",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major in accounting with at least a high credit (65%) average or equivalent GPA that meets the entry requirements of a professional accounting organisation*\n\nor\n\nan Australian bachelor degree (or equivalent) with a major in accounting with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and an Australian graduate certificate / honours degree (or equivalent)\n\nor\n\nan Australian bachelor degree (or equivalent) with a major in accounting and two years relevant professional experience**\n\nor\n\nan Australian bachelor degree (or equivalent) with a major in accounting and full membership of a professional accounting organisation*\n\n*Professional accounting organisations: Chartered Accountants Australia + New Zealand (CA ANZ) or CPA Australia or Association of Chartered Certified Accountants (ACCA) or Chartered Institute of Management Accountants (CIMA), Institute of Public Accountants (IPA) or a recognised equivalent professional accounting program.\n\n** Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major in accounting with at least a high credit (65%) average or equivalent GPA that meets the entry requirements of a professional accounting organisation*"
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "an Australian bachelor degree (or equivalent) with a major in accounting with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and an Australian graduate certificate / honours degree (or equivalent)"
+        },
+        {
+          "sequence": 3,
+          "criteria_text": "an Australian bachelor degree (or equivalent) with a major in accounting and two years relevant professional experience**"
+        },
+        {
+          "sequence": 4,
+          "criteria_text": "an Australian bachelor degree (or equivalent) with a major in accounting and full membership of a professional accounting organisation*\n\n*Professional accounting organisations: Chartered Accountants Australia + New Zealand (CA ANZ) or CPA Australia or Association of Chartered Certified Accountants (ACCA) or Chartered Institute of Management Accountants (CIMA), Institute of Public Accountants (IPA) or a recognised equivalent professional accounting program.\n\n** Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6038",
+      "source_sha256": "05d1a147a0459bafda6cd62b476faf291b9ffc4dad28b2179778e71cc4913e5e",
+      "captured_at": "2026-07-31T09:45:48.140542+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6038-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6039",
+      "program_name": "Master of Advanced Finance",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major or minor* in finance with at least a high credit (65%) average or equivalent Grade Point Average (GPA).",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6039",
+      "source_sha256": "627343bdc8a286e3ef2e7418a73bb1bd37c4680a5a6cc3ddad0ffa1abb676f4d",
+      "captured_at": "2026-07-31T09:45:53.190493+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6039-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6039",
+      "program_name": "Master of Advanced Finance",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major in finance with at least a high credit (65%) average, or equivalent Grade Point Average (GPA), from a Certified Financial Analysts (CFA) Institute affiliated university\n\nor\n\nan Australian bachelor degree (or equivalent) with a major in finance with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and an Australian graduate certificate / honours degree (or equivalent)\n\nor\n\nan Australian bachelor degree (or equivalent) with a major in finance with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and two years relevant professional experience**\n\nor\n\nan Australian bachelor degree (or equivalent) and having passed the level I CFA examination or equivalent membership of a recognised professional finance program.\n\n*A minor is at least four units (equivalent to 24 Monash credit points). ** Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major in finance with at least a high credit (65%) average, or equivalent Grade Point Average (GPA), from a Certified Financial Analysts (CFA) Institute affiliated university"
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "an Australian bachelor degree (or equivalent) with a major in finance with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and an Australian graduate certificate / honours degree (or equivalent)"
+        },
+        {
+          "sequence": 3,
+          "criteria_text": "an Australian bachelor degree (or equivalent) with a major in finance with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and two years relevant professional experience**"
+        },
+        {
+          "sequence": 4,
+          "criteria_text": "an Australian bachelor degree (or equivalent) and having passed the level I CFA examination or equivalent membership of a recognised professional finance program.\n\n*A minor is at least four units (equivalent to 24 Monash credit points). ** Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6039",
+      "source_sha256": "627343bdc8a286e3ef2e7418a73bb1bd37c4680a5a6cc3ddad0ffa1abb676f4d",
+      "captured_at": "2026-07-31T09:45:53.190493+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6039-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6040",
+      "program_name": "Master of Global Business",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* with at least a high credit (65%) average or equivalent Grade Point Average (GPA).",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6040",
+      "source_sha256": "74b52823dd6a789696fad67427525633150a4d2b670708d064f129143c046462",
+      "captured_at": "2026-07-31T09:45:58.142583+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6040-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6040",
+      "program_name": "Master of Global Business",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and Australian graduate certificate / honours degree (or equivalent).\n\nor\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* and two years relevant professional experience***.\n\n*Cognate disciplines include: arts, business, commerce, economics, engineering, law, management, humanities, science or social science disciplines **A minor is at least four units (equivalent to 24 Monash credit points). ***Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and Australian graduate certificate / honours degree (or equivalent)."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* and two years relevant professional experience***.\n\n*Cognate disciplines include: arts, business, commerce, economics, engineering, law, management, humanities, science or social science disciplines **A minor is at least four units (equivalent to 24 Monash credit points). ***Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6040",
+      "source_sha256": "74b52823dd6a789696fad67427525633150a4d2b670708d064f129143c046462",
+      "captured_at": "2026-07-31T09:45:58.142583+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6040-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6041",
+      "program_name": "Master of Management",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* with at least a high credit (65%) average or equivalent Grade Point Average (GPA). Or\n\nAn Australian bachelor degree (or equivalent) and at least two years of relevant professional experience***.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6041",
+      "source_sha256": "7411323688c7a32fdba9bfe33129448ae4932c3f7f32d1f001b8f414604da644",
+      "captured_at": "2026-07-31T09:46:03.020775+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6041-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6041",
+      "program_name": "Master of Management",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and Australian graduate certificate / honours degree (or equivalent).\n\nOr\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* and two years relevant professional experience***.\n\n*Cognate disciplines include: arts, business, commerce, economics, engineering, law, management, humanities, science or social science disciplines **A minor is at least four units (equivalent to 24 Monash credit points). *** Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and Australian graduate certificate / honours degree (or equivalent)."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent) with a major or minor** in a cognate discipline* and two years relevant professional experience***.\n\n*Cognate disciplines include: arts, business, commerce, economics, engineering, law, management, humanities, science or social science disciplines **A minor is at least four units (equivalent to 24 Monash credit points). *** Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6041",
+      "source_sha256": "7411323688c7a32fdba9bfe33129448ae4932c3f7f32d1f001b8f414604da644",
+      "captured_at": "2026-07-31T09:46:03.020775+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6041-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6042",
+      "program_name": "Master of Applied Marketing",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in marketing with at least a high credit (65%) average or equivalent Grade Point Average (GPA).",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6042",
+      "source_sha256": "02e513877f441048a2418ef17dac8955e3a989b39de28e0f691f887dec7f773c",
+      "captured_at": "2026-07-31T09:46:07.974342+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6042-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6042",
+      "program_name": "Master of Applied Marketing",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in marketing with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and an Australian graduate certificate / honours degree (or equivalent) in marketing\n\nor\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in marketing and two years relevant professional experience*.\n\n*Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.\n\n**A minor is at least four units (equivalent to 24 Monash credit points).",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nAn Australian bachelor degree (or equivalent) with a major or minor** in marketing with at least a high credit (65%) average or equivalent Grade Point Average (GPA) and an Australian graduate certificate / honours degree (or equivalent) in marketing"
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent) with a major or minor** in marketing and two years relevant professional experience*.\n\n*Applicants applying on the basis of work experience are required to provide a detailed curriculum vitae, outlining their employment history and professional experience.\n\n**A minor is at least four units (equivalent to 24 Monash credit points)."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6042",
+      "source_sha256": "02e513877f441048a2418ef17dac8955e3a989b39de28e0f691f887dec7f773c",
+      "captured_at": "2026-07-31T09:46:07.974342+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6042-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "B6059",
+      "program_name": "Master of Managerial Analytics",
+      "faculty_name": "Faculty of Business and Economics",
+      "discipline_id": "business",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "Entry level 1 - 72 points to complete Duration: 2 years part time\n\nAn Australian bachelor degree in a relevant discipline* or an equivalent qualification with at least credit (60%) average, or equivalent Grade Point Average (GPA).\n\n*Relevant disciplines include: Accounting, Business statistics, Econometrics, Mathematics and Business.\n\nor\n\nAn Australian bachelor degree or equivalent qualification with at least credit (60%) average, or equivalent Grade Point Average (GPA) plus at least two years relevant work experience.\n\nEntry level 2 - 48 points to complete Duration: 1.4 years part time\n\nA Monash University Graduate Certificate of Managerial Analytics with at least credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [
+          "mathematics",
+          "statistics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "Entry level 1 - 72 points to complete Duration: 2 years part time\n\nAn Australian bachelor degree in a relevant discipline* or an equivalent qualification with at least credit (60%) average, or equivalent Grade Point Average (GPA).\n\n*Relevant disciplines include: Accounting, Business statistics, Econometrics, Mathematics and Business."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree or equivalent qualification with at least credit (60%) average, or equivalent Grade Point Average (GPA) plus at least two years relevant work experience.\n\nEntry level 2 - 48 points to complete Duration: 1.4 years part time\n\nA Monash University Graduate Certificate of Managerial Analytics with at least credit (60%) average."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/B6059",
+      "source_sha256": "3fedf7900d0aac221ee42e8c015dfbc8d7329cf006615ca4ed715fe9e75ad58a",
+      "captured_at": "2026-07-31T09:46:12.986617+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-b6059-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "C6001",
+      "program_name": "Master of Information Technology",
+      "faculty_name": "Faculty of Information Technology",
+      "discipline_id": "computing",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time\n\nAn Australian bachelor degree (or equivalent) not necessarily in IT, with at least a credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/C6001",
+      "source_sha256": "e016fd9312ff0764b3ad76c79bef9c1543810d4af03c1bc6c56bb87f142fee3d",
+      "captured_at": "2026-07-31T09:46:18.038782+00:00",
+      "verified_at": "2026-08-01T00:00:00+08:00",
+      "review_status": "VERIFIED",
+      "hard_decision_allowed": true,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-c6001-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "C6001",
+      "program_name": "Master of Information Technology",
+      "faculty_name": "Faculty of Information Technology",
+      "discipline_id": "computing",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline or major in IT including computing, computer science or a technical information technology field, with completed studies in java and python programming, algorithms, computer architecture, operating systems and networks, and databases with at least a credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [
+          "programming",
+          "algorithms",
+          "computer architecture",
+          "operating systems",
+          "networks",
+          "databases"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/C6001",
+      "source_sha256": "e016fd9312ff0764b3ad76c79bef9c1543810d4af03c1bc6c56bb87f142fee3d",
+      "captured_at": "2026-07-31T09:46:18.038782+00:00",
+      "verified_at": "2026-08-01T00:00:00+08:00",
+      "review_status": "VERIFIED",
+      "hard_decision_allowed": true,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-c6001-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "C6002",
+      "program_name": "Master of Cybersecurity",
+      "faculty_name": "Faculty of Information Technology",
+      "discipline_id": "computing",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time\n\nAn Australian bachelor degree (or equivalent), not necessarily in IT, with at least a credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/C6002",
+      "source_sha256": "2f2953f70f4cb399d42cc621311cca86c6cc4c098922e18d608cd8358f015c57",
+      "captured_at": "2026-07-31T09:46:23.079660+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-c6002-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "C6002",
+      "program_name": "Master of Cybersecurity",
+      "faculty_name": "Faculty of Information Technology",
+      "discipline_id": "computing",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline including computing, computer science, software engineering, computer systems, electrical, electronic or communication engineering with completed studies in python programming, algorithms, computer architecture, operating systems and networks, systems analysis and design and databases with at least a credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [
+          "programming",
+          "algorithms",
+          "computer architecture",
+          "operating systems",
+          "networks",
+          "databases"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/C6002",
+      "source_sha256": "2f2953f70f4cb399d42cc621311cca86c6cc4c098922e18d608cd8358f015c57",
+      "captured_at": "2026-07-31T09:46:23.079660+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-c6002-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "C6003",
+      "program_name": "Master of Business Information Systems",
+      "faculty_name": "Faculty of Information Technology",
+      "discipline_id": "computing",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time\n\nAn Australian bachelor degree (or equivalent), not necessarily in IT, with at least a credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/C6003",
+      "source_sha256": "acc051fa6ddf9b730390c4937c4f7ecfbb81ae950d0bc324bfa1756aa3ee1545",
+      "captured_at": "2026-07-31T09:46:28.055606+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-c6003-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "C6003",
+      "program_name": "Master of Business Information Systems",
+      "faculty_name": "Faculty of Information Technology",
+      "discipline_id": "computing",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline relating to information systems or with an information systems major, with completed studies in: foundational programming, database, systems analysis and design plus an understanding of the enterprise IT applications, including transactional, managerial and analytical applications, with at least a credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [
+          "programming"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/C6003",
+      "source_sha256": "acc051fa6ddf9b730390c4937c4f7ecfbb81ae950d0bc324bfa1756aa3ee1545",
+      "captured_at": "2026-07-31T09:46:28.055606+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-c6003-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "C6004",
+      "program_name": "Master of Data Science",
+      "faculty_name": "Faculty of Information Technology",
+      "discipline_id": "computing",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time\n\nAn Australian bachelor degree (or equivalent), not necessarily in IT, with at least a credit (60%) average. Entry level 2: 72 points to complete Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline relating to IT, or a business, engineering or science degree with an IT major including python programming, databases, algorithms, computer architecture, operating systems and networks, and mathematics (including calculus, linear algebra and probability and statistics) with at least a credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [
+          "mathematics",
+          "statistics",
+          "programming",
+          "algorithms",
+          "computer architecture",
+          "operating systems",
+          "networks",
+          "databases"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/C6004",
+      "source_sha256": "f89ec5199e3f9e14204e3a226595990ceafe9a8b59c456f3e853be9f6bab0e10",
+      "captured_at": "2026-07-31T09:46:33.118149+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-c6004-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "C6007",
+      "program_name": "Master of Artificial Intelligence",
+      "faculty_name": "Faculty of Information Technology",
+      "discipline_id": "computing",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time\n\nAn Australian bachelor degree (or equivalent), not necessarily in IT, with at least a credit (60%) average. Entry level 2 : 72 points to complete Duration: 1.5 year full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in a cognate discipline relating to IT, or an engineering or science degree with a substantial IT component including python programming, algorithms, databases, computer architecture, operating systems and networks, and mathematics (including calculus, linear algebra and probability and statistics) with at least a credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [
+          "mathematics",
+          "statistics",
+          "programming",
+          "algorithms",
+          "computer architecture",
+          "operating systems",
+          "networks",
+          "databases"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/C6007",
+      "source_sha256": "b8c787feeb088d2bc6cf6ea8c0d2baeaad114092017cfe915bda5809e5d7a09f",
+      "captured_at": "2026-07-31T09:46:38.127767+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-c6007-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "C6008",
+      "program_name": "Master of Computer Science",
+      "faculty_name": "Faculty of Information Technology",
+      "discipline_id": "computing",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "Entry level 1 -  72 points to complete Duration: 2 years part-time.\n\nAn Australian bachelor degree (or equivalent) in a relevant discipline^, with at least a credit (60%) average\n\n^Relevant disciplines include any degree in a STEM discipline or degrees that have mathematics, business analytics, scientific or critical thinking, or problem solving.\n\nEntry level 2 - 48 points to complete Duration: 1.4 years part-time.\n\nA Monash University Graduate Certificate of Computer Science with at least credit (60%) average.\n\nOR\n\nAn Australian bachelor degree (or equivalent) in a relevant discipline and a Graduate Certificate or Graduate Diploma in a relevant discipline, with at least a credit (60%) average in the higher degree.\n\n*To undertake artificial intelligence studies, you must have knowledge of calculus and linear algebra at the level of undergraduate physical science or engineering.\n\nEntry level 3  - 24 points to complete Duration: .7 years part-time\n\nA Monash University Graduate Diploma of Computer Science with at least credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [
+          "mathematics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "Entry level 1 -  72 points to complete Duration: 2 years part-time.\n\nAn Australian bachelor degree (or equivalent) in a relevant discipline^, with at least a credit (60%) average\n\n^Relevant disciplines include any degree in a STEM discipline or degrees that have mathematics, business analytics, scientific or critical thinking, or problem solving.\n\nEntry level 2 - 48 points to complete Duration: 1.4 years part-time.\n\nA Monash University Graduate Certificate of Computer Science with at least credit (60%) average."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian bachelor degree (or equivalent) in a relevant discipline and a Graduate Certificate or Graduate Diploma in a relevant discipline, with at least a credit (60%) average in the higher degree.\n\n*To undertake artificial intelligence studies, you must have knowledge of calculus and linear algebra at the level of undergraduate physical science or engineering.\n\nEntry level 3  - 24 points to complete Duration: .7 years part-time\n\nA Monash University Graduate Diploma of Computer Science with at least credit (60%) average."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/C6008",
+      "source_sha256": "0cf001cec2381a7b2f9ef90abf3a25f066fd547775c06f0ee21e0a779173acb0",
+      "captured_at": "2026-07-31T09:46:43.122491+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-c6008-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "E6005",
+      "program_name": "Master of Transportation Systems",
+      "faculty_name": "Faculty of Engineering",
+      "discipline_id": "engineering",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": null,
+      "criteria_text": "An Australian bachelor degree (or equivalent) in engineering or a cognate field.\n\nFor SEU students: An equivalent score in the National Master Unified Entrance Examination will be utilised in place of the required WAM score of an undergraduate degree.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/E6005",
+      "source_sha256": "ac32b2633c4c981770dd616a4f8cdf752f9270eeb51ab2cbe19200b33dbaf1ad",
+      "captured_at": "2026-07-31T09:46:48.132754+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-e6005-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "E6006",
+      "program_name": "Master of Civil Engineering",
+      "faculty_name": "Faculty of Engineering",
+      "discipline_id": "engineering",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": null,
+      "criteria_text": "An Australian bachelor degree (or equivalent) in civil engineering.\n\nFor SEU students: An equivalent score in the National Master Unified Entrance Examination will be utilised in place of the required WAM score of an undergraduate degree.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/E6006",
+      "source_sha256": "3108aeabfd83160c8c272ad89f3a4e78da53f3ecbe2b71b4638da37f7ef05d79",
+      "captured_at": "2026-07-31T09:46:53.284884+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-e6006-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "E6009",
+      "program_name": "Master of Industrial Chemical Engineering",
+      "faculty_name": "Faculty of Engineering",
+      "discipline_id": "engineering",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": null,
+      "criteria_text": "An Australian bachelor degree in chemical engineering (or equivalent).\n\nFor SEU students: An equivalent score in the National Master Unified Entrance Examination will be utilised in place of the required WAM score of an undergraduate degree.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/E6009",
+      "source_sha256": "c9dc478da19531c6fb98dc08acbfb2660199e0931e07c69fc5528ad96cef2a37",
+      "captured_at": "2026-07-31T09:46:58.277851+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-e6009-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "E6011",
+      "program_name": "Master of Professional Engineering",
+      "faculty_name": "Faculty of Engineering",
+      "discipline_id": "engineering",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "3年制项目",
+      "duration_months": 36,
+      "credits_to_complete": 144,
+      "minimum_average_percent": null,
+      "criteria_text": "144 points to complete – Duration: 3 years full-time\n\n- Chemical engineering: prior studies in mathematics (12 credit point Monash equivalent) and chemistry (12 credit point Monash equivalent).\n\n- Civil engineering: prior studies in mathematics (12 credit point Monash equivalent) and physics (12 credit point Monash equivalent).\n\n- Electrical engineering: prior studies in mathematics (12 credit point Monash equivalent) and physics (12 credit point Monash equivalent).\n\n- Materials engineering: prior studies in mathematics (12 credit point Monash equivalent) plus physics (12 credit point Monash equivalent) or chemistry (12 credit point Monash equivalent).\n\n- Mechanical engineering: prior studies in mathematics (12 credit point Monash equivalent) and physics (12 credit point Monash equivalent).",
+      "requirements": {
+        "bachelor_degree_required": false,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [],
+        "subject_keywords": [
+          "mathematics",
+          "physics",
+          "chemistry"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/E6011",
+      "source_sha256": "c241db9561e8276a52281bf9cd545fd02ad47539813f42dc61abe57ef41701b3",
+      "captured_at": "2026-07-31T09:47:04.850637+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-e6011-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "E6012",
+      "program_name": "Master of Advanced Materials and Manufacturing Engineering",
+      "faculty_name": "Faculty of Engineering",
+      "discipline_id": "engineering",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": null,
+      "criteria_text": "An Australian undergraduate degree in materials or mechanical engineering (or equivalent). For SEU students: An equivalent score in the National Master Unified Entrance Examination will be utilised in place of the required WAM score of an undergraduate degree.",
+      "requirements": {
+        "bachelor_degree_required": false,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/E6012",
+      "source_sha256": "ec7f63b8051c3567b7de1081454cad34cf28eabd28245199471c87d06ed39299",
+      "captured_at": "2026-07-31T09:47:10.091852+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-e6012-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "E6013",
+      "program_name": "Master of Applied Engineering",
+      "faculty_name": "Faculty of Engineering",
+      "discipline_id": "engineering",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 60.0,
+      "criteria_text": "An Australian 4-year bachelor’s degree (or equivalent) in engineering, in a discipline related to the chosen specialisation within the Master’s course, as approved by the Faculty, with at least a credit (60%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          60.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/E6013",
+      "source_sha256": "609a39101d74b3ecd490fe53cc7b9b136706aabfcdfbd3a7b31760c42221ac7d",
+      "captured_at": "2026-07-31T09:47:15.049398+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-e6013-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "E6014",
+      "program_name": "Master of Engineering",
+      "faculty_name": "Faculty of Engineering",
+      "discipline_id": "engineering",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "An Australian Bachelor of Engineering* degree (or equivalent) in a discipline relating to the specialisation to be studied within the Master course as approved by the Faculty, with at least high credit (65%) average.\n\n*equivalent to an Australian 4 year Bachelor of Engineering degree",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/E6014",
+      "source_sha256": "7043a04e7e93e182726812b197da09f0374123222f88ecbc8a3f3f588fec3491",
+      "captured_at": "2026-07-31T09:47:20.207429+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-e6014-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "E6016",
+      "program_name": "Master of Transport and Mobility Planning",
+      "faculty_name": "Faculty of Engineering",
+      "discipline_id": "engineering",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "An Australian 4 year bachelor's degree (or equivalent) in transportation, civil engineering, environmental engineering, sustainable engineering, infrastructure engineering, urban/city/town planning or other related fields approved by the Faculty of Engineering, with at least high credit (65%) average.\n\nor\n\nAn Australian 4 year bachelor's degree (or equivalent) in transportation, environmental sciences, human geography, architecture, land surveying, human geography or other related fields approved by the Faculty of Engineering, with at least high credit (65%) average and a minimum of 3 years professional work experience* in transport, urban, city, town or regional planning.\n\n*Refer to additional selection criteria.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "An Australian 4 year bachelor's degree (or equivalent) in transportation, civil engineering, environmental engineering, sustainable engineering, infrastructure engineering, urban/city/town planning or other related fields approved by the Faculty of Engineering, with at least high credit (65%) average."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian 4 year bachelor's degree (or equivalent) in transportation, environmental sciences, human geography, architecture, land surveying, human geography or other related fields approved by the Faculty of Engineering, with at least high credit (65%) average and a minimum of 3 years professional work experience* in transport, urban, city, town or regional planning.\n\n*Refer to additional selection criteria."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/E6016",
+      "source_sha256": "84064b77c0da780b0aa881054816e5582f140b3ff7e1dccf68b8eb607a4a89f9",
+      "captured_at": "2026-07-31T09:47:25.172278+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-e6016-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "E6017",
+      "program_name": "Master of Advanced Engineering",
+      "faculty_name": "Faculty of Engineering",
+      "discipline_id": "engineering",
+      "handbook_year": 2026,
+      "pathway_code": "STANDARD",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "An Australian 4 year Bachelor of Engineering degree (or equivalent) in a discipline relating to the specialisation to be studied within the Master course as approved by the Faculty, with at least high credit (65%) average.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/E6017",
+      "source_sha256": "39bb8a9450bd42d0ed6d3e4505d103f4b03ec8e21e4cbaf428c0a0c12e78fa3b",
+      "captured_at": "2026-07-31T09:47:30.331737+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-e6017-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "S6000",
+      "program_name": "Master of Science",
+      "faculty_name": "Faculty of Science",
+      "discipline_id": "mathematics_science",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "96 points to complete – Duration: 2 years full-time, 4 years part-time.\n\nAn Australian bachelor degree (or equivalent) with specific topic knowledge as outlined below, and at least 65% (high credit) average overall, or equivalent qualification and experience approved by the faculty.\n\nTopic knowledge:\n\nFor Astrophysics:\n\n- Foundation knowledge in multivariable calculus, including vector calculus; differential equations (Ordinary and Partial Differential Equations); linear algebra and matrices.\n\n- A background in classical mechanics and astronomy/astrophysics\n\nFor Atmospheric Science:\n\n- Any minor in atmospheric science, oceanography, mathematics, physics or a related field, which must include differential calculus.\n\nFor Earth Science:\n\n- A minor in earth science, environmental science, or any related discipline\n\nFor Physics:\n\n- Foundational knowledge in Multivariable calculus, including vector calculus; differential equations (Ordinary and Partial Differential Equations); linear algebra and matrices.\n\n- A background in classical mechanics and field theory, including relativity and classical electrodynamics.\n\n- A background in quantum mechanics at the upper-level undergraduate level.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "mathematics",
+          "physics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/S6000",
+      "source_sha256": "1480b2ec99ab262e19022d38c4153e432c13fc461aef83cb44c63edd12c5af91",
+      "captured_at": "2026-07-31T09:47:35.390602+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-s6000-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "S6000",
+      "program_name": "Master of Science",
+      "faculty_name": "Faculty of Science",
+      "discipline_id": "mathematics_science",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete – Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) with at least a major and specific topic knowledge in the intended Master specialisation with at least 65% (high credit) average, or equivalent qualification and experience approved by the Faculty of Science. In addition to requirements of level 1 entry, the following specific topic knowledge:\n\nFor Astrophysics:\n\n- A background in computational fluid dynamics and numerical solutions of Ordinary and Partial Differential Equations, modern cosmology, computational fluid dynamics, numerical solutions of Ordinary and Partial Differential Equations.\n\nFor Atmospheric Science:\n\n- An upper-level undergraduate understanding of moist thermodynamics, dynamical meteorology, physical meteorology and multivariable calculus.\n\nFor Earth Science:\n\n- Advanced studies including sedimentary and deep earth geology.\n\nFor Physics:\n\n- A background in statistical mechanics and condensed matter physics.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "physics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/S6000",
+      "source_sha256": "1480b2ec99ab262e19022d38c4153e432c13fc461aef83cb44c63edd12c5af91",
+      "captured_at": "2026-07-31T09:47:35.390602+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-s6000-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "S6000",
+      "program_name": "Master of Science",
+      "faculty_name": "Faculty of Science",
+      "discipline_id": "mathematics_science",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_3",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete – Duration: 1 year full-time, 2 years part-time.\n\nA four-year Australian honours degree (or equivalent) in a cognate science discipline with at least a 65% (high credit) average in the intended Master discipline or equivalent qualification and experience approved by the Faculty of Science.",
+      "requirements": {
+        "bachelor_degree_required": false,
+        "cognate_background_required": true,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/S6000",
+      "source_sha256": "1480b2ec99ab262e19022d38c4153e432c13fc461aef83cb44c63edd12c5af91",
+      "captured_at": "2026-07-31T09:47:35.390602+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-s6000-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "S6001",
+      "program_name": "Master of Financial Mathematics",
+      "faculty_name": "Faculty of Science",
+      "discipline_id": "mathematics_science",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "96 points to complete Duration: 2 years full-time, 4 years part-time\n\nAn Australian bachelor degree (or equivalent) with a strong mathematical content* with at least a 65% credit average.\n\n*i.e. Completion of units of mathematics with an emphasis on multivariable calculus, linear algebra, probability, statistics and differential equations.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "mathematics",
+          "statistics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/S6001",
+      "source_sha256": "7497a3205ca581d5492ea974e1987e6026d54e21d215853d8a852546fe3d8c93",
+      "captured_at": "2026-07-31T09:47:40.303436+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-s6001-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "S6001",
+      "program_name": "Master of Financial Mathematics",
+      "faculty_name": "Faculty of Science",
+      "discipline_id": "mathematics_science",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "Duration: 72 points to complete 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in mathematics with at least a 65% credit average\n\nor\n\nAn Australian graduate certificate/diploma (or equivalent) with a strong mathematical content* with at least a 65% credit average.\n\n*I.e. Completion of units of mathematics with an emphasis on multivariable calculus, linear algebra, probability, statistics and differential equations.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "mathematics",
+          "statistics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "Duration: 72 points to complete 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in mathematics with at least a 65% credit average"
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian graduate certificate/diploma (or equivalent) with a strong mathematical content* with at least a 65% credit average.\n\n*I.e. Completion of units of mathematics with an emphasis on multivariable calculus, linear algebra, probability, statistics and differential equations."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/S6001",
+      "source_sha256": "7497a3205ca581d5492ea974e1987e6026d54e21d215853d8a852546fe3d8c93",
+      "captured_at": "2026-07-31T09:47:40.303436+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-s6001-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "S6001",
+      "program_name": "Master of Financial Mathematics",
+      "faculty_name": "Faculty of Science",
+      "discipline_id": "mathematics_science",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_3",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete Duration: 1 years full-time, 2 years part-time\n\nA four-year Australian honours degree (or equivalent) in mathematics with at least 65% credit average.",
+      "requirements": {
+        "bachelor_degree_required": false,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "mathematics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/S6001",
+      "source_sha256": "7497a3205ca581d5492ea974e1987e6026d54e21d215853d8a852546fe3d8c93",
+      "captured_at": "2026-07-31T09:47:40.303436+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-s6001-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "S6003",
+      "program_name": "Master of Mathematics",
+      "faculty_name": "Faculty of Science",
+      "discipline_id": "mathematics_science",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_1",
+      "display_name": "2年制项目",
+      "duration_months": 24,
+      "credits_to_complete": 96,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "96 points to complete – Duration: 2 years full-time, 4 years part-time\n\nAn Australian bachelor degree (or equivalent) with at least high credit (65%) average or equivalent qualification and experience approved by the faculty; and a 65% average over 4 units in mathematics of which at least 2 are at level 2.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "mathematics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/S6003",
+      "source_sha256": "d517f427084fe940861785a669d46d5a0352cef385d16364dd959d17fa94189b",
+      "captured_at": "2026-07-31T09:47:47.893725+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-s6003-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "S6003",
+      "program_name": "Master of Mathematics",
+      "faculty_name": "Faculty of Science",
+      "discipline_id": "mathematics_science",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_2",
+      "display_name": "1.5年制项目",
+      "duration_months": 18,
+      "credits_to_complete": 72,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "72 points to complete – Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in mathematics with at least high credit (65%) average or equivalent qualification and experience approved by the faculty.\n\nOR\n\nAn Australian graduate certificate/diploma (or equivalent) with at least high credit (65%) average or equivalent qualification and experience approved by the faculty; and a 65% average over 8 units in mathematics.",
+      "requirements": {
+        "bachelor_degree_required": true,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": false,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "mathematics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [
+        {
+          "sequence": 1,
+          "criteria_text": "72 points to complete – Duration: 1.5 years full-time, 3 years part-time\n\nAn Australian bachelor degree (or equivalent) in mathematics with at least high credit (65%) average or equivalent qualification and experience approved by the faculty."
+        },
+        {
+          "sequence": 2,
+          "criteria_text": "An Australian graduate certificate/diploma (or equivalent) with at least high credit (65%) average or equivalent qualification and experience approved by the faculty; and a 65% average over 8 units in mathematics."
+        }
+      ],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/S6003",
+      "source_sha256": "d517f427084fe940861785a669d46d5a0352cef385d16364dd959d17fa94189b",
+      "captured_at": "2026-07-31T09:47:47.893725+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-s6003-2026.md"
+      }
+    },
+    {
+      "university_code": "MONASH",
+      "university_name": "Monash University",
+      "program_code": "S6003",
+      "program_name": "Master of Mathematics",
+      "faculty_name": "Faculty of Science",
+      "discipline_id": "mathematics_science",
+      "handbook_year": 2026,
+      "pathway_code": "ENTRY_LEVEL_3",
+      "display_name": "1年制项目",
+      "duration_months": 12,
+      "credits_to_complete": 48,
+      "minimum_average_percent": 65.0,
+      "criteria_text": "48 points to complete – Duration: 1 year full-time, 2 years part-time\n\nA four-year Australian honours degree (or equivalent) in mathematics with at least high credit (65%) average or equivalent qualification and experience approved by the faculty.",
+      "requirements": {
+        "bachelor_degree_required": false,
+        "cognate_background_required": false,
+        "honours_degree_mentioned": true,
+        "work_experience_months": null,
+        "percentage_thresholds": [
+          65.0
+        ],
+        "subject_keywords": [
+          "mathematics"
+        ],
+        "supplementary_evidence": []
+      },
+      "alternative_pathways": [],
+      "available_intakes": [],
+      "source_url": "https://handbook.monash.edu/2026/courses/S6003",
+      "source_sha256": "d517f427084fe940861785a669d46d5a0352cef385d16364dd959d17fa94189b",
+      "captured_at": "2026-07-31T09:47:47.893725+00:00",
+      "verified_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "hard_decision_allowed": false,
+      "evidence": {
+        "source_type": "official_handbook",
+        "heading": "Minimum entry requirements",
+        "local_source": "D:\\agentdev\\edurag-agent-lab\\data\\official_sources\\clean\\monash\\2026\\monash-s6003-2026.md"
+      }
+    }
+  ]
+}

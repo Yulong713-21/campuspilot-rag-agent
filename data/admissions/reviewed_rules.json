@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "reviewed_programs": {
+    "MONASH:C6001:2026": {
+      "review_status": "VERIFIED",
+      "hard_decision_allowed": true,
+      "verified_at": "2026-08-01T00:00:00+08:00",
+      "reviewed_source_url": "https://www.monash.edu/study/courses/find-a-course/information-technology-c6001?international=true",
+      "review_note": "已核对 2 年制与 1.5 年制路径的学制、学分、最低 60% 均分及 IT 相关背景课程要求。"
+    }
+  }
+}

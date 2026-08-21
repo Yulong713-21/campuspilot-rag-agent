@@ -25,9 +25,12 @@ jobs:
           cache: pip
           cache-dependency-path: |
             requirements-server.txt
+            requirements-torch-cpu.txt
             requirements-app.txt
             requirements-persistence.txt
-      - run: pip install -r requirements-server.txt
+      - run: |
+          pip install -r requirements-torch-cpu.txt
+          pip install -r requirements-server.txt
       - name: Run deployment-critical tests
         run: >-
           python -m unittest

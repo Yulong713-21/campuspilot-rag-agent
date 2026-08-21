@@ -1,0 +1,4 @@
+--index-url https://download.pytorch.org/whl/cpu
+
+# Pin the CPU wheel so low-cost Linux deployments do not pull CUDA libraries.
+torch==2.6.0

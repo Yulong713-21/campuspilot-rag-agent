@@ -233,8 +233,9 @@ class ProgramRecommendationNarrator:
         ):
             raise ValueError("recommendation contains a prohibited guarantee")
         if re.search(
-            r"ANZSCO|MLTSSL|STSOL|CSOL|AASW|AITSL|ANMAC|AHPRA|NCAS|"
-            r"\b\d{6}\b|获邀分数|EOI分数|邀请分数",
+            r"ANZSCO|MLTSSL|STSOL|CSOL|ACS|AASW|AITSL|ANMAC|AHPRA|NCAS|"
+            r"\b\d{6}\b|获邀分数|EOI分数|邀请分数|"
+            r"(?:要求|需要|补足).{0,10}\d+(?:年|个月).{0,10}(?:工作经验|职业经验)",
             content,
             flags=re.IGNORECASE,
         ):

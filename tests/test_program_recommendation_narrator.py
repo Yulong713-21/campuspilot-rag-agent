@@ -141,6 +141,29 @@ class ProgramRecommendationNarratorTest(unittest.TestCase):
         self.assertNotIn("移民", result["message"])
         self.assertEqual(result["trace"][0]["retry_count"], 1)
 
+    def test_unverified_assessment_agency_and_experience_rule_are_rewritten(self) -> None:
+        client = SequenceClient(
+            [
+                "需要通过 ACS 评估，并补足要求的1年相关工作经验。",
+                (
+                    "你已有计算机背景，可以继续探索软件开发方向。项目候选不是按"
+                    "移民可行性排序，职业评估和工作经验条件仍需用当前官方资料核验。"
+                ),
+            ]
+        )
+        narrator = ProgramRecommendationNarrator(client)
+
+        result = narrator.narrate(
+            query="想去澳洲做程序员并规划长期发展",
+            profile={"migration_priority": True},
+            recommendations=[{"career_path": {}}],
+            fallback_message="固定模板",
+        )
+
+        self.assertEqual(client.call_count, 2)
+        self.assertNotIn("ACS", result["message"])
+        self.assertNotIn("1年", result["message"])
+
     def test_neutral_migration_planning_language_is_not_rejected(self) -> None:
         content = (
             "你已有计算机本科背景，也明确希望换一个发展环境，并在澳洲继续做程序员。"

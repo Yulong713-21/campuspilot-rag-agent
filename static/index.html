@@ -9,7 +9,7 @@
     >
     <title>CampusPilot · 课程与毕业路径规划</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="/static/app.css?v=20260822-agent-admission-1">
+    <link rel="stylesheet" href="/static/app.css?v=20260822-admission-ui-2">
   </head>
   <body>
     <header class="topbar">
@@ -187,7 +187,11 @@
                   <strong>本科成绩单 PDF</strong>
                   <small>最大 10 MB；文本型 PDF 可直接读取，扫描件会提示需要 OCR。</small>
                 </div>
-                <input id="transcriptFile" type="file" accept="application/pdf,.pdf">
+                <div class="transcript-file-control">
+                  <label class="file-button" for="transcriptFile">选择 PDF</label>
+                  <span id="transcriptFileName">未选择文件</span>
+                  <input id="transcriptFile" type="file" accept="application/pdf,.pdf">
+                </div>
                 <button id="parseTranscriptButton" class="secondary-button" type="button">读取成绩单</button>
               </section>
 
@@ -426,6 +430,6 @@
     </dialog>
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
-    <script src="/static/app.js?v=20260822-agent-admission-1" defer></script>
+    <script src="/static/app.js?v=20260822-admission-ui-2" defer></script>
   </body>
 </html>

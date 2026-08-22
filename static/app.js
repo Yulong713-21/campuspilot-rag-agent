@@ -37,6 +37,7 @@ const elements = Object.fromEntries(
     "admissionScale",
     "admissionGoal",
     "transcriptFile",
+    "transcriptFileName",
     "parseTranscriptButton",
     "recommendAdmissionButton",
     "evaluateAdmissionButton",
@@ -891,7 +892,7 @@ function renderAdmissionResult(payload, titleText = "申请分析结果") {
   const title = document.createElement("strong");
   title.textContent = titleText;
   const status = document.createElement("span");
-  status.textContent = payload.status || payload.error_code || "COMPLETED";
+  status.textContent = formatAdmissionStatus(payload.status || payload.error_code);
   heading.append(title, status);
   const message = document.createElement("p");
   message.textContent = payload.message || "已生成候选结果。";
@@ -904,6 +905,18 @@ function renderAdmissionResult(payload, titleText = "申请分析结果") {
     missing.textContent = `仍需补充：${payload.missing_fields.join("、")}`;
     elements.admissionResult.append(missing);
   }
+}
+
+function formatAdmissionStatus(status) {
+  const labels = {
+    RECOMMENDATION_PROFILE_INSUFFICIENT: "需要补充申请背景",
+    PRELIMINARY_ABOVE_PUBLISHED_REFERENCE: "初步达到公开参考要求",
+    PRELIMINARY_BELOW_PUBLISHED_REFERENCE: "暂未达到公开参考要求",
+    REVIEW_REQUIRED: "需要进一步核验",
+    INFORMATION_INSUFFICIENT: "信息不足",
+    COMPLETED: "分析完成",
+  };
+  return labels[status] || "分析完成";
 }
 
 async function recommendAdmissionPrograms() {
@@ -980,6 +993,7 @@ function switchView(viewName) {
   document.querySelectorAll(".nav-button").forEach((button) => {
     button.classList.toggle("active", button.dataset.view === viewName);
   });
+  window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 async function loadCatalog() {
@@ -1074,6 +1088,9 @@ elements.clearChatButton.addEventListener("click", resetChat);
 elements.admissionUniversity.addEventListener("change", loadAdmissionPrograms);
 elements.admissionDiscipline.addEventListener("change", loadAdmissionPrograms);
 elements.parseTranscriptButton.addEventListener("click", parseTranscript);
+elements.transcriptFile.addEventListener("change", () => {
+  elements.transcriptFileName.textContent = elements.transcriptFile.files[0]?.name || "未选择文件";
+});
 elements.recommendAdmissionButton.addEventListener("click", recommendAdmissionPrograms);
 elements.admissionForm.addEventListener("submit", evaluateAdmission);
 document.querySelectorAll(".nav-button").forEach((button) => {

@@ -10,6 +10,13 @@ from .openai_compatible_client import OpenAICompatibleChatClient
 class ProgramRecommendationNarrator:
     """Turn grounded direction and catalog results into a natural Pia reply."""
 
+    POLICY_DETAIL_PATTERN = re.compile(
+        r"ANZSCO|MLTSSL|STSOL|CSOL|ACS|AASW|AITSL|ANMAC|AHPRA|NCAS|"
+        r"\b\d{6}\b|获邀分数|EOI分数|邀请分数|"
+        r"(?:要求|需要|补足).{0,10}\d+(?:年|个月).{0,10}(?:工作经验|职业经验)",
+        flags=re.IGNORECASE,
+    )
+
     def __init__(
         self,
         client: OpenAICompatibleChatClient | None = None,
@@ -97,6 +104,7 @@ class ProgramRecommendationNarrator:
             result: dict[str, Any] | None = None
             content = ""
             retry_count = 0
+            policy_details_removed = False
             for attempt in range(2):
                 result = self.client.chat(messages, temperature=0.55)
                 candidate = result["message"].get("content")
@@ -110,7 +118,12 @@ class ProgramRecommendationNarrator:
                     break
                 except ValueError:
                     if attempt == 1:
-                        raise
+                        sanitized = self._remove_unsupported_sentences(content)
+                        if len(sanitized) < 80:
+                            raise
+                        content = sanitized
+                        policy_details_removed = True
+                        break
                     retry_count += 1
                     messages.extend(
                         [
@@ -140,6 +153,7 @@ class ProgramRecommendationNarrator:
                         "source": "openai_compatible_llm",
                         "model": result.get("model"),
                         "retry_count": retry_count,
+                        "policy_details_removed": policy_details_removed,
                     }
                 ],
             }
@@ -232,14 +246,45 @@ class ProgramRecommendationNarrator:
             for claim in forbidden_claims
         ):
             raise ValueError("recommendation contains a prohibited guarantee")
-        if re.search(
-            r"ANZSCO|MLTSSL|STSOL|CSOL|ACS|AASW|AITSL|ANMAC|AHPRA|NCAS|"
-            r"\b\d{6}\b|获邀分数|EOI分数|邀请分数|"
-            r"(?:要求|需要|补足).{0,10}\d+(?:年|个月).{0,10}(?:工作经验|职业经验)",
-            content,
-            flags=re.IGNORECASE,
-        ):
+        if ProgramRecommendationNarrator.POLICY_DETAIL_PATTERN.search(content):
             raise ValueError("recommendation contains unverified policy detail")
+
+    @staticmethod
+    def _remove_unsupported_sentences(content: str) -> str:
+        sentences = re.split(r"(?<=[。！？；])|\n+", content)
+        kept: list[str] = []
+        forbidden_claims = (
+            "保证录取",
+            "一定录取",
+            "保证高薪",
+            "一定高薪",
+            "保证就业",
+            "保证移民",
+            "一定能移民",
+            "确保获邀",
+            "一定获邀",
+            "符合移民资格",
+            "满足移民资格",
+            "符合签证资格",
+            "满足签证资格",
+        )
+        for sentence in sentences:
+            sentence = sentence.strip()
+            if not sentence:
+                continue
+            if ProgramRecommendationNarrator.POLICY_DETAIL_PATTERN.search(
+                sentence
+            ):
+                continue
+            if any(
+                ProgramRecommendationNarrator._contains_unqualified_claim(
+                    sentence, claim
+                )
+                for claim in forbidden_claims
+            ):
+                continue
+            kept.append(sentence)
+        return "\n\n".join(kept)
 
     @staticmethod
     def _contains_unqualified_claim(content: str, claim: str) -> bool:

@@ -46,6 +46,7 @@ java-gateway/target/
 .coverage
 htmlcov/
 .pytest_cache/
+.artifacts/
 .DS_Store
 Thumbs.db
 

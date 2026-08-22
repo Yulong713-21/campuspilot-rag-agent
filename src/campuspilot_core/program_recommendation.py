@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import json
+from pathlib import Path
 import re
 from typing import Any
 
@@ -151,6 +153,12 @@ class ProgramRecommendationService:
     )
     MIGRATION_PRIORITY_TERMS = (
         "移民",
+        "移居澳洲",
+        "留澳",
+        "留在澳洲",
+        "长期留澳",
+        "好留澳洲",
+        "澳洲好留",
         "获邀",
         "eoi",
         "州担保",
@@ -198,16 +206,27 @@ class ProgramRecommendationService:
             "通过 Game Jam 或独立项目判断自己更偏开发、策划还是产品",
         ],
     }
+    DIRECTION_CHANGE_TERMS = (
+        "转专业", "转行", "换专业", "改行", "不想继续", "不想做",
+        "还能考虑", "其他方向", "跨专业",
+    )
 
     def __init__(
         self,
         admission_service: AdmissionMvpService | None = None,
         profile_interpreter: Any | None = None,
         narrator: Any | None = None,
+        direction_catalog_path: str | Path | None = None,
     ) -> None:
         self.admission_service = admission_service or AdmissionMvpService()
         self.profile_interpreter = profile_interpreter
         self.narrator = narrator
+        catalog_path = Path(direction_catalog_path) if direction_catalog_path else (
+            Path(__file__).resolve().parents[2]
+            / "data"
+            / "australia_study_direction_catalog_2026.json"
+        )
+        self.direction_catalog = self._load_direction_catalog(catalog_path)
 
     def recommend(self, request: dict[str, Any]) -> dict[str, Any]:
         prompt = str(request.get("prompt") or "").strip()
@@ -227,6 +246,8 @@ class ProgramRecommendationService:
             f"{conversation_context} {prompt} {profile_text}".strip().lower()
         )
         signals = self._extract_signals(effective_query)
+        deterministic_signals = list(signals)
+        explicit_directions = self._match_direction_catalog(effective_query)
         mobility_goal = any(
             term in effective_query for term in self.CAREER_MOBILITY_TERMS
         )
@@ -324,6 +345,23 @@ class ProgramRecommendationService:
                     "ok": False,
                     "error": type(exc).__name__,
                 }
+        if explicit_directions:
+            if (
+                not deterministic_signals
+                and not any(
+                    term in effective_query
+                    for term in self.DIRECTION_CHANGE_TERMS
+                )
+            ):
+                # A user's stated background is not permission to redirect
+                # them into whichever detailed catalog happens to exist. This
+                # also applies when the cloud profile interpreter fails.
+                signals = []
+            uncatalogued_directions = self._merge_explicit_directions(
+                explicit_directions,
+                uncatalogued_directions,
+                effective_query,
+            )
         exploration_mode = (mobility_goal or compensation_priority) and not signals
         if uncatalogued_directions and not signals:
             ranking_signals = []
@@ -582,7 +620,7 @@ class ProgramRecommendationService:
             message = narration["message"]
             answer_source = narration["answer_source"]
             trace.extend(narration.get("trace", []))
-            if migration_priority and not any(
+            has_migration_boundary = any(
                 marker in message
                 for marker in (
                     "不是按移民",
@@ -591,7 +629,12 @@ class ProgramRecommendationService:
                     "以当前官方信息为准",
                     "具有时效性",
                 )
-            ):
+            ) or (
+                "职业清单" in message
+                and "职业评估" in message
+                and "核验" in message
+            )
+            if migration_priority and not has_migration_boundary:
                 message = (
                     f"{message.rstrip()}\n\n需要单独说明：当前项目或方向候选不是按"
                     "留澳或移民可行性排序；职业清单、职业评估、州担保和邀请情况"
@@ -696,6 +739,68 @@ class ProgramRecommendationService:
             if len(result) == 4:
                 break
         return result
+
+    @staticmethod
+    def _load_direction_catalog(path: Path) -> list[dict[str, Any]]:
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return []
+        directions = payload.get("directions", [])
+        return [item for item in directions if isinstance(item, dict)]
+
+    def _match_direction_catalog(self, text: str) -> list[dict[str, Any]]:
+        matches: list[dict[str, Any]] = []
+        for direction in self.direction_catalog:
+            aliases = direction.get("aliases", [])
+            if any(str(alias).lower() in text for alias in aliases):
+                matches.append(direction)
+        return matches[:4]
+
+    def _merge_explicit_directions(
+        self,
+        explicit: list[dict[str, Any]],
+        inferred: list[dict[str, Any]],
+        effective_query: str,
+    ) -> list[dict[str, Any]]:
+        merged: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        for direction in explicit:
+            name = str(direction.get("name") or "").strip()
+            if not name or name in seen:
+                continue
+            rationale = str(direction.get("summary") or "").strip()
+            if direction.get("category") == "education" and "教师资格" in effective_query:
+                rationale = (
+                    "你已提到教师资格，教育方向值得优先核对原资格能否衔接"
+                    "澳洲认证课程、教师注册、英语和教学实践要求。"
+                )
+            links = direction.get("official_links", [])
+            merged.append(
+                {
+                    "name": name,
+                    "category": direction.get("category", "other"),
+                    "rationale": rationale,
+                    "typical_roles": direction.get("typical_roles", []),
+                    "official_links": links,
+                    "official_url": (
+                        links[0].get("url")
+                        if links and isinstance(links[0], dict)
+                        else None
+                    ),
+                    "verification_note": self.UNCATALOGUED_VERIFICATION_NOTE,
+                    "catalog_status": "direction_indexed",
+                    "detail_level": "direction_only",
+                }
+            )
+            seen.add(name)
+        for direction in inferred:
+            name = str(direction.get("name") or "").strip()
+            if not name or name in seen:
+                continue
+            merged.append(direction)
+            seen.add(name)
+        return merged[:4]
 
     def _rank(
         self,

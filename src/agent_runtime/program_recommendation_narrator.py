@@ -16,6 +16,11 @@ class ProgramRecommendationNarrator:
         r"(?:要求|需要|补足).{0,10}\d+(?:年|个月).{0,10}(?:工作经验|职业经验)",
         flags=re.IGNORECASE,
     )
+    UNSUPPORTED_DIRECTION_CLAIM_PATTERN = re.compile(
+        r"direction_indexed|(?:不需|无需|不用).{0,12}(?:前置课|先修课|先修)|"
+        r"符合.{0,24}职业评估|职业评估.{0,16}(?:重点|关注|认可|要求)",
+        flags=re.IGNORECASE,
+    )
 
     def __init__(
         self,
@@ -50,8 +55,8 @@ class ProgramRecommendationNarrator:
                 if profile.get("migration_priority", False)
                 else None
             ),
-            "暂未收录的方向候选": profile.get(
-                "uncatalogued_directions", []
+            "方向级候选": self._public_directions(
+                profile.get("uncatalogued_directions", [])
             ),
             "目录候选数量": len(recommendations),
             "可探索岗位": self._unique_values(
@@ -82,7 +87,11 @@ class ProgramRecommendationNarrator:
                             "这类系统模板开头，不要使用‘路线1’模板。有目录项目时，项目"
                             "卡片只代表当前目录中的课程方向候选，不代表它们已经按留澳就业"
                             "或移民可行性排序；没有目录项目时，应自然解释当前只能给方向级"
-                            "建议，不要假装存在项目卡片。用户以移民规划为目标时，正文必须"
+                            "建议，并提醒用户可从后续卡片打开官方入口。方向目录只证明保存了"
+                            "这个专业方向和官方查询入口，不证明用户无需补先修课，不证明课程"
+                            "已经通过职业认证，也不证明职业评估或移民可行性。不要把"
+                            "catalog_status、detail_level 等内部字段说给用户。"
+                            "用户以移民规划为目标时，正文必须"
                             "明确职业清单、职业评估、州担保和邀请情况需要按最新官方信息"
                             "核验。可以讨论用户的澳洲移民"
                             "规划目标和需要继续核验的方向，但不得判断签证或移民资格，"
@@ -248,6 +257,10 @@ class ProgramRecommendationNarrator:
             raise ValueError("recommendation contains a prohibited guarantee")
         if ProgramRecommendationNarrator.POLICY_DETAIL_PATTERN.search(content):
             raise ValueError("recommendation contains unverified policy detail")
+        if ProgramRecommendationNarrator.UNSUPPORTED_DIRECTION_CLAIM_PATTERN.search(
+            content
+        ):
+            raise ValueError("recommendation overstates direction catalog evidence")
 
     @staticmethod
     def _remove_unsupported_sentences(content: str) -> str:
@@ -273,6 +286,10 @@ class ProgramRecommendationNarrator:
             if not sentence:
                 continue
             if ProgramRecommendationNarrator.POLICY_DETAIL_PATTERN.search(
+                sentence
+            ):
+                continue
+            if ProgramRecommendationNarrator.UNSUPPORTED_DIRECTION_CLAIM_PATTERN.search(
                 sentence
             ):
                 continue
@@ -321,6 +338,23 @@ class ProgramRecommendationNarrator:
                 if value not in values:
                     values.append(value)
         return values[:limit]
+
+    @staticmethod
+    def _public_directions(values: Any) -> list[dict[str, Any]]:
+        result: list[dict[str, Any]] = []
+        for value in values if isinstance(values, list) else []:
+            if not isinstance(value, dict):
+                continue
+            result.append(
+                {
+                    "name": value.get("name"),
+                    "rationale": value.get("rationale"),
+                    "typical_roles": value.get("typical_roles", []),
+                    "verification_note": value.get("verification_note"),
+                    "official_links": value.get("official_links", []),
+                }
+            )
+        return result
 
     @staticmethod
     def _fallback(message: str, *, reason: str) -> dict[str, Any]:

@@ -633,7 +633,8 @@ function createPiaMessage(content) {
 function renderProgramRecommendations(container, payload) {
   const recommendationPayload = payload.program_recommendations || payload;
   const recommendations = recommendationPayload?.recommendations || [];
-  if (!recommendations.length) {
+  const directions = recommendationPayload?.uncatalogued_directions || [];
+  if (!recommendations.length && !directions.length) {
     return;
   }
   const grid = document.createElement("div");
@@ -659,6 +660,30 @@ function renderProgramRecommendations(container, payload) {
       link.textContent = "查看官方项目页";
       card.append(link);
     }
+    grid.append(card);
+  });
+  directions.forEach((direction, index) => {
+    const card = document.createElement("article");
+    card.className = "chat-program-card direction-only";
+    const rank = document.createElement("span");
+    rank.className = "program-rank";
+    rank.textContent = `方向 ${index + 1} · 详情待完善`;
+    const title = document.createElement("strong");
+    title.textContent = direction.name;
+    const reason = document.createElement("p");
+    reason.textContent = direction.rationale || "当前先提供方向级建议，课程与录取细节仍需核对。";
+    card.append(rank, title, reason);
+    const directionLinks = Array.isArray(direction.official_links) && direction.official_links.length
+      ? direction.official_links
+      : (direction.official_url ? [{ label: "官方项目入口", url: direction.official_url }] : []);
+    directionLinks.forEach((officialLink) => {
+      const link = document.createElement("a");
+      link.href = officialLink.url;
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      link.textContent = officialLink.label || "查看官方项目入口";
+      card.append(link);
+    });
     grid.append(card);
   });
   container.append(grid);

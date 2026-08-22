@@ -53,6 +53,19 @@ EXPLANATION_MARKERS = (
     "更适合",
     "优先",
     "衔接",
+    "关键",
+    "核心",
+    "本质",
+    "差异",
+    "差别",
+    "相比",
+    "比起",
+    "契合",
+    "匹配",
+    "更贴近",
+    "综合来看",
+    "毕竟",
+    "取决于",
 )
 RISK_BOUNDARY_MARKERS = (
     "核验",
@@ -117,6 +130,38 @@ def evaluate_case(
         }
 
 
+def write_report(
+    path: Path,
+    *,
+    results: list[dict[str, Any]],
+    planned_case_count: int,
+    min_natural: int,
+    stopped_reason: str | None = None,
+) -> dict[str, Any]:
+    results = sorted(results, key=lambda item: item["id"])
+    natural_count = sum(item["natural"] for item in results)
+    completed = len(results) == planned_case_count
+    required = min(min_natural, planned_case_count)
+    summary = {
+        "evaluated_at": datetime.now(timezone.utc).isoformat(),
+        "case_count": len(results),
+        "planned_case_count": planned_case_count,
+        "completed": completed,
+        "stopped_reason": stopped_reason,
+        "natural_count": natural_count,
+        "natural_rate": round(natural_count / max(len(results), 1), 4),
+        "required_natural_count": required,
+        "passed": completed and natural_count >= required,
+        "results": results,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    return summary
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Run the 50-case CampusPilot recommendation naturalness evaluation."
@@ -126,6 +171,16 @@ def main() -> int:
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--category", type=str, default="")
     parser.add_argument("--min-natural", type=int, default=28)
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="Reuse completed case results from the output checkpoint.",
+    )
+    parser.add_argument(
+        "--continue-on-llm-fallback",
+        action="store_true",
+        help="Keep evaluating after a case falls back from the cloud LLM.",
+    )
     parser.add_argument(
         "--output",
         type=Path,
@@ -147,35 +202,53 @@ def main() -> int:
         narrator=ProgramRecommendationNarrator(client),
     )
 
-    results: list[dict[str, Any]] = []
-    with ThreadPoolExecutor(max_workers=max(1, args.workers)) as executor:
-        futures = {
-            executor.submit(evaluate_case, service, case): case["id"]
-            for case in cases
+    results_by_id: dict[str, dict[str, Any]] = {}
+    if args.resume and args.output.exists():
+        checkpoint = json.loads(args.output.read_text(encoding="utf-8"))
+        results_by_id = {
+            item["id"]: item
+            for item in checkpoint.get("results", [])
+            if item.get("id")
         }
-        for future in as_completed(futures):
-            item = future.result()
-            results.append(item)
-            print(
-                f"{item['id']} natural={item['natural']} "
-                f"source={item['answer_source']}"
+    pending = [case for case in cases if case["id"] not in results_by_id]
+    stopped_reason: str | None = None
+    worker_count = max(1, args.workers)
+    for offset in range(0, len(pending), worker_count):
+        batch = pending[offset : offset + worker_count]
+        with ThreadPoolExecutor(max_workers=worker_count) as executor:
+            futures = {
+                executor.submit(evaluate_case, service, case): case["id"]
+                for case in batch
+            }
+            for future in as_completed(futures):
+                item = future.result()
+                results_by_id[item["id"]] = item
+                print(
+                    f"{item['id']} natural={item['natural']} "
+                    f"source={item['answer_source']}"
+                )
+                write_report(
+                    args.output,
+                    results=list(results_by_id.values()),
+                    planned_case_count=len(cases),
+                    min_natural=args.min_natural,
+                )
+        batch_has_fallback = any(
+            not str(results_by_id[case["id"]].get("answer_source", "")).startswith(
+                "llm_"
             )
+            for case in batch
+        )
+        if batch_has_fallback and not args.continue_on_llm_fallback:
+            stopped_reason = "llm_fallback_detected"
+            break
 
-    results.sort(key=lambda item: item["id"])
-    natural_count = sum(item["natural"] for item in results)
-    summary = {
-        "evaluated_at": datetime.now(timezone.utc).isoformat(),
-        "case_count": len(results),
-        "natural_count": natural_count,
-        "natural_rate": round(natural_count / max(len(results), 1), 4),
-        "required_natural_count": min(args.min_natural, len(results)),
-        "passed": natural_count >= min(args.min_natural, len(results)),
-        "results": results,
-    }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(
-        json.dumps(summary, ensure_ascii=False, indent=2),
-        encoding="utf-8",
+    summary = write_report(
+        args.output,
+        results=list(results_by_id.values()),
+        planned_case_count=len(cases),
+        min_natural=args.min_natural,
+        stopped_reason=stopped_reason,
     )
     print(json.dumps({key: value for key, value in summary.items() if key != "results"}, ensure_ascii=False, indent=2))
     print(f"output={args.output}")

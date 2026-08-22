@@ -1,0 +1,97 @@
+{
+  "catalog_version": "2026.08.22",
+  "scope": "Australia postgraduate direction discovery",
+  "coverage_notice": "方向目录用于避免因详细 Handbook 尚未入库而漏掉专业。它不代表录取、职业评估、签证或移民结论。",
+  "directions": [
+    {
+      "direction_id": "civil_engineering",
+      "name": "土木工程",
+      "category": "engineering",
+      "aliases": ["土木", "civil engineering", "结构工程", "交通工程", "岩土工程"],
+      "summary": "延续土木本科背景，重点核对课程衔接、工程实践、项目经验和职业认证要求。",
+      "typical_roles": ["土木工程师", "结构工程师", "交通工程师", "岩土工程师", "工程项目方向"],
+      "official_links": [
+        {
+          "label": "Monash Master of Professional Engineering",
+          "url": "https://www.monash.edu/study/courses/find-a-course/professional-engineering-e6011?international=true"
+        },
+        {
+          "label": "UNSW Master of Engineering Science (Civil Engineering)",
+          "url": "https://www.unsw.edu.au/study/postgraduate/master-of-engineering-science-civil-engineering"
+        }
+      ]
+    },
+    {
+      "direction_id": "mechanical_engineering",
+      "name": "机械工程",
+      "category": "engineering",
+      "aliases": ["机械", "mechanical engineering", "机电"],
+      "summary": "适合机械、机电等相关背景，需继续核对先修课程、课程认证和项目实践。",
+      "typical_roles": ["机械工程师", "制造工程师", "设备与维护工程师", "工程项目方向"],
+      "official_links": [{"label": "Monash Professional Engineering", "url": "https://www.monash.edu/study/courses/find-a-course/professional-engineering-e6011?international=true"}]
+    },
+    {
+      "direction_id": "electrical_engineering",
+      "name": "电气与电子工程",
+      "category": "engineering",
+      "aliases": ["电气", "电子工程", "electrical engineering", "electronics engineering", "通信工程"],
+      "summary": "可衔接电气、电子、通信和控制背景，需核对数学、物理及专业先修要求。",
+      "typical_roles": ["电气工程师", "电子工程师", "控制工程师", "通信工程方向"],
+      "official_links": [{"label": "Monash Professional Engineering", "url": "https://www.monash.edu/study/courses/find-a-course/professional-engineering-e6011?international=true"}]
+    },
+    {
+      "direction_id": "chemical_engineering",
+      "name": "化学工程",
+      "category": "engineering",
+      "aliases": ["化工", "化学工程", "chemical engineering"],
+      "summary": "适合化工及相关理工背景，重点核对化学、数学先修与专业实践要求。",
+      "typical_roles": ["化学工程师", "工艺工程师", "生产与质量工程方向"],
+      "official_links": [{"label": "Monash Professional Engineering", "url": "https://www.monash.edu/study/courses/find-a-course/professional-engineering-e6011?international=true"}]
+    },
+    {
+      "direction_id": "materials_engineering",
+      "name": "材料工程",
+      "category": "engineering",
+      "aliases": ["材料", "材料工程", "materials engineering"],
+      "summary": "适合材料、物理、化学和部分工程背景，需核对具体项目允许的衔接入口。",
+      "typical_roles": ["材料工程师", "研发工程师", "质量与制造方向"],
+      "official_links": [{"label": "Monash Professional Engineering", "url": "https://www.monash.edu/study/courses/find-a-course/professional-engineering-e6011?international=true"}]
+    },
+    {
+      "direction_id": "nursing",
+      "name": "护理",
+      "category": "healthcare",
+      "aliases": ["护理", "nursing"],
+      "summary": "属于强实践和注册导向方向，必须核对课程认证、临床实习、英语和注册要求。",
+      "typical_roles": ["注册护士及相关护理方向"],
+      "official_links": [{"label": "Monash course finder", "url": "https://www.monash.edu/study/courses/find-a-course"}]
+    },
+    {
+      "direction_id": "teaching",
+      "name": "教育与教师培养",
+      "category": "education",
+      "aliases": ["教师", "教育", "幼教", "中学教育", "teaching", "education"],
+      "summary": "需区分幼教、中学教育等培养方向，并逐项核对认证课程、教学实践、英语和教师注册要求。",
+      "typical_roles": ["幼儿教师", "中学教师", "教育支持方向"],
+      "official_links": [{"label": "Monash course finder", "url": "https://www.monash.edu/study/courses/find-a-course"}]
+    },
+    {
+      "direction_id": "social_work",
+      "name": "社会工作",
+      "category": "social_work",
+      "aliases": ["社工", "社会工作", "social work"],
+      "summary": "强调沟通、助人实践和实习，需核对课程认证、实习时数和英语要求。",
+      "typical_roles": ["社会工作者", "社区服务与个案支持方向"],
+      "official_links": [{"label": "Monash course finder", "url": "https://www.monash.edu/study/courses/find-a-course"}]
+    },
+    {
+      "direction_id": "construction_management",
+      "name": "工程与建造管理",
+      "category": "engineering",
+      "aliases": ["工程管理", "建造管理", "construction management", "project management"],
+      "summary": "可利用工程背景转向项目、造价、施工和协调工作，但与执业土木工程师路线不同。",
+      "typical_roles": ["工程项目管理", "施工管理", "造价与合同管理方向"],
+      "official_links": [{"label": "Go8 official course directories", "url": "https://go8.edu.au/about/members"}]
+    }
+  ]
+}

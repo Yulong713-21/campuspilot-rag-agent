@@ -236,6 +236,27 @@ class ProgramRecommendationNarratorTest(unittest.TestCase):
         )
         self.assertIn("不能保证移民", result["message"])
 
+    def test_internal_status_and_unsupported_prerequisite_are_removed(self) -> None:
+        content = (
+            "土木工程已经标记为 direction_indexed，因此你无需补前置课，"
+            "也符合职业评估的基本逻辑。\n\n"
+            "你已有土木背景，可以先从结构、交通和岩土的工作内容中确认兴趣，"
+            "再打开官方项目入口核对课程结构、先修要求和实践安排。继续原方向"
+            "能够保留已有知识积累，但是否适合你仍取决于想做的工程场景。"
+        )
+        narrator = ProgramRecommendationNarrator(FakeClient(content))
+
+        result = narrator.narrate(
+            query="我本科是土木，想留在澳洲",
+            profile={"migration_priority": True},
+            recommendations=[],
+            fallback_message="请先核对土木方向。",
+        )
+
+        self.assertNotIn("direction_indexed", result["message"])
+        self.assertNotIn("无需补前置课", result["message"])
+        self.assertIn("已有土木背景", result["message"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -261,6 +261,41 @@ class ProgramRecommendationServiceTest(unittest.TestCase):
             "complete_migration_evidence_boundary", result["trace_tools"]
         )
 
+    def test_existing_migration_evidence_boundary_is_not_duplicated(self) -> None:
+        class BoundaryNarrator:
+            def narrate(self, **kwargs):
+                return {
+                    "message": (
+                        "土木背景可以先沿原方向核对项目。职业清单和职业评估"
+                        "都需要按最新官方信息核验。"
+                    ),
+                    "answer_source": "llm_direction_recommendation_without_catalog",
+                    "trace": [],
+                }
+
+        service = ProgramRecommendationService(narrator=BoundaryNarrator())
+        result = service.recommend(
+            {
+                "prompt": "我本科是土木，想留在澳洲",
+                "allow_agent_direction_recommendation": True,
+            }
+        )
+
+        self.assertNotIn(
+            "complete_migration_evidence_boundary", result["trace_tools"]
+        )
+        self.assertEqual(result["message"].count("职业清单"), 1)
+
+    def test_future_stay_in_australia_is_migration_planning_signal(self) -> None:
+        result = ProgramRecommendationService().recommend(
+            {
+                "prompt": "预算有限但希望未来留澳，选专业先看什么？",
+                "allow_agent_direction_recommendation": True,
+            }
+        )
+
+        self.assertTrue(result["profile"]["migration_priority"])
+
     def test_salary_priority_is_recommended_by_agent_then_grounded_in_catalog(self) -> None:
         class SalaryDirectionAgent:
             def extract(self, profile_text: str) -> dict:
@@ -427,19 +462,23 @@ class ProgramRecommendationServiceTest(unittest.TestCase):
         self.assertEqual(result["status"], "PROGRAM_RECOMMENDATIONS_READY")
         self.assertEqual(result["recommendations"], [])
         self.assertTrue(result["profile"]["migration_priority"])
-        self.assertEqual(len(result["uncatalogued_directions"]), 3)
-        self.assertEqual(
-            result["uncatalogued_directions"][0]["catalog_status"],
-            "not_indexed",
-        )
+        self.assertGreaterEqual(len(result["uncatalogued_directions"]), 3)
+        direction_names = {
+            item["name"] for item in result["uncatalogued_directions"]
+        }
+        self.assertIn("教育与教师培养", direction_names)
+        self.assertIn("社会工作", direction_names)
         self.assertEqual(
             result["next_action"],
             "refine_direction_or_expand_catalog",
         )
-        self.assertIn(
-            "你已提到教师资格",
-            result["uncatalogued_directions"][0]["rationale"],
+        education = next(
+            item
+            for item in result["uncatalogued_directions"]
+            if item["name"] == "教育与教师培养"
         )
+        self.assertEqual(education["catalog_status"], "direction_indexed")
+        self.assertIn("你已提到教师资格", education["rationale"])
         self.assertEqual(narrator.call_count, 1)
         self.assertEqual(
             result["answer_source"],
@@ -447,6 +486,101 @@ class ProgramRecommendationServiceTest(unittest.TestCase):
         )
         self.assertIn("最新官方信息核验", result["message"])
         self.assertNotIn("低分必邀", result["message"])
+
+    def test_explicit_civil_background_is_not_redirected_to_indexed_catalog(self) -> None:
+        class OverreachingDirectionAgent:
+            def extract(self, profile_text: str) -> dict:
+                return {
+                    "matched_signals": ["computing", "analytics"],
+                    "career_mobility_goal": True,
+                    "compensation_priority": False,
+                    "work_intensity_tolerance": "unknown",
+                    "migration_priority": True,
+                    "uncatalogued_directions": [],
+                    "needs_clarification": False,
+                    "clarification_question": None,
+                    "evidence_phrases": ["本科就是土木", "想移居澳洲"],
+                    "interpretation_summary": "可以考虑计算机或数据方向。",
+                    "confidence": 0.8,
+                    "model": "overreaching-agent",
+                }
+
+        service = ProgramRecommendationService(
+            profile_interpreter=OverreachingDirectionAgent()
+        )
+        result = service.recommend(
+            {
+                "prompt": "我本科就是土木，土木好留澳洲吗？雅思还在考",
+                "allow_agent_direction_recommendation": True,
+            }
+        )
+
+        self.assertEqual(result["status"], "PROGRAM_RECOMMENDATIONS_READY")
+        self.assertEqual(result["recommendations"], [])
+        self.assertEqual(result["profile"]["matched_signals"], [])
+        self.assertEqual(result["uncatalogued_directions"][0]["name"], "土木工程")
+        self.assertEqual(
+            result["uncatalogued_directions"][0]["catalog_status"],
+            "direction_indexed",
+        )
+        self.assertIn(
+            "monash.edu",
+            result["uncatalogued_directions"][0]["official_url"],
+        )
+        self.assertNotIn("计算机", result["message"])
+        self.assertNotIn("数据分析", result["message"])
+
+    def test_civil_user_who_requests_a_career_change_can_compare_new_directions(self) -> None:
+        class CareerChangeAgent:
+            def extract(self, profile_text: str) -> dict:
+                return {
+                    "matched_signals": ["analytics"],
+                    "career_mobility_goal": True,
+                    "compensation_priority": False,
+                    "work_intensity_tolerance": "unknown",
+                    "migration_priority": True,
+                    "uncatalogued_directions": [],
+                    "needs_clarification": False,
+                    "clarification_question": None,
+                    "evidence_phrases": ["学土木", "不想去工地"],
+                    "interpretation_summary": "用户明确希望转向非工地工作。",
+                    "confidence": 0.8,
+                    "model": "career-change-agent",
+                }
+
+        result = ProgramRecommendationService(
+            profile_interpreter=CareerChangeAgent()
+        ).recommend(
+            {
+                "prompt": "我学土木但不想去工地，想转专业还能考虑哪些方向？",
+                "allow_agent_direction_recommendation": True,
+            }
+        )
+
+        self.assertTrue(result["recommendations"])
+        self.assertIn("数据与分析", result["profile"]["matched_signals"])
+        self.assertEqual(result["uncatalogued_directions"][0]["name"], "土木工程")
+
+    def test_explicit_direction_survives_profile_interpreter_failure(self) -> None:
+        class FailingDirectionAgent:
+            def extract(self, profile_text: str) -> dict:
+                raise ValueError("invalid model response")
+
+        result = ProgramRecommendationService(
+            profile_interpreter=FailingDirectionAgent()
+        ).recommend(
+            {
+                "prompt": "我本科就是土木，土木好留澳洲吗？雅思还在考",
+                "allow_agent_direction_recommendation": True,
+            }
+        )
+
+        self.assertEqual(result["recommendations"], [])
+        self.assertEqual(result["uncatalogued_directions"][0]["name"], "土木工程")
+        self.assertEqual(
+            result["profile"]["profile_source"],
+            "deterministic_rules_after_llm_error",
+        )
 
     def test_follow_up_clarification_does_not_repeat_first_turn_intro(self) -> None:
         class EmptyProfileInterpreter:

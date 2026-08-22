@@ -72,6 +72,8 @@ class AgentAPITest(unittest.TestCase):
         self.assertIn("Pia 对话", response.text)
         self.assertIn("申请评估", response.text)
         self.assertIn('id="transcriptFile"', response.text)
+        self.assertIn("app.css?v=", response.text)
+        self.assertIn("app.js?v=", response.text)
         self.assertEqual(stylesheet.status_code, 200)
         self.assertIn("/api/agent/chat", script.text)
         self.assertIn("/api/admissions/transcripts/parse", script.text)

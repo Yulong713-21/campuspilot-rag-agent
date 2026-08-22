@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 import sys
 import unittest
 
@@ -119,7 +120,7 @@ class ProgramRecommendationServiceTest(unittest.TestCase):
             result["profile"]["matched_signals"],
         )
 
-    def test_direction_agent_runs_only_when_enabled_and_rules_miss(self) -> None:
+    def test_direction_agent_enriches_profile_even_when_rules_match(self) -> None:
         class FakeProfileInterpreter:
             def __init__(self) -> None:
                 self.call_count = 0
@@ -144,7 +145,7 @@ class ProgramRecommendationServiceTest(unittest.TestCase):
         self.assertEqual(interpreter.call_count, 0)
         second = service.recommend(
             {
-                "prompt": "我喜欢解决复杂系统问题",
+                "prompt": "我本科读计算机，希望去澳洲找程序员工作",
                 "allow_llm_profile_fallback": True,
             }
         )
@@ -155,6 +156,109 @@ class ProgramRecommendationServiceTest(unittest.TestCase):
         self.assertIn(
             "recommend_program_directions_with_agent",
             second["trace_tools"],
+        )
+
+    def test_existing_computing_signal_keeps_user_background_summary(self) -> None:
+        class BackgroundAwareInterpreter:
+            def extract(self, profile_text: str) -> dict:
+                return {
+                    "matched_signals": ["computing"],
+                    "career_mobility_goal": True,
+                    "compensation_priority": False,
+                    "work_intensity_tolerance": "unknown",
+                    "migration_priority": True,
+                    "uncatalogued_directions": [],
+                    "needs_clarification": False,
+                    "clarification_question": "你更看重课程实用性还是就业支持？",
+                    "evidence_phrases": [
+                        "深圳大学读的计算机",
+                        "国内太卷了",
+                        "移民澳洲",
+                        "找程序员工作",
+                    ],
+                    "interpretation_summary": (
+                        "你已有计算机本科背景，希望换一个发展环境并在澳洲继续软件开发，"
+                        "因此项目方向可以延续计算机，但就业和移民条件仍需分别核验。"
+                    ),
+                    "confidence": 0.9,
+                    "model": "background-aware-agent",
+                }
+
+        service = ProgramRecommendationService(
+            profile_interpreter=BackgroundAwareInterpreter()
+        )
+        result = service.recommend(
+            {
+                "prompt": (
+                    "我本科在深圳大学读的计算机，国内太卷了，"
+                    "想移民澳洲找程序员工作"
+                ),
+                "allow_agent_direction_recommendation": True,
+            }
+        )
+
+        self.assertEqual(result["status"], "PROGRAM_RECOMMENDATIONS_READY")
+        self.assertTrue(result["profile"]["migration_priority"])
+        self.assertIn(
+            "深圳大学读的计算机",
+            result["profile"]["evidence_phrases"],
+        )
+        self.assertEqual(len(result["profile"]["evidence_phrases"]), 4)
+        self.assertIn(
+            "recommend_program_directions_with_agent",
+            result["trace_tools"],
+        )
+
+    def test_naturalness_fixture_has_fifty_conversation_cases(self) -> None:
+        fixture = (
+            REPO_ROOT
+            / "tests"
+            / "fixtures"
+            / "program_recommendation_naturalness_cases.json"
+        )
+        cases = json.loads(fixture.read_text(encoding="utf-8"))
+
+        self.assertEqual(len(cases), 50)
+        self.assertEqual(len({case["id"] for case in cases}), 50)
+        self.assertTrue(all(18 <= len(case["prompt"]) <= 45 for case in cases))
+        self.assertTrue(all(case["anchors"] for case in cases))
+
+    def test_migration_recommendation_completes_missing_evidence_boundary(self) -> None:
+        class ComputingProfileInterpreter:
+            def extract(self, profile_text: str) -> dict:
+                return {
+                    "matched_signals": ["computing"],
+                    "career_mobility_goal": True,
+                    "migration_priority": True,
+                    "uncatalogued_directions": [],
+                    "evidence_phrases": ["深圳大学读计算机", "移民澳洲"],
+                    "interpretation_summary": "延续计算机背景探索澳洲开发岗位。",
+                    "confidence": 0.9,
+                    "model": "profile-test",
+                }
+
+        class BoundaryOmittingNarrator:
+            def narrate(self, **kwargs):
+                return {
+                    "message": "你的计算机本科背景可以自然衔接软件开发方向。",
+                    "answer_source": "llm_program_recommendation_with_catalog",
+                    "trace": [],
+                }
+
+        service = ProgramRecommendationService(
+            profile_interpreter=ComputingProfileInterpreter(),
+            narrator=BoundaryOmittingNarrator(),
+        )
+        result = service.recommend(
+            {
+                "prompt": "我本科在深圳大学读计算机，想移民澳洲做程序员",
+                "allow_agent_direction_recommendation": True,
+            }
+        )
+
+        self.assertIn("不是按留澳或移民可行性排序", result["message"])
+        self.assertIn(
+            "complete_migration_evidence_boundary", result["trace_tools"]
         )
 
     def test_salary_priority_is_recommended_by_agent_then_grounded_in_catalog(self) -> None:
@@ -242,11 +346,27 @@ class ProgramRecommendationServiceTest(unittest.TestCase):
         self.assertEqual(explanation["summary_source"], "service_fallback")
 
     def test_migration_goal_can_return_uncatalogued_directions(self) -> None:
-        class ExplodingNarrator:
+        class MigrationNarrator:
+            def __init__(self) -> None:
+                self.call_count = 0
+
             def narrate(self, **kwargs):
-                raise AssertionError(
-                    "migration narration must wait for verified policy evidence"
-                )
+                self.call_count += 1
+                return {
+                    "message": (
+                        "你把留澳可行性放在首位，也提到了教师资格。当前先比较教育、"
+                        "社工和工程等方向，但这些候选不是按移民难度排序；职业清单、"
+                        "职业评估、州担保和邀请情况仍需按最新官方信息核验。"
+                    ),
+                    "answer_source": "llm_direction_recommendation_without_catalog",
+                    "trace": [
+                        {
+                            "tool": "generate_natural_recommendation",
+                            "ok": True,
+                            "source": "fake_llm",
+                        }
+                    ],
+                }
 
         class MigrationDirectionAgent:
             def extract(self, profile_text: str) -> dict:
@@ -292,9 +412,10 @@ class ProgramRecommendationServiceTest(unittest.TestCase):
                     "model": "migration-direction-agent",
                 }
 
+        narrator = MigrationNarrator()
         service = ProgramRecommendationService(
             profile_interpreter=MigrationDirectionAgent(),
-            narrator=ExplodingNarrator(),
+            narrator=narrator,
         )
         result = service.recommend(
             {
@@ -319,13 +440,12 @@ class ProgramRecommendationServiceTest(unittest.TestCase):
             "你已提到教师资格",
             result["uncatalogued_directions"][0]["rationale"],
         )
-        generation = next(
-            item
-            for item in result["trace"]
-            if item["tool"] == "generate_natural_recommendation"
+        self.assertEqual(narrator.call_count, 1)
+        self.assertEqual(
+            result["answer_source"],
+            "llm_direction_recommendation_without_catalog",
         )
-        self.assertTrue(generation["skipped"])
-        self.assertIn("不能把候选方向理解为保证获邀", result["message"])
+        self.assertIn("最新官方信息核验", result["message"])
         self.assertNotIn("低分必邀", result["message"])
 
     def test_follow_up_clarification_does_not_repeat_first_turn_intro(self) -> None:

@@ -252,8 +252,7 @@ class ProgramRecommendationService:
         interpretation_summary: str | None = None
         profile_trace: dict[str, Any] | None = None
         if (
-            not signals
-            and self.profile_interpreter is not None
+            self.profile_interpreter is not None
             and (
                 request.get("allow_agent_direction_recommendation")
                 or request.get("allow_llm_profile_fallback")
@@ -261,11 +260,15 @@ class ProgramRecommendationService:
         ):
             try:
                 interpreted = self.profile_interpreter.extract(effective_query)
-                signals = [
+                interpreted_signals = [
                     signal
                     for signal in interpreted.get("matched_signals", [])
                     if signal in self.SIGNALS
                 ]
+                # Deterministic matches are useful candidate labels, but they
+                # must not prevent the profile Agent from retaining the user's
+                # background, motivation, target market, and intended role.
+                signals = list(dict.fromkeys([*signals, *interpreted_signals]))
                 mobility_goal = mobility_goal or bool(
                     interpreted.get("career_mobility_goal")
                 )
@@ -380,27 +383,44 @@ class ProgramRecommendationService:
                 or request.get("is_recommendation_follow_up")
                 or request.get("allow_llm_profile_fallback")
             )
+            fallback_message = (
+                "我记下了你刚补充的信息。现在还差一步：需要把兴趣落到"
+                "你愿意长期做的工作内容上。"
+                if is_follow_up
+                else (
+                    "可以先不选专业。请至少告诉我一个就业方向、擅长的事情，"
+                    "或你喜欢和不喜欢的学习方式。"
+                )
+            )
+            questions = [
+                profile_clarification
+                or "毕业后更想做技术、数据、金融、市场还是管理类工作？",
+                "你更喜欢写代码和分析数字，还是沟通、创意与组织协调？",
+            ]
+            answer_source = "recommendation_profile_clarification"
+            clarify = getattr(self.narrator, "clarify", None)
+            if callable(clarify):
+                narration = clarify(
+                    query=effective_query,
+                    evidence_phrases=profile_evidence,
+                    suggested_question=questions[0],
+                    fallback_message=fallback_message,
+                )
+                fallback_message = narration["message"]
+                answer_source = narration["answer_source"]
+                trace.extend(narration.get("trace", []))
             return self._result(
                 status="RECOMMENDATION_PROFILE_INSUFFICIENT",
-                message=(
-                    "我记下了你刚补充的信息。现在还差一步：需要把兴趣落到"
-                    "你愿意长期做的工作内容上。"
-                    if is_follow_up
-                    else (
-                        "可以先不选专业。请至少告诉我一个就业方向、擅长的事情，"
-                        "或你喜欢和不喜欢的学习方式。"
-                    )
-                ),
+                message=fallback_message,
                 recommendations=[],
-                clarifying_questions=[
-                    profile_clarification
-                    or "毕业后更想做技术、数据、金融、市场还是管理类工作？",
-                    "你更喜欢写代码和分析数字，还是沟通、创意与组织协调？",
-                ],
+                clarifying_questions=(
+                    [] if answer_source.startswith("llm_") else questions
+                ),
                 trace=trace,
                 effective_query=effective_query,
                 confidence="low",
                 next_action="ask_recommendation_profile",
+                answer_source=answer_source,
             )
         if not candidates and not uncatalogued_directions:
             return self._result(
@@ -552,20 +572,7 @@ class ProgramRecommendationService:
             if recommendations
             else "direction_recommendation_without_catalog"
         )
-        if (
-            self.narrator is not None
-            and migration_priority
-            and not recommendations
-        ):
-            trace.append(
-                {
-                    "tool": "generate_natural_recommendation",
-                    "ok": False,
-                    "skipped": True,
-                    "reason": "verified_migration_policy_evidence_required",
-                }
-            )
-        elif self.narrator is not None:
+        if self.narrator is not None:
             narration = self.narrator.narrate(
                 query=effective_query,
                 profile=profile,
@@ -575,6 +582,28 @@ class ProgramRecommendationService:
             message = narration["message"]
             answer_source = narration["answer_source"]
             trace.extend(narration.get("trace", []))
+            if migration_priority and not any(
+                marker in message
+                for marker in (
+                    "不是按移民",
+                    "不代表移民",
+                    "最新官方信息核验",
+                    "以当前官方信息为准",
+                    "具有时效性",
+                )
+            ):
+                message = (
+                    f"{message.rstrip()}\n\n需要单独说明：当前项目或方向候选不是按"
+                    "留澳或移民可行性排序；职业清单、职业评估、州担保和邀请情况"
+                    "需要以当前官方信息为准。"
+                )
+                trace.append(
+                    {
+                        "tool": "complete_migration_evidence_boundary",
+                        "ok": True,
+                        "reason": "generated_answer_omitted_required_boundary",
+                    }
+                )
         return self._result(
             status="PROGRAM_RECOMMENDATIONS_READY",
             message=message,

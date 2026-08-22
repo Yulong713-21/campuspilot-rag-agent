@@ -432,6 +432,39 @@ class CampusPilotConversationGraphTest(unittest.TestCase):
         self.assertEqual(result["intent"], "study_plan")
         self.assertEqual(result["conversation_route"], "structured")
 
+    def test_ambiguous_llm_cannot_override_explicit_migration_career_goal(self) -> None:
+        interpreter = FakeIntentInterpreter(
+            {
+                "intent": "ambiguous",
+                "goal_summary": "uncertain",
+                "needs_clarification": True,
+                "clarification_question": "请补充需求",
+                "course_code": None,
+                "confidence": 0.3,
+            }
+        )
+        graph = CampusPilotConversationGraph(
+            CampusPilotConversationAgent(goal_interpreter=interpreter)
+        )
+
+        result = graph.respond(
+            {
+                "message": (
+                    "我本科在深圳大学读的计算机，国内太卷了，"
+                    "想移民澳洲找程序员工作"
+                )
+            }
+        )
+
+        self.assertEqual(result["intent"], "program_recommendation")
+        self.assertEqual(result["conversation_route"], "structured")
+        validation = next(
+            item
+            for item in result["trace"]
+            if item["tool"] == "validate_intent_decision"
+        )
+        self.assertEqual(validation["source"], "deterministic_fallback")
+
     def test_invented_course_code_is_rejected(self) -> None:
         interpreter = FakeIntentInterpreter(
             {

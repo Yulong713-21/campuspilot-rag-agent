@@ -2031,8 +2031,23 @@ class CampusPilotConversationAgent:
         has_program_recommendation_intent = any(
             term in normalized for term in self.PROGRAM_RECOMMENDATION_TERMS
         )
+        has_migration_career_goal = (
+            any(term in normalized for term in ("移民", "留澳"))
+            and any(
+                term in normalized
+                for term in (
+                    "专业",
+                    "工作",
+                    "职业",
+                    "就业",
+                    "程序员",
+                    "读研",
+                    "硕士",
+                )
+            )
+        )
         has_planning_intent = any(term in normalized for term in self.PLAN_TERMS)
-        if has_program_recommendation_intent:
+        if has_program_recommendation_intent or has_migration_career_goal:
             return "program_recommendation", course_code
         if has_recruitment_intent and has_planning_intent:
             return "study_plan", course_code

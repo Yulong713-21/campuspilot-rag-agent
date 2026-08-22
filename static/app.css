@@ -34,7 +34,8 @@ body {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
   letter-spacing: 0;
 }
@@ -342,10 +343,11 @@ legend {
   font-weight: 750;
 }
 
-select {
+select,
+input[type="text"],
+input[type="number"],
+textarea {
   width: 100%;
-  height: 40px;
-  padding: 0 10px;
   border: 1px solid #cbd6d6;
   border-radius: 5px;
   outline: none;
@@ -353,7 +355,23 @@ select {
   color: var(--ink);
 }
 
-select:focus {
+select,
+input[type="text"],
+input[type="number"] {
+  height: 40px;
+  padding: 0 10px;
+}
+
+textarea {
+  min-height: 72px;
+  padding: 10px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgb(18 109 103 / 10%);
 }
@@ -1133,6 +1151,453 @@ dialog::backdrop {
   margin-top: 12px;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.agent-view {
+  max-width: 1240px;
+}
+
+.agent-heading {
+  min-height: 74px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.pia-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pia-identity > div > p:last-child {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.pia-avatar,
+.message-avatar {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-weight: 800;
+}
+
+.pia-avatar {
+  width: 48px;
+  height: 48px;
+  font-size: 19px;
+}
+
+.message-avatar {
+  width: 30px;
+  height: 30px;
+  font-size: 12px;
+}
+
+.chat-layout {
+  min-height: 680px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.chat-panel {
+  min-width: 0;
+  min-height: 680px;
+  display: grid;
+  grid-template-rows: minmax(420px, 1fr) auto auto;
+  border-right: 1px solid var(--line);
+}
+
+.chat-messages {
+  max-height: 590px;
+  padding: 25px;
+  overflow-y: auto;
+  background: #fbfcfc;
+}
+
+.chat-message {
+  margin-bottom: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.chat-message.user {
+  justify-content: flex-end;
+}
+
+.message-body {
+  max-width: min(760px, 88%);
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: white;
+}
+
+.chat-message.user .message-body {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+.chat-message.pending .message-body {
+  color: var(--muted);
+}
+
+.message-body > strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--accent-dark);
+  font-size: 11px;
+}
+
+.chat-message.user .message-body > strong {
+  color: #d8efec;
+}
+
+.message-body > p {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.72;
+}
+
+.chat-suggestions {
+  padding: 10px 18px;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  border-top: 1px solid var(--line);
+}
+
+.chat-suggestions button {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid #b7d7d4;
+  border-radius: 5px;
+  background: #f3fbfa;
+  color: var(--accent-dark);
+  cursor: pointer;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.chat-composer {
+  padding: 13px 18px 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 86px;
+  align-items: end;
+  gap: 9px;
+  border-top: 1px solid var(--line);
+}
+
+.chat-composer textarea {
+  min-height: 64px;
+  max-height: 150px;
+}
+
+.chat-composer .primary-button {
+  height: 42px;
+}
+
+.agent-context {
+  padding: 22px;
+  background: var(--muted-surface);
+}
+
+.agent-context dl {
+  margin: 15px 0 0;
+}
+
+.agent-context dl div {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.agent-context dt {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.agent-context dd {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.agent-boundary {
+  margin: 24px 0 0;
+  padding: 11px;
+  border-left: 3px solid var(--amber);
+  background: var(--amber-bg);
+  color: #74541f;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.chat-program-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.chat-program-card {
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--muted-surface);
+}
+
+.chat-program-card span,
+.chat-program-card strong,
+.chat-program-card small {
+  display: block;
+}
+
+.program-rank {
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.chat-program-card strong {
+  margin-top: 5px;
+  font-size: 11px;
+}
+
+.chat-program-card small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.chat-program-card p {
+  margin: 8px 0 0;
+  color: #41545a;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.chat-program-card a,
+.chat-details a {
+  color: var(--blue);
+  font-size: 9px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.chat-program-card a {
+  display: inline-block;
+  margin-top: 9px;
+}
+
+.chat-details {
+  margin-top: 12px;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+}
+
+.chat-details summary {
+  color: var(--accent-dark);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.chat-details ul {
+  margin: 8px 0 0;
+  padding-left: 17px;
+}
+
+.chat-details li {
+  margin-top: 7px;
+}
+
+.chat-details li span,
+.chat-details.trace p {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.admission-layout {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: minmax(440px, 0.9fr) minmax(0, 1.1fr);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.admission-form {
+  padding: 23px;
+  border-right: 1px solid var(--line);
+  background: var(--muted-surface);
+}
+
+.control-heading > span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.admission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 11px;
+}
+
+.admission-wide {
+  grid-column: 1 / -1;
+}
+
+.transcript-upload {
+  margin-top: 18px;
+  padding: 13px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 0.8fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #cddcda;
+  background: white;
+}
+
+.transcript-upload strong,
+.transcript-upload small {
+  display: block;
+}
+
+.transcript-upload strong {
+  font-size: 11px;
+}
+
+.transcript-upload small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.transcript-upload input {
+  min-width: 0;
+  font-size: 10px;
+}
+
+.admission-actions {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.admission-result {
+  min-width: 0;
+  min-height: 640px;
+  padding: 25px;
+}
+
+.admission-empty {
+  min-height: 590px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.admission-empty p {
+  max-width: 430px;
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+#transcriptResult,
+#admissionResult {
+  margin-bottom: 16px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: white;
+}
+
+.result-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.result-heading > span {
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: #eaf6f4;
+  color: var(--accent-dark);
+  font-size: 8px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+#transcriptResult > p,
+#admissionResult > p {
+  margin: 12px 0 0;
+  color: #3f5258;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+#transcriptResult dl {
+  margin: 14px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+#transcriptResult dl div {
+  padding: 9px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+#transcriptResult dt {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+#transcriptResult dd {
+  margin: 4px 0 0;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+#transcriptResult > small,
+.result-notice {
+  color: var(--amber);
+  font-size: 9px;
+}
+
 @media (max-width: 1040px) {
   .shell {
     grid-template-columns: 184px minmax(0, 1fr);
@@ -1148,6 +1613,23 @@ dialog::backdrop {
 
   .evidence-grid {
     grid-template-columns: 1fr;
+  }
+
+  .chat-layout {
+    grid-template-columns: minmax(0, 1fr) 220px;
+  }
+
+  .chat-program-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admission-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admission-form {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
   }
 }
 
@@ -1179,11 +1661,12 @@ dialog::backdrop {
   }
 
   .sidebar nav {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    overflow-x: auto;
   }
 
   .nav-button {
+    flex: 0 0 104px;
     justify-content: center;
     gap: 5px;
     font-size: 11px;
@@ -1302,5 +1785,71 @@ dialog::backdrop {
 
   .university-heading {
     align-items: flex-start;
+  }
+
+  .agent-heading {
+    min-height: 68px;
+  }
+
+  .pia-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .chat-layout {
+    min-height: 620px;
+    display: block;
+  }
+
+  .chat-panel {
+    min-height: 620px;
+    border-right: 0;
+  }
+
+  .chat-messages {
+    max-height: 500px;
+    padding: 16px 12px;
+  }
+
+  .message-body {
+    max-width: 90%;
+  }
+
+  .agent-context {
+    display: none;
+  }
+
+  .chat-composer {
+    padding: 11px;
+    grid-template-columns: minmax(0, 1fr) 70px;
+  }
+
+  .admission-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admission-wide {
+    grid-column: auto;
+  }
+
+  .transcript-upload {
+    grid-template-columns: 1fr;
+  }
+
+  .transcript-upload .secondary-button {
+    width: 100%;
+  }
+
+  .admission-result {
+    min-height: 420px;
+    padding: 14px;
+  }
+
+  .admission-empty {
+    min-height: 380px;
+  }
+
+  .admission-actions {
+    grid-template-columns: 1fr;
   }
 }

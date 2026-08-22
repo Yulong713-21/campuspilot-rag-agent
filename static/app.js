@@ -6,7 +6,14 @@ const state = {
   busy: false,
   selectedDiscipline: "computing",
   sessionToken: window.localStorage.getItem("campuspilot-session-token"),
+  chatHistory: [],
+  chatThreadId:
+    window.localStorage.getItem("campuspilot-chat-thread") ||
+    `web-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+  admissionPrograms: [],
 };
+
+window.localStorage.setItem("campuspilot-chat-thread", state.chatThreadId);
 
 const elements = Object.fromEntries(
   [
@@ -14,6 +21,28 @@ const elements = Object.fromEntries(
     "retrievedDate",
     "sourceCount",
     "catalogVersion",
+    "chatForm",
+    "chatInput",
+    "chatMessages",
+    "chatSuggestions",
+    "sendChatButton",
+    "clearChatButton",
+    "admissionForm",
+    "admissionUniversity",
+    "admissionDiscipline",
+    "admissionProgram",
+    "undergraduateInstitution",
+    "undergraduateMajor",
+    "admissionScore",
+    "admissionScale",
+    "admissionGoal",
+    "transcriptFile",
+    "parseTranscriptButton",
+    "recommendAdmissionButton",
+    "evaluateAdmissionButton",
+    "admissionEmpty",
+    "transcriptResult",
+    "admissionResult",
     "planForm",
     "programVariant",
     "studyStream",
@@ -75,10 +104,11 @@ const roleLabels = {
 };
 
 async function api(path, options = {}) {
+  const hasFormData = options.body instanceof FormData;
   const response = await fetch(path, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
+      ...(hasFormData ? {} : { "Content-Type": "application/json" }),
       ...(options.headers || {}),
     },
   });
@@ -582,6 +612,367 @@ async function decideSave(approved) {
   }
 }
 
+function createPiaMessage(content) {
+  const article = document.createElement("article");
+  article.className = "chat-message assistant";
+  const avatar = document.createElement("span");
+  avatar.className = "message-avatar";
+  avatar.textContent = "P";
+  const body = document.createElement("div");
+  body.className = "message-body";
+  const name = document.createElement("strong");
+  name.textContent = "Pia";
+  const text = document.createElement("p");
+  text.textContent = content;
+  body.append(name, text);
+  article.append(avatar, body);
+  return { article, body };
+}
+
+function renderProgramRecommendations(container, payload) {
+  const recommendationPayload = payload.program_recommendations || payload;
+  const recommendations = recommendationPayload?.recommendations || [];
+  if (!recommendations.length) {
+    return;
+  }
+  const grid = document.createElement("div");
+  grid.className = "chat-program-grid";
+  recommendations.forEach((program, index) => {
+    const card = document.createElement("article");
+    card.className = "chat-program-card";
+    const rank = document.createElement("span");
+    rank.className = "program-rank";
+    rank.textContent = `路线 ${program.rank || index + 1}`;
+    const title = document.createElement("strong");
+    title.textContent = program.display_name_zh || program.program_name || program.name;
+    const university = document.createElement("small");
+    university.textContent = program.university_name || "";
+    const reason = document.createElement("p");
+    reason.textContent = (program.reasons || []).join("；") || program.tradeoff || "建议继续核对课程结构与录取要求。";
+    card.append(rank, title, university, reason);
+    if (program.official_url) {
+      const link = document.createElement("a");
+      link.href = program.official_url;
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      link.textContent = "查看官方项目页";
+      card.append(link);
+    }
+    grid.append(card);
+  });
+  container.append(grid);
+}
+
+function renderChatEvidence(container, evidence = []) {
+  if (!evidence.length) {
+    return;
+  }
+  const details = document.createElement("details");
+  details.className = "chat-details";
+  const summary = document.createElement("summary");
+  summary.textContent = `查看依据（${evidence.length}）`;
+  const list = document.createElement("ul");
+  evidence.forEach((item) => {
+    const row = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = item.source_url || item.url || "#";
+    link.target = "_blank";
+    link.rel = "noreferrer";
+    link.textContent = item.title || item.source_type || "官方来源";
+    const excerpt = document.createElement("span");
+    excerpt.textContent = item.excerpt || item.content || "";
+    row.append(link, excerpt);
+    list.append(row);
+  });
+  details.append(summary, list);
+  container.append(details);
+}
+
+function renderChatTrace(container, payload) {
+  const tools = payload.trace_tools || [];
+  if (!tools.length) {
+    return;
+  }
+  const details = document.createElement("details");
+  details.className = "chat-details trace";
+  const summary = document.createElement("summary");
+  summary.textContent = `查看处理过程（${tools.length} 步）`;
+  const flow = document.createElement("p");
+  flow.textContent = tools.join(" → ");
+  details.append(summary, flow);
+  container.append(details);
+}
+
+function appendChatMessage(role, content, payload = null) {
+  let article;
+  let body;
+  if (role === "assistant") {
+    ({ article, body } = createPiaMessage(content));
+  } else {
+    article = document.createElement("article");
+    article.className = "chat-message user";
+    body = document.createElement("div");
+    body.className = "message-body";
+    const name = document.createElement("strong");
+    name.textContent = "我";
+    const text = document.createElement("p");
+    text.textContent = content;
+    body.append(name, text);
+    article.append(body);
+  }
+  if (payload) {
+    renderProgramRecommendations(body, payload);
+    const evidence = payload.evidence || payload.documents || [];
+    renderChatEvidence(body, evidence);
+    renderChatTrace(body, payload);
+  }
+  elements.chatMessages.append(article);
+  elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+  return article;
+}
+
+function setChatBusy(busy) {
+  elements.sendChatButton.disabled = busy;
+  elements.chatInput.disabled = busy;
+  elements.sendChatButton.textContent = busy ? "Pia 思考中" : "发送";
+}
+
+async function sendChatMessage(message) {
+  const trimmed = message.trim();
+  if (!trimmed) {
+    return;
+  }
+  const previousHistory = state.chatHistory.slice(-6);
+  appendChatMessage("user", trimmed);
+  state.chatHistory.push({ role: "user", content: trimmed.slice(0, 2000) });
+  elements.chatInput.value = "";
+  setChatBusy(true);
+  const waiting = createPiaMessage("正在理解你的目标并选择合适的工具……");
+  waiting.article.classList.add("pending");
+  elements.chatMessages.append(waiting.article);
+  elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+  try {
+    const payload = await api("/api/agent/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        thread_id: state.chatThreadId,
+        message: trimmed,
+        conversation_history: previousHistory,
+      }),
+    });
+    waiting.article.remove();
+    const answer =
+      payload.message ||
+      payload.program_recommendations?.message ||
+      "我已经完成处理，但暂时没有生成可展示的回答。";
+    appendChatMessage("assistant", answer, payload);
+    state.chatHistory.push({ role: "assistant", content: answer.slice(0, 2000) });
+  } catch (error) {
+    waiting.article.remove();
+    appendChatMessage("assistant", `这次请求没有完成：${error.message}`);
+  } finally {
+    setChatBusy(false);
+    elements.chatInput.focus();
+  }
+}
+
+function resetChat() {
+  state.chatHistory = [];
+  state.chatThreadId = `web-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+  window.localStorage.setItem("campuspilot-chat-thread", state.chatThreadId);
+  elements.chatMessages.replaceChildren();
+  elements.chatMessages.append(
+    createPiaMessage("新对话已经开始。告诉我你的成绩、目标学校、就业想法或学习偏好吧。").article,
+  );
+}
+
+async function loadAdmissionPrograms() {
+  const university = elements.admissionUniversity.value;
+  if (!university) {
+    state.admissionPrograms = [];
+    elements.admissionProgram.replaceChildren(new Option("先选择目标学校", ""));
+    elements.admissionProgram.disabled = true;
+    return;
+  }
+  elements.admissionProgram.disabled = true;
+  elements.admissionProgram.replaceChildren(new Option("加载项目中……", ""));
+  try {
+    const params = new URLSearchParams({
+      university,
+      discipline_id: elements.admissionDiscipline.value,
+    });
+    const payload = await api(`/api/admissions/programs?${params}`);
+    state.admissionPrograms = payload.programs || [];
+    elements.admissionProgram.replaceChildren(new Option("请选择具体项目", ""));
+    state.admissionPrograms.forEach((program) => {
+      const suffix = program.evaluation_ready ? " · 规则已核验" : " · 可浏览";
+      elements.admissionProgram.append(
+        new Option(`${program.name}${suffix}`, program.program_code || program.name),
+      );
+    });
+    elements.admissionProgram.disabled = false;
+  } catch (error) {
+    elements.admissionProgram.replaceChildren(new Option("项目加载失败", ""));
+    showToast(error.message, "error");
+  }
+}
+
+function renderTranscriptResult(payload) {
+  elements.admissionEmpty.classList.add("hidden");
+  elements.transcriptResult.classList.remove("hidden");
+  const profile = payload.candidate_profile || {};
+  elements.transcriptResult.replaceChildren();
+  const heading = document.createElement("div");
+  heading.className = "result-heading";
+  const title = document.createElement("strong");
+  title.textContent = "成绩单读取结果";
+  const status = document.createElement("span");
+  status.textContent = payload.status;
+  heading.append(title, status);
+  const message = document.createElement("p");
+  message.textContent = payload.message;
+  const facts = document.createElement("dl");
+  [
+    ["本科院校", profile.institution || "未识别"],
+    ["成绩", profile.overall_score == null ? "未识别" : `${profile.overall_score}/${profile.score_scale}`],
+    ["已修学分", profile.completed_credits ?? "未识别"],
+    ["课程条目", `${(profile.courses || []).length} 门`],
+  ].forEach(([label, value]) => {
+    const row = document.createElement("div");
+    const dt = document.createElement("dt");
+    const dd = document.createElement("dd");
+    dt.textContent = label;
+    dd.textContent = value;
+    row.append(dt, dd);
+    facts.append(row);
+  });
+  const notice = document.createElement("small");
+  notice.textContent = "解析字段必须由你确认后才能用于申请评估。";
+  elements.transcriptResult.append(heading, message, facts, notice);
+  if (profile.institution) {
+    elements.undergraduateInstitution.value = profile.institution;
+  }
+  if (profile.overall_score != null) {
+    elements.admissionScore.value = profile.overall_score;
+    elements.admissionScale.value = String(profile.score_scale || 100);
+  }
+}
+
+async function parseTranscript() {
+  const file = elements.transcriptFile.files[0];
+  if (!file) {
+    showToast("请先选择 PDF 成绩单。", "error");
+    return;
+  }
+  elements.parseTranscriptButton.disabled = true;
+  elements.parseTranscriptButton.textContent = "读取中";
+  const form = new FormData();
+  form.append("file", file);
+  try {
+    const payload = await api("/api/admissions/transcripts/parse?provider=local_pdf", {
+      method: "POST",
+      body: form,
+    });
+    renderTranscriptResult(payload);
+  } catch (error) {
+    showToast(error.message, "error");
+  } finally {
+    elements.parseTranscriptButton.disabled = false;
+    elements.parseTranscriptButton.textContent = "读取成绩单";
+  }
+}
+
+function renderAdmissionResult(payload, titleText = "申请分析结果") {
+  elements.admissionEmpty.classList.add("hidden");
+  elements.admissionResult.classList.remove("hidden");
+  elements.admissionResult.replaceChildren();
+  const heading = document.createElement("div");
+  heading.className = "result-heading";
+  const title = document.createElement("strong");
+  title.textContent = titleText;
+  const status = document.createElement("span");
+  status.textContent = payload.status || payload.error_code || "COMPLETED";
+  heading.append(title, status);
+  const message = document.createElement("p");
+  message.textContent = payload.message || "已生成候选结果。";
+  elements.admissionResult.append(heading, message);
+  renderProgramRecommendations(elements.admissionResult, payload);
+  renderChatEvidence(elements.admissionResult, payload.evidence || []);
+  if (payload.missing_fields?.length) {
+    const missing = document.createElement("p");
+    missing.className = "result-notice";
+    missing.textContent = `仍需补充：${payload.missing_fields.join("、")}`;
+    elements.admissionResult.append(missing);
+  }
+}
+
+async function recommendAdmissionPrograms() {
+  const score = elements.admissionScore.value;
+  const goal = elements.admissionGoal.value.trim();
+  const prompt = [
+    goal,
+    elements.undergraduateMajor.value && `本科专业：${elements.undergraduateMajor.value}`,
+    score && `当前成绩：${score}/${elements.admissionScale.value}`,
+  ].filter(Boolean).join("；") || "请根据我的背景推荐澳洲八大授课型硕士项目";
+  elements.recommendAdmissionButton.disabled = true;
+  elements.recommendAdmissionButton.textContent = "Pia 分析中";
+  try {
+    const request = {
+      prompt,
+      university: elements.admissionUniversity.value || null,
+      undergraduate_major: elements.undergraduateMajor.value || null,
+      career_goal: goal || null,
+      score_value: score ? Number(score) : null,
+      score_scale: score ? Number(elements.admissionScale.value) : null,
+      max_results: 3,
+    };
+    const payload = await api("/api/admissions/recommend", {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
+    renderAdmissionResult(payload, "Pia 推荐的候选项目");
+  } catch (error) {
+    showToast(error.message, "error");
+  } finally {
+    elements.recommendAdmissionButton.disabled = false;
+    elements.recommendAdmissionButton.textContent = "让 Pia 推荐项目";
+  }
+}
+
+async function evaluateAdmission(event) {
+  event.preventDefault();
+  if (!elements.admissionUniversity.value || !elements.admissionProgram.value) {
+    showToast("请先选择目标学校和具体项目；不确定时先让 Pia 推荐。", "error");
+    return;
+  }
+  const score = elements.admissionScore.value;
+  const scale = Number(elements.admissionScale.value);
+  const request = {
+    university: elements.admissionUniversity.value,
+    program: elements.admissionProgram.value,
+    discipline_id: elements.admissionDiscipline.value,
+    undergraduate_institution: elements.undergraduateInstitution.value || null,
+    undergraduate_major: elements.undergraduateMajor.value || null,
+    score_value: score ? Number(score) : null,
+    score_scale: score ? scale : null,
+    score_basis: score ? (scale === 100 ? "RAW_PERCENT" : "GPA") : null,
+  };
+  elements.evaluateAdmissionButton.disabled = true;
+  elements.evaluateAdmissionButton.textContent = "核对中";
+  try {
+    const payload = await api("/api/admissions/evaluate", {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
+    renderAdmissionResult(payload);
+  } catch (error) {
+    showToast(error.message, "error");
+  } finally {
+    elements.evaluateAdmissionButton.disabled = false;
+    elements.evaluateAdmissionButton.textContent = "核对公开门槛";
+  }
+}
+
 function switchView(viewName) {
   document.querySelectorAll(".view").forEach((view) => {
     view.classList.toggle("hidden", view.id !== `${viewName}View`);
@@ -663,6 +1054,28 @@ elements.savePlanButton.addEventListener("click", startSaveConfirmation);
 elements.confirmSaveButton.addEventListener("click", () => decideSave(true));
 elements.rejectSaveButton.addEventListener("click", () => decideSave(false));
 elements.closeDialogButton.addEventListener("click", () => decideSave(false));
+elements.chatForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  sendChatMessage(elements.chatInput.value);
+});
+elements.chatInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    elements.chatForm.requestSubmit();
+  }
+});
+elements.chatSuggestions.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-prompt]");
+  if (button) {
+    sendChatMessage(button.dataset.prompt);
+  }
+});
+elements.clearChatButton.addEventListener("click", resetChat);
+elements.admissionUniversity.addEventListener("change", loadAdmissionPrograms);
+elements.admissionDiscipline.addEventListener("change", loadAdmissionPrograms);
+elements.parseTranscriptButton.addEventListener("click", parseTranscript);
+elements.recommendAdmissionButton.addEventListener("click", recommendAdmissionPrograms);
+elements.admissionForm.addEventListener("submit", evaluateAdmission);
 document.querySelectorAll(".nav-button").forEach((button) => {
   button.addEventListener("click", () => switchView(button.dataset.view));
 });

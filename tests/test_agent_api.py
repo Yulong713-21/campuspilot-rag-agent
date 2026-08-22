@@ -69,7 +69,13 @@ class AgentAPITest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("CampusPilot", response.text)
+        self.assertIn("Pia 对话", response.text)
+        self.assertIn("申请评估", response.text)
+        self.assertIn('id="transcriptFile"', response.text)
         self.assertEqual(stylesheet.status_code, 200)
+        self.assertIn("/api/agent/chat", script.text)
+        self.assertIn("/api/admissions/transcripts/parse", script.text)
+        self.assertIn("/api/admissions/evaluate", script.text)
         self.assertNotIn("alice-demo-token", script.text)
 
     def test_anonymous_session_can_own_approval_thread(self) -> None:

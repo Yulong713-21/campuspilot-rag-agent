@@ -30,17 +30,23 @@
     <div class="shell">
       <aside class="sidebar">
         <nav aria-label="主要功能">
-          <button class="nav-button active" type="button" data-view="planner">
-            <span>01</span>毕业路径
+          <button class="nav-button active" type="button" data-view="agent">
+            <span>01</span>Pia 对话
+          </button>
+          <button class="nav-button" type="button" data-view="admission">
+            <span>02</span>申请评估
+          </button>
+          <button class="nav-button" type="button" data-view="planner">
+            <span>03</span>毕业路径
           </button>
           <button class="nav-button" type="button" data-view="compare">
-            <span>02</span>项目比较
+            <span>04</span>项目比较
           </button>
           <button class="nav-button" type="button" data-view="classifier">
-            <span>03</span>课程归属
+            <span>05</span>课程归属
           </button>
           <button class="nav-button" type="button" data-view="universities">
-            <span>04</span>院校专业
+            <span>06</span>院校专业
           </button>
         </nav>
 
@@ -61,7 +67,148 @@
       </aside>
 
       <main>
-        <section id="plannerView" class="view">
+        <section id="agentView" class="view agent-view">
+          <div class="agent-heading">
+            <div class="pia-identity">
+              <span class="pia-avatar" aria-hidden="true">P</span>
+              <div>
+                <p class="overline">CampusPilot Agent</p>
+                <h1>和 Pia 一起规划</h1>
+                <p>从兴趣与成绩出发，逐步缩小专业、项目和课程方案。</p>
+              </div>
+            </div>
+            <button id="clearChatButton" class="text-button" type="button">新对话</button>
+          </div>
+
+          <div class="chat-layout">
+            <section class="chat-panel" aria-label="Pia 对话">
+              <div id="chatMessages" class="chat-messages" aria-live="polite">
+                <article class="chat-message assistant">
+                  <span class="message-avatar" aria-hidden="true">P</span>
+                  <div class="message-body">
+                    <strong>Pia</strong>
+                    <p>你好，我是 Pia。你可以直接告诉我成绩、目标学校、就业想法或学习偏好，我们从你现在最关心的问题开始。</p>
+                  </div>
+                </article>
+              </div>
+
+              <div id="chatSuggestions" class="chat-suggestions">
+                <button type="button" data-prompt="我喜欢编程，也希望有国际化就业机会，适合什么专业？">按兴趣推荐专业</button>
+                <button type="button" data-prompt="我的本科均分是 82，想申请澳洲八大的计算机硕士，应该先看哪些项目？">按成绩推荐项目</button>
+                <button type="button" data-prompt="我想尽快毕业，同时给实习和求职留时间，课程应该怎么安排？">规划毕业路径</button>
+              </div>
+
+              <form id="chatForm" class="chat-composer">
+                <label class="sr-only" for="chatInput">告诉 Pia 你的问题</label>
+                <textarea id="chatInput" rows="2" maxlength="4000" placeholder="例如：我本科是软件工程，均分 82，想申请澳洲计算机硕士……" required></textarea>
+                <button id="sendChatButton" class="primary-button" type="submit">发送</button>
+              </form>
+            </section>
+
+            <aside class="agent-context">
+              <p class="overline">Pia can help</p>
+              <dl>
+                <div><dt>方向探索</dt><dd>兴趣、性格与职业目标</dd></div>
+                <div><dt>申请判断</dt><dd>成绩与公开录取要求</dd></div>
+                <div><dt>课程规划</dt><dd>学分、先修与学习负荷</dd></div>
+                <div><dt>证据来源</dt><dd>Handbook 与官方项目页</dd></div>
+              </dl>
+              <p class="agent-boundary">申请和签证政策可能变化。Pia 会区分建议、公开门槛与学校正式决定。</p>
+            </aside>
+          </div>
+        </section>
+
+        <section id="admissionView" class="view hidden">
+          <div class="view-heading">
+            <div>
+              <p class="overline">Admission navigator</p>
+              <h1>从本科成绩到项目选择</h1>
+              <p>上传成绩单或手动填写背景，让 Pia 推荐候选项目，再核对已收录的官方要求。</p>
+            </div>
+            <span class="version-label">澳洲八大 · 授课型硕士</span>
+          </div>
+
+          <div class="admission-layout">
+            <form id="admissionForm" class="admission-form">
+              <div class="control-heading">
+                <h2>申请背景</h2>
+                <span>计算机与商科</span>
+              </div>
+
+              <div class="admission-grid">
+                <label>目标学校
+                  <select id="admissionUniversity">
+                    <option value="">不限，由 Pia 推荐</option>
+                    <option value="Monash">Monash University</option>
+                    <option value="Melbourne">The University of Melbourne</option>
+                    <option value="Sydney">The University of Sydney</option>
+                    <option value="UNSW">UNSW Sydney</option>
+                    <option value="ANU">Australian National University</option>
+                    <option value="UQ">The University of Queensland</option>
+                    <option value="UWA">The University of Western Australia</option>
+                    <option value="Adelaide">Adelaide University</option>
+                  </select>
+                </label>
+                <label>申请方向
+                  <select id="admissionDiscipline">
+                    <option value="computing">计算机与信息技术</option>
+                    <option value="business">商科</option>
+                  </select>
+                </label>
+                <label class="admission-wide">具体项目
+                  <select id="admissionProgram" disabled>
+                    <option value="">先选择目标学校</option>
+                  </select>
+                </label>
+                <label>本科院校
+                  <input id="undergraduateInstitution" maxlength="200" placeholder="例如：北京科技大学">
+                </label>
+                <label>本科专业
+                  <input id="undergraduateMajor" maxlength="200" placeholder="例如：软件工程">
+                </label>
+                <label>成绩
+                  <input id="admissionScore" type="number" min="0" step="0.01" placeholder="82">
+                </label>
+                <label>成绩量表
+                  <select id="admissionScale">
+                    <option value="100">百分制</option>
+                    <option value="4">4 分制 GPA</option>
+                    <option value="7">7 分制 GPA</option>
+                    <option value="3">3 分制 GPA</option>
+                  </select>
+                </label>
+                <label class="admission-wide">你的目标
+                  <textarea id="admissionGoal" rows="3" maxlength="500" placeholder="例如：希望从事软件开发，重视国际化机会，优先考虑澳洲八大。"></textarea>
+                </label>
+              </div>
+
+              <section class="transcript-upload">
+                <div>
+                  <strong>本科成绩单 PDF</strong>
+                  <small>最大 10 MB；文本型 PDF 可直接读取，扫描件会提示需要 OCR。</small>
+                </div>
+                <input id="transcriptFile" type="file" accept="application/pdf,.pdf">
+                <button id="parseTranscriptButton" class="secondary-button" type="button">读取成绩单</button>
+              </section>
+
+              <div class="admission-actions">
+                <button id="recommendAdmissionButton" class="secondary-button" type="button">让 Pia 推荐项目</button>
+                <button id="evaluateAdmissionButton" class="primary-button" type="submit">核对公开门槛</button>
+              </div>
+            </form>
+
+            <section class="admission-result" aria-live="polite">
+              <div id="admissionEmpty" class="admission-empty">
+                <strong>先提供你的申请背景</strong>
+                <p>不确定学校时可以直接让 Pia 推荐；选择具体项目后再核对公开录取要求。</p>
+              </div>
+              <div id="transcriptResult" class="hidden"></div>
+              <div id="admissionResult" class="hidden"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="plannerView" class="view hidden">
           <div class="view-heading">
             <div>
               <p class="overline">Study plan agent</p>

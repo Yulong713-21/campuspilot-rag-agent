@@ -1,54 +1,107 @@
-# CampusPilot 轻量服务器部署
+# CampusPilot 公网 Demo 部署
 
-> 当前可直接执行的 GitHub Actions、GHCR、Docker Compose、Caddy HTTPS、运行数据打包、验收和
-> 回滚步骤见 [`CAMPUSPILOT_GITHUB_PRODUCTION_DEPLOYMENT.md`](CAMPUSPILOT_GITHUB_PRODUCTION_DEPLOYMENT.md)。
-
-## 推荐拓扑
-
-演示环境采用同域反向代理：Nginx 提供 Vue 静态文件，并将 `/api` 转发到
-Java Gateway；Gateway 再访问 campus-service，campus-service 通过
-`CAMPUSPILOT_AGENT_BASE_URL` 调用 Python Agent。Milvus、MySQL 和 Redis 可先
-放在同一台演示服务器，数据增大后再拆分。
+当前目标是单台 Ubuntu 24.04 服务器上的低资源、可回滚 HTTP Demo：
 
 ```text
-Browser -> Nginx -> Java Gateway -> campus-service -> Python Agent
-                                      |                 |
-                                   MySQL/Redis        Milvus/LLM API
+Internet :80
+  -> Nginx
+  -> 127.0.0.1:8010
+  -> one-worker FastAPI container
+  -> structured catalog / SQLite
+  -> optional Milvus Lite
+  -> optional cloud LLM
 ```
 
-## Agent 配置接口
+FastAPI、SQLite 和 Milvus 不直接暴露公网。当前阶段不配置域名、HTTPS、Caddy 或额外中间件。
 
-1. 从 `.env.server.example` 创建服务器私密配置，API Key 不进入 Git。
-2. 使用 `CAMPUSPILOT_CORS_ORIGINS` 设置允许访问的前端域名，多个域名用逗号分隔。
-3. 使用 `CAMPUSPILOT_AGENT_BASE_URL` 配置 Java 到 Python Agent 的地址。
-4. 前端构建时通过 `VITE_API_BASE_URL` 配置 API 前缀；同域部署推荐 `/api`。
+## 服务器布局
 
-启动 Agent：
-
-```powershell
-.\scripts\run_agent_api.ps1 -BindHost 0.0.0.0 -Port 8010
+```text
+/opt/campuspilot/
+├── campuspilot-rag-agent/          # Git 仓库
+│   ├── .env                        # 私密配置，不进入 Git
+│   └── deploy/production/
+│       └── runtime-data/           # ignored bind mounts
+└── deploy-state/
+    ├── previous.env                # 上一镜像与回滚元数据
+    └── backups/<timestamp>/        # 日志与 Nginx 备份
 ```
 
-Linux 上等价命令：
+## 首次准备
+
+服务器仓库必须位于 `/opt/campuspilot/campuspilot-rag-agent`，处于干净的 `main` 分支。
 
 ```bash
-python -m uvicorn agent_runtime.api:app --app-dir src --host 0.0.0.0 --port 8010
+cd /opt/campuspilot/campuspilot-rag-agent
+cp .env.server.example .env
+chmod 600 .env
 ```
 
-## 健康检查
+编辑 `.env` 中的真实模型配置。部署脚本只检查变量名是否存在，不覆盖或打印值。
 
-- `GET /health/live`：只判断进程是否存活，供容器或进程管理器探测。
-- `GET /health/ready`：判断目录和检索器是否完成初始化，供负载均衡器决定是否接流量。
-- `GET /health`：展示当前数据、检索和目标理解模式，供演示排障。
+2 GB 内存服务器首次部署建议保持：
 
-生产环境不要把 8010、8090、10010、19530、3306 和 6379 直接暴露到公网；
-公网只开放 Nginx 的 80/443，内部服务通过安全组或本机网络互访。
+```env
+CAMPUSPILOT_RETRIEVAL_MODE=catalog_bm25
+CAMPUSPILOT_VECTOR_SEARCH_ENABLED=0
+CAMPUSPILOT_RERANKER_ENABLED=0
+```
 
-## 最小资源
+此模式是明确的 degraded deployment：Planner、BM25 和 Evidence 可用，但 Milvus 与 reranker
+未上线。只有准备好 Milvus Lite DB 与 MiniLM 模型并通过 smoke test 后才能启用 vector。
 
-- LLM 使用第三方 API、Milvus 同机：建议至少 4 vCPU、8 GB 内存、100 GB SSD。
-- Milvus 独立或使用托管向量库：应用机可从 2 vCPU、4 GB 起步。
-- 本地运行 7B 模型不属于低成本演示部署，建议继续使用兼容 API。
+## 部署
 
-上线前还需要补 TLS、域名、日志轮转、自动备份和密钥管理。中国大陆服务器绑定
-公网域名通常还涉及备案；个人演示可先选择中国香港节点或只做临时 IP 验收。
+```bash
+cd /opt/campuspilot/campuspilot-rag-agent
+sudo ./deploy/production/deploy.sh
+```
+
+脚本会：
+
+1. 拒绝 dirty worktree 和非 `main` 分支；
+2. 检查 `.env` 必需变量名；
+3. fetch 并只允许 fast-forward；
+4. 记录当前 SHA、镜像、日志与 Nginx 配置；
+5. 构建 `campuspilot:<full-git-sha>` 和 `campuspilot:latest`；
+6. 以单 worker、`127.0.0.1:8010`、日志轮转和 bind mounts 启动容器；
+7. 验证 live、ready、health、前端、三套 Planner 方案和 Evidence；
+8. 仅在 `nginx -t` 成功后 reload；
+9. 验证本机 Nginx 与公网 IP。
+
+公网失败不会破坏已经健康的应用和 Nginx。此时脚本会报告可能的云安全组问题，不修改 UFW、
+SSH 或云厂商控制台。
+
+## 手动验证
+
+```bash
+./deploy/production/verify.sh http://127.0.0.1:8010
+./deploy/production/verify.sh http://127.0.0.1
+./deploy/production/verify.sh http://43.108.32.225
+```
+
+Vector 关闭时输出 `WARN vector retrieval disabled`。Vector 开启时，readiness 必须为 true，
+且 `/health` 的 retrieval mode 必须包含 `milvus`。
+
+## 回滚
+
+部署脚本在容器启动、live、ready 或 Planner 门禁失败后自动调用回滚。也可以手工执行：
+
+```bash
+sudo ./deploy/production/rollback.sh
+```
+
+回滚使用 `/opt/campuspilot/deploy-state/previous.env` 中记录的不可变旧镜像，恢复 Nginx 备份，
+并重新验证应用与 Nginx。脚本不删除 Docker volume、旧镜像、数据库或备份。
+
+## 诊断
+
+```bash
+docker ps -a
+docker logs --tail 100 campuspilot
+free -h
+df -h /
+nginx -t
+```
+
+不要把 `.env`、日志、数据库、Milvus 文件或模型权重提交到 Git。

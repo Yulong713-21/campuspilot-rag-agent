@@ -5,7 +5,6 @@ __pycache__/
 .env.*
 !.env.example
 !.env.server.example
-!deploy/production/.env.production.example
 
 # Secrets, credentials, and local certificates must never enter Git history.
 *.pem

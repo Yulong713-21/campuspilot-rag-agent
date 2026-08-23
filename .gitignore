@@ -52,6 +52,14 @@ Thumbs.db
 
 # Personal learning, resume, and interview material stays outside the public repo.
 notes/
+private/
+career-prep/
+docs/*INTERVIEW*
+docs/*interview*
+docs/*RESUME*
+docs/*resume*
+docs/*MENTOR*
+docs/*mentor*
 docs/AI_AGENT_LEARNING_ROADMAP_AND_MOD_PLAN.md
 docs/CAMPUSPILOT_7_DAY_DEEP_DIVE.md
 docs/CAMPUSPILOT_AGENT_INTERVIEW_SCRIPT_CN.md

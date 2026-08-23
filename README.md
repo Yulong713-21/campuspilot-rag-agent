@@ -175,6 +175,7 @@ Milvus 启动失败时主服务会降级到 BM25，并在 readiness 中暴露降
 
 ## 文档
 
+- [公开开发顺序与 Git 分支框架](docs/DEVELOPMENT_SEQUENCE.md)
 - [CampusPilot 技术文档](docs/CAMPUSPILOT_TECHNICAL_DOCUMENT.md)
 - [确定性领域模型](docs/CAMPUSPILOT_DOMAIN_MODEL.md)
 - [MySQL 表结构](docs/CAMPUSPILOT_MYSQL_SCHEMA.md)

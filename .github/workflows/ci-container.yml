@@ -28,6 +28,8 @@ jobs:
             requirements-torch-cpu.txt
             requirements-app.txt
             requirements-persistence.txt
+      - name: Enforce public repository boundary
+        run: python scripts/check_public_repository.py
       - run: |
           pip install -r requirements-torch-cpu.txt
           pip install -r requirements-server.txt

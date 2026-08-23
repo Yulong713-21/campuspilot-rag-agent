@@ -19,8 +19,8 @@ Git 提交按可验证增量推进，不用 `day-XX` 作为公开分支结构。
    - Deadline、限流、上下文预算和 fallback 保证模型不可用时仍能返回确定性结果。
 5. **产品接口与界面**
    - `src/agent_runtime/api.py`：FastAPI 产品接口。
-   - `static/`：用户工作台和受保护的本地模型管理页。
-   - `java-gateway/`、`integrations/`：可选企业网关与工作流集成。
+   - `frontend/`：Demo-first C6001 Planner 前端；由 FastAPI 以 `/static` URL 提供资源。
+   - `integrations/`：可选企业网关与工作流集成，不属于公开运行主路径。
 6. **验证、部署与运维**
    - `tests/`、`eval/`、`experiments/`：单元、回归和可观察实验。
    - `deploy/`、`Dockerfile*`、`.github/workflows/`：部署、容器和持续集成。

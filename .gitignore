@@ -37,10 +37,12 @@ data/official_sources/extraction-report.json
 data/official_sources/handbook-chunks.jsonl
 data/official_sources/*-download-report.json
 data/unit_sources/
+data/vector/
+data/runtime/
 node_modules/
 dist/
 build/
-java-gateway/target/
+integrations/java-gateway/target/
 .idea/
 .vscode/
 .coverage

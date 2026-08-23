@@ -17,7 +17,7 @@ RUN python -m pip install --upgrade pip \
     && python -m pip install -r requirements-server.txt
 
 COPY src ./src
-COPY static ./static
+COPY frontend ./frontend
 COPY data ./data
 COPY scripts ./scripts
 COPY alembic.ini ./alembic.ini

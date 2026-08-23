@@ -514,6 +514,6 @@ FastAPI 服务同时提供两类入口：
 | `/docs` | 开发者 | 查看 OpenAPI 契约并手动调试接口 |
 | `/health` | 运维与探针 | 检查服务是否正常 |
 
-前端静态资源位于 `static/`，由 FastAPI `StaticFiles` 同源托管。页面中的状态不是本地模拟，
+前端源码位于 `frontend/`，由 FastAPI `StaticFiles` 通过稳定的 `/static` URL 同源托管。页面中的状态不是本地模拟，
 而是来自审批 API 和 SQLite Checkpoint。浏览器只负责展示，认证、thread 所有权和工作流
 恢复均由服务端执行。

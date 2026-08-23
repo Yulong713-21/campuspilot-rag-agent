@@ -69,8 +69,7 @@ RAG 模块：
 
 前端/API：
 
-- `static/index.html`
-- `static/src/App.jsx`
+- 历史 EduRAG 前端已被 production `frontend/` 中的 Demo-first Planner 取代。
 - `app.py` 中的 `/api/query`、`/api/stream`、`/api/history`、`/api/sources`、`/health`
 
 ## 4. 系统运行主流程

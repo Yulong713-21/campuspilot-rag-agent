@@ -14,7 +14,7 @@
 再启动网关：
 
 ```powershell
-cd java-gateway
+cd integrations\java-gateway
 mvn spring-boot:run
 ```
 

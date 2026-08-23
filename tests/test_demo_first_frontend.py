@@ -7,7 +7,7 @@ import unittest
 from fastapi.testclient import TestClient
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STATIC_ROOT = REPO_ROOT / "static"
+FRONTEND_ROOT = REPO_ROOT / "frontend"
 SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
@@ -28,23 +28,23 @@ class DemoFirstFrontendTest(unittest.TestCase):
         self.assertNotIn("id=\"admissionForm\"", response.text)
 
     def test_frontend_uses_es_modules_without_monolithic_app(self) -> None:
-        index = (STATIC_ROOT / "index.html").read_text(encoding="utf-8")
+        index = (FRONTEND_ROOT / "index.html").read_text(encoding="utf-8")
         javascript = "\n".join(
             path.read_text(encoding="utf-8")
-            for path in sorted((STATIC_ROOT / "js").rglob("*.js"))
+            for path in sorted((FRONTEND_ROOT / "js").rglob("*.js"))
         )
 
         self.assertIn('type="module"', index)
         self.assertIn("/static/js/planner-page.js", index)
-        self.assertFalse((STATIC_ROOT / "app.js").exists())
+        self.assertFalse((FRONTEND_ROOT / "app.js").exists())
         self.assertNotIn("function setBusy", javascript)
         self.assertNotIn('document.querySelectorAll("button")', javascript)
         self.assertIn("runButtonTask", javascript)
 
     def test_evidence_is_a_first_class_card_surface(self) -> None:
-        index = (STATIC_ROOT / "index.html").read_text(encoding="utf-8")
+        index = (FRONTEND_ROOT / "index.html").read_text(encoding="utf-8")
         evidence = (
-            STATIC_ROOT / "js" / "planner" / "evidence.js"
+            FRONTEND_ROOT / "js" / "planner" / "evidence.js"
         ).read_text(encoding="utf-8")
 
         self.assertIn("OFFICIAL EVIDENCE", index)

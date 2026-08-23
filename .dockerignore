@@ -17,9 +17,11 @@ models
 node_modules
 dist
 build
-java-gateway/target
+integrations/java-gateway/target
 data/official_sources/raw
 data/official_sources/clean
 data/official_sources/index.json
 data/official_sources/*-report.json
 data/official_sources/handbook-chunks.jsonl
+data/vector
+data/runtime

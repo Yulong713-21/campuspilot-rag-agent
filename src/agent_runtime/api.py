@@ -75,8 +75,8 @@ from campuspilot_core.transcript_parser import (
 )
 
 
-STATIC_DIR = Path(__file__).resolve().parents[2] / "static"
-REPO_ROOT = STATIC_DIR.parent
+FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
+REPO_ROOT = FRONTEND_DIR.parent
 LOGGER = logging.getLogger(__name__)
 
 
@@ -582,7 +582,9 @@ def create_app(
                 )
         return await call_next(request)
 
-    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+    # Keep the public URL stable while the repository uses an explicit frontend/
+    # production boundary.
+    app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
 
     def current_user(
         credentials: Annotated[
@@ -638,7 +640,7 @@ def create_app(
 
     @app.get("/", include_in_schema=False)
     def root() -> FileResponse:
-        return FileResponse(STATIC_DIR / "index.html")
+        return FileResponse(FRONTEND_DIR / "index.html")
 
     @app.get("/admin", include_in_schema=False)
     def admin_page(request: Request) -> FileResponse:
@@ -647,7 +649,7 @@ def create_app(
         host = request.client.host if request.client else ""
         if admin_local_only and host not in {"127.0.0.1", "::1", "localhost"}:
             raise HTTPException(status_code=404, detail="local admin is unavailable")
-        return FileResponse(STATIC_DIR / "admin.html")
+        return FileResponse(FRONTEND_DIR / "admin.html")
 
     @app.get("/api/admin/config", include_in_schema=False)
     def get_admin_config(

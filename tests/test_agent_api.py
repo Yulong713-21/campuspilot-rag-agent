@@ -61,25 +61,27 @@ class AgentAPITest(unittest.TestCase):
         self.assertEqual(missing.status_code, 401)
         self.assertEqual(invalid.status_code, 401)
 
-    def test_root_serves_user_workspace(self) -> None:
+    def test_root_serves_demo_first_c6001_planner(self) -> None:
         with self.client() as client:
             response = client.get("/")
-            stylesheet = client.get("/static/app.css")
-            script = client.get("/static/app.js")
+            stylesheet = client.get("/static/planner.css")
+            page_script = client.get("/static/js/planner-page.js")
+            api_script = client.get("/static/js/core/api.js")
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("CampusPilot", response.text)
-        self.assertIn("Pia 对话", response.text)
-        self.assertIn("申请评估", response.text)
-        self.assertIn('id="transcriptFile"', response.text)
-        self.assertIn("app.css?v=", response.text)
-        self.assertIn("app.js?v=", response.text)
-        self.assertIn('id="transcriptFileName"', response.text)
+        self.assertIn("C6001 Planner Demo", response.text)
+        self.assertIn('id="planForm"', response.text)
+        self.assertIn('id="evidenceGrid"', response.text)
+        self.assertIn("planner.css?v=", response.text)
+        self.assertIn("/static/js/planner-page.js?v=", response.text)
+        self.assertNotIn('id="chatForm"', response.text)
+        self.assertNotIn('id="admissionForm"', response.text)
         self.assertEqual(stylesheet.status_code, 200)
-        self.assertIn("/api/agent/chat", script.text)
-        self.assertIn("/api/admissions/transcripts/parse", script.text)
-        self.assertIn("/api/admissions/evaluate", script.text)
-        self.assertNotIn("alice-demo-token", script.text)
+        self.assertEqual(page_script.status_code, 200)
+        self.assertIn("/api/plans/generate", page_script.text)
+        self.assertIn("runButtonTask", api_script.text)
+        self.assertNotIn("alice-demo-token", page_script.text)
 
     def test_anonymous_session_can_own_approval_thread(self) -> None:
         with self.client() as client:

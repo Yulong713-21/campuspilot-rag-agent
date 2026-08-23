@@ -1,16 +1,19 @@
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
+import hmac
 import json
 import logging
 import os
 from pathlib import Path
 import sqlite3
+import time
 from typing import Annotated, Any, Literal
 
 from fastapi import (
     Depends,
     FastAPI,
     File,
+    Header,
     HTTPException,
     Path as ApiPath,
     Query,
@@ -23,7 +26,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
 from langgraph.checkpoint.sqlite import SqliteSaver
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator
 
 from .approval_service import (
     ApprovalService,
@@ -32,6 +35,7 @@ from .approval_service import (
     ThreadOwnershipRepository,
 )
 from .approval_workflow import LangGraphApprovalWorkflow
+from .admin_config import EnvironmentConfigStore, env_flag
 from .anonymous_session import AnonymousSessionRepository
 from .campuspilot import (
     CampusPilotCatalog,
@@ -72,6 +76,7 @@ from campuspilot_core.transcript_parser import (
 
 
 STATIC_DIR = Path(__file__).resolve().parents[2] / "static"
+REPO_ROOT = STATIC_DIR.parent
 LOGGER = logging.getLogger(__name__)
 
 
@@ -101,6 +106,44 @@ class ActionRequest(BaseModel):
 
 class ResumeRequest(BaseModel):
     approved: bool
+
+
+class AdminConfigUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    cloud_llm_enabled: bool | None = None
+    openai_base_url: str | None = Field(default=None, min_length=1, max_length=500)
+    openai_model: str | None = Field(default=None, min_length=1, max_length=200)
+    api_key: SecretStr | None = None
+    openai_timeout_seconds: float | None = Field(
+        default=None,
+        ge=1,
+        le=300,
+    )
+    retrieval_mode: Literal["catalog_bm25", "full_bm25", "hybrid"] | None = None
+    vector_search_enabled: bool | None = None
+    reranker_enabled: bool | None = None
+    rate_limit_per_minute: int | None = Field(default=None, ge=0, le=10000)
+    max_upload_bytes: int | None = Field(
+        default=None,
+        ge=1024,
+        le=100 * 1024 * 1024,
+    )
+
+    @field_validator("openai_base_url")
+    @classmethod
+    def validate_base_url(cls, value: str | None) -> str | None:
+        if value is not None and not value.startswith("https://"):
+            raise ValueError("OpenAI-compatible Base URL must use HTTPS")
+        return value.rstrip("/") if value else value
+
+
+class AdminLlmTestRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    prompt: str = Field(min_length=1, max_length=1000)
+    temperature: float = Field(default=0.1, ge=0.0, le=2.0)
+    max_tokens: int = Field(default=128, ge=1, le=2048)
 
 
 class ProgramComparisonRequest(BaseModel):
@@ -384,6 +427,17 @@ def create_app(
         if rate_limit_per_minute > 0
         else None
     )
+    admin_enabled = env_flag("CAMPUSPILOT_ADMIN_ENABLED")
+    admin_local_only = env_flag("CAMPUSPILOT_ADMIN_LOCAL_ONLY", default=True)
+    admin_token = os.environ.get("CAMPUSPILOT_ADMIN_TOKEN", "")
+    if admin_enabled and not admin_token:
+        raise ValueError(
+            "CAMPUSPILOT_ADMIN_TOKEN is required when local admin is enabled"
+        )
+    env_file = Path(
+        os.environ.get("CAMPUSPILOT_ENV_FILE", str(REPO_ROOT / ".env"))
+    )
+    config_store = EnvironmentConfigStore(env_file)
     campus_catalog = CampusPilotCatalog()
     admission_service = AdmissionMvpService()
     institution_catalog = InstitutionCatalog()
@@ -483,6 +537,8 @@ def create_app(
         version="0.2.0",
         lifespan=lifespan,
     )
+    app.state.cloud_client = cloud_client
+    app.state.config_store = config_store
     cors_origins = [
         value.strip()
         for value in os.environ.get(
@@ -556,9 +612,168 @@ def create_app(
     def service() -> ApprovalService:
         return app.state.approval_service
 
+    def require_admin(
+        request: Request,
+        supplied_token: Annotated[
+            str | None,
+            Header(alias="X-CampusPilot-Admin-Token"),
+        ] = None,
+    ) -> None:
+        if not admin_enabled:
+            raise HTTPException(status_code=404, detail="local admin is disabled")
+        host = request.client.host if request.client else ""
+        if admin_local_only and host not in {"127.0.0.1", "::1", "localhost"}:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="local admin only accepts loopback requests",
+            )
+        if supplied_token is None or not hmac.compare_digest(
+            supplied_token,
+            admin_token,
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="invalid admin token",
+            )
+
     @app.get("/", include_in_schema=False)
     def root() -> FileResponse:
         return FileResponse(STATIC_DIR / "index.html")
+
+    @app.get("/admin", include_in_schema=False)
+    def admin_page(request: Request) -> FileResponse:
+        if not admin_enabled:
+            raise HTTPException(status_code=404, detail="local admin is disabled")
+        host = request.client.host if request.client else ""
+        if admin_local_only and host not in {"127.0.0.1", "::1", "localhost"}:
+            raise HTTPException(status_code=404, detail="local admin is unavailable")
+        return FileResponse(STATIC_DIR / "admin.html")
+
+    @app.get("/api/admin/config", include_in_schema=False)
+    def get_admin_config(
+        _: Annotated[None, Depends(require_admin)],
+    ) -> dict[str, Any]:
+        config = config_store.public_config()
+        runtime_client = app.state.cloud_client
+        return {
+            "config": config,
+            "runtime": {
+                "llm_client_active": runtime_client is not None,
+                "model": runtime_client.model if runtime_client is not None else None,
+                "base_url": (
+                    runtime_client.base_url if runtime_client is not None else None
+                ),
+                "restart_note": (
+                    "检索、Reranker、限流、上传限制和 LLM 开关需重启服务。"
+                ),
+            },
+        }
+
+    @app.put("/api/admin/config", include_in_schema=False)
+    def update_admin_config(
+        update: AdminConfigUpdate,
+        _: Annotated[None, Depends(require_admin)],
+    ) -> dict[str, Any]:
+        before = config_store.public_config()
+        payload = update.model_dump(exclude_none=True, exclude={"api_key"})
+        api_key = update.api_key.get_secret_value() if update.api_key else None
+        try:
+            config_store.update(payload, api_key=api_key)
+        except (OSError, ValueError) as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=str(exc),
+            ) from exc
+        after = config_store.public_config()
+        changed_fields = [
+            field
+            for field in payload
+            if before.get(field) != after.get(field)
+        ]
+        if api_key:
+            changed_fields.append("api_key")
+        restart_fields = {
+            "cloud_llm_enabled",
+            "retrieval_mode",
+            "vector_search_enabled",
+            "reranker_enabled",
+            "rate_limit_per_minute",
+            "max_upload_bytes",
+        }
+        restart_required = sorted(restart_fields.intersection(changed_fields))
+        hot_applied: list[str] = []
+        runtime_client = app.state.cloud_client
+        live_fields = {
+            "openai_base_url",
+            "openai_model",
+            "openai_timeout_seconds",
+            "api_key",
+        }
+        requested_live_fields = live_fields.intersection(changed_fields)
+        if requested_live_fields and runtime_client is not None:
+            try:
+                runtime_client.reconfigure(
+                    api_key=(api_key if api_key else None),
+                    base_url=after["openai_base_url"],
+                    model=after["openai_model"],
+                    timeout_seconds=after["openai_timeout_seconds"],
+                )
+                hot_applied = sorted(requested_live_fields)
+            except ValueError as exc:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail=str(exc),
+                ) from exc
+        elif requested_live_fields:
+            restart_required.extend(sorted(requested_live_fields))
+        return {
+            "saved": True,
+            "config": after,
+            "hot_applied_fields": hot_applied,
+            "restart_required_fields": sorted(set(restart_required)),
+            "message": (
+                "配置已保存；标记字段需重启服务后生效。"
+                if restart_required
+                else "配置已保存并应用到当前模型客户端。"
+            ),
+        }
+
+    @app.post("/api/admin/llm/test", include_in_schema=False)
+    def test_admin_llm(
+        test: AdminLlmTestRequest,
+        _: Annotated[None, Depends(require_admin)],
+    ) -> dict[str, Any]:
+        try:
+            client = OpenAICompatibleChatClient.from_environment()
+            started = time.perf_counter()
+            result = client.chat(
+                [
+                    {
+                        "role": "system",
+                        "content": (
+                            "你是 CampusPilot 配置测试助手。请用简体中文简短回答，"
+                            "不要调用工具，不要补充未提供的事实。"
+                        ),
+                    },
+                    {"role": "user", "content": test.prompt},
+                ],
+                temperature=test.temperature,
+                max_tokens=test.max_tokens,
+            )
+            elapsed_ms = round((time.perf_counter() - started) * 1000, 1)
+        except Exception as exc:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail=f"{type(exc).__name__}: {str(exc)[:300]}",
+            ) from exc
+        content = result["message"].get("content")
+        return {
+            "ok": True,
+            "content": content if isinstance(content, str) else "",
+            "model": result.get("model"),
+            "usage": result.get("usage", {}),
+            "elapsed_ms": elapsed_ms,
+        }
 
     @app.get("/health")
     def health() -> dict[str, str]:

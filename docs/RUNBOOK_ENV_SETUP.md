@@ -716,6 +716,53 @@ CAMPUSPILOT_OPENAI_BASE_URL=https://工作空间ID.cn-beijing.maas.aliyuncs.com/
 CAMPUSPILOT_OPENAI_MODEL=qwen-plus
 ```
 
+## CampusPilot 本地管理后台
+
+本地管理后台用于维护 OpenAI 兼容模型配置、检索开关和运行保护参数。默认关闭，
+不会随公开 Demo 自动暴露。先在本地 `.env` 增加：
+
+```dotenv
+CAMPUSPILOT_ADMIN_ENABLED=1
+CAMPUSPILOT_ADMIN_LOCAL_ONLY=1
+CAMPUSPILOT_ADMIN_TOKEN=请替换为随机管理员Token
+CAMPUSPILOT_ENV_FILE=.env
+```
+
+可以用 Python 生成随机 Token：
+
+```powershell
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+启动 FastAPI 后打开：
+
+```text
+http://127.0.0.1:8010/admin
+```
+
+安全边界：
+
+- 管理 API 必须携带独立的 `X-CampusPilot-Admin-Token`；
+- `CAMPUSPILOT_ADMIN_LOCAL_ONLY=1` 时只接受回环地址访问；
+- API Key 仅允许覆盖写入，读取接口只返回“是否配置”和末四位提示；
+- `.env` 使用临时文件加原子替换，保留注释和非管理字段；
+- 管理页面只把管理员 Token 放在 `sessionStorage`，关闭会话后失效；
+- 公网服务器默认保持 `CAMPUSPILOT_ADMIN_ENABLED=0`。
+
+生效范围：
+
+```text
+API Key / Base URL / 模型名称 / 模型超时
+  -> 已存在云模型客户端时立即热更新
+
+LLM 开关 / 检索模式 / 向量检索 / Reranker / 限流 / 上传大小
+  -> 写入 .env，重启服务后重新装配组件
+```
+
+“连接测试”会使用已保存的模型配置发送一条最小请求，并展示模型名称、耗时、输入
+Token 和输出 Token。该操作会真实消耗模型额度；额度耗尽时页面会显示上游错误，
+不会自动连续重试。
+
 Key 与 Base URL 必须属于同一个百炼工作空间和计费计划。单独验证：
 
 ```powershell

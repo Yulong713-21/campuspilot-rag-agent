@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CampusPilot 本地管理</title>
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark">C</span>
+      <span><strong>CampusPilot</strong><small>本地运行配置</small></span>
+    </a>
+    <div class="runtime-state"><span id="runtimeDot" class="status-dot"></span><span id="runtimeText">等待连接</span></div>
+  </header>
+
+  <main class="admin-shell">
+    <aside class="sidebar">
+      <nav aria-label="管理分区">
+        <button class="nav-item active" data-target="providerSection">模型服务</button>
+        <button class="nav-item" data-target="retrievalSection">检索与运行</button>
+        <button class="nav-item" data-target="testSection">连接测试</button>
+      </nav>
+      <div class="sidebar-note">
+        <strong>安全说明</strong>
+        <p>API Key 只写入本地环境文件，页面不会读取或回显完整密钥。</p>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <div id="authPanel" class="auth-panel">
+        <div>
+          <strong>连接本地管理接口</strong>
+          <p>请输入 `CAMPUSPILOT_ADMIN_TOKEN`。Token 只保存在当前浏览器会话。</p>
+        </div>
+        <div class="auth-controls">
+          <input id="adminToken" type="password" autocomplete="current-password" placeholder="管理员 Token">
+          <button id="connectButton" class="primary" type="button">连接</button>
+        </div>
+      </div>
+
+      <div id="adminContent" class="admin-content" hidden>
+        <div class="page-heading">
+          <div>
+            <span class="eyebrow">LOCAL ADMIN</span>
+            <h1>模型与运行参数</h1>
+            <p>调整 OpenAI 兼容模型、检索模式和本地保护参数。</p>
+          </div>
+          <div class="heading-actions">
+            <span id="saveState" class="save-state">尚未修改</span>
+            <button id="reloadButton" class="secondary" type="button">重新读取</button>
+            <button id="saveButton" class="primary" type="button">保存配置</button>
+          </div>
+        </div>
+
+        <div id="notice" class="notice" hidden></div>
+
+        <section id="providerSection" class="settings-section">
+          <div class="section-title">
+            <div><span>01</span><h2>模型服务</h2></div>
+            <p>模型、Base URL、API Key 和超时支持热更新。</p>
+          </div>
+          <div class="form-grid">
+            <label class="field toggle-field">
+              <span><strong>启用云模型</strong><small>切换开关后需重启服务</small></span>
+              <input id="cloudEnabled" type="checkbox" role="switch">
+            </label>
+            <label class="field span-2">
+              <span>OpenAI 兼容 Base URL</span>
+              <input id="baseUrl" type="url" placeholder="https://example.com/compatible-mode/v1">
+            </label>
+            <label class="field">
+              <span>模型名称</span>
+              <input id="modelName" type="text" placeholder="qwen-plus">
+            </label>
+            <label class="field">
+              <span>API Key</span>
+              <input id="apiKey" type="password" autocomplete="new-password" placeholder="留空则保持当前密钥">
+              <small id="apiKeyHint">尚未读取配置</small>
+            </label>
+            <label class="field">
+              <span>请求超时（秒）</span>
+              <input id="timeoutSeconds" type="number" min="1" max="300" step="1">
+            </label>
+          </div>
+        </section>
+
+        <section id="retrievalSection" class="settings-section">
+          <div class="section-title">
+            <div><span>02</span><h2>检索与运行</h2></div>
+            <p>这些参数影响服务组件，保存后需要重启。</p>
+          </div>
+          <div class="form-grid">
+            <label class="field">
+              <span>检索模式</span>
+              <select id="retrievalMode">
+                <option value="catalog_bm25">目录 BM25</option>
+                <option value="full_bm25">完整 BM25</option>
+                <option value="hybrid">BM25 + 向量混合</option>
+              </select>
+            </label>
+            <label class="field toggle-field">
+              <span><strong>向量检索</strong><small>依赖 Milvus 与 Embedding</small></span>
+              <input id="vectorEnabled" type="checkbox" role="switch">
+            </label>
+            <label class="field toggle-field">
+              <span><strong>Reranker</strong><small>依赖本地重排模型</small></span>
+              <input id="rerankerEnabled" type="checkbox" role="switch">
+            </label>
+            <label class="field">
+              <span>每分钟请求上限</span>
+              <input id="rateLimit" type="number" min="0" max="10000" step="1">
+              <small>0 表示关闭本地限流</small>
+            </label>
+            <label class="field">
+              <span>PDF 最大上传（MB）</span>
+              <input id="maxUploadMb" type="number" min="1" max="100" step="1">
+            </label>
+          </div>
+        </section>
+
+        <section id="testSection" class="settings-section test-layout">
+          <div class="section-title">
+            <div><span>03</span><h2>连接测试</h2></div>
+            <p>使用已保存配置发送一次最小模型请求，会消耗少量额度。</p>
+          </div>
+          <div class="test-grid">
+            <div class="test-controls">
+              <label class="field">
+                <span>测试问题</span>
+                <textarea id="testPrompt" rows="5">请用一句话说明你当前使用的模型连接正常。</textarea>
+              </label>
+              <label class="field range-field">
+                <span>Temperature <output id="temperatureValue">0.1</output></span>
+                <input id="temperature" type="range" min="0" max="2" step="0.1" value="0.1">
+              </label>
+              <label class="field">
+                <span>最大输出 Token</span>
+                <input id="maxTokens" type="number" min="1" max="2048" value="128">
+              </label>
+              <button id="testButton" class="primary full-width" type="button">发送测试</button>
+            </div>
+            <div class="test-result" aria-live="polite">
+              <div class="result-head"><strong>测试输出</strong><span id="testMeta">尚未测试</span></div>
+              <pre id="testOutput">保存配置后，可在这里验证模型连接。</pre>
+              <dl id="usageGrid" class="usage-grid"></dl>
+            </div>
+          </div>
+        </section>
+
+        <footer class="config-footer">
+          <span>环境文件</span><code id="envFilePath">-</code>
+        </footer>
+      </div>
+    </section>
+  </main>
+  <script src="/static/admin.js" defer></script>
+</body>
+</html>

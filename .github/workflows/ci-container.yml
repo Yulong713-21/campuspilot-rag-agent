@@ -2,7 +2,7 @@ name: CampusPilot CI and Container
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
     tags: ["v*"]
   pull_request:
     branches: [main]
@@ -42,10 +42,11 @@ jobs:
           tests.test_campuspilot
           tests.test_campuspilot_domain_core
           tests.test_admission_mvp
+          tests.test_demo_first_frontend
           tests.test_release_scope
 
   container:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: test
     runs-on: ubuntu-latest
     steps:

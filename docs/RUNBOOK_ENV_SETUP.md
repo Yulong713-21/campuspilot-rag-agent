@@ -1,5 +1,39 @@
 # EduRAG 环境跑通 Runbook
 
+## Runtime reliability and request tracing
+
+Every API response includes `X-Request-ID`. A valid incoming `X-Request-ID` is
+reused; otherwise the API creates one. Runtime events are JSON Lines and use the
+same `request_id` across request, route, retrieval, Planner and LLM events.
+
+Use the request ID returned to the client to isolate one request:
+
+```bash
+docker logs campuspilot 2>&1 | grep '"request_id":"REQUEST_ID"'
+```
+
+Debug in this order: `/health/live`, `/health/ready`, `/health`, the response
+request ID, then container logs. Collect a safe status bundle with:
+
+```bash
+scripts/ops/collect_runtime_status.sh
+```
+
+The collector prints timestamps, the Git revision, container state, health
+responses, memory, disk and the final 100 application log lines. It never reads
+`.env`, dumps process environment variables or prints configured API keys.
+
+Normalized public LLM failures are `LLM_RATE_LIMITED`,
+`LLM_QUOTA_EXHAUSTED`, `LLM_TIMEOUT` and `LLM_UNAVAILABLE`. Transient rate,
+timeout and upstream 5xx failures retry at most twice. Authentication, quota and
+invalid-request failures are never retried. Configure the bound with
+`CAMPUSPILOT_OPENAI_MAX_RETRIES=2` (allowed range: 0-2).
+
+The deterministic Planner remains available when the LLM is unavailable.
+Responses that use a deterministic fallback explicitly include degraded status
+and a normalized reason; operations with no truthful fallback return a stable
+non-2xx error containing the same request ID.
+
 日期：2026-07-08
 
 ## CampusPilot 当前向量检索环境（2026-07-31）

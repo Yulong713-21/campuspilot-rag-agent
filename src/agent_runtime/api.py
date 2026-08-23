@@ -5,9 +5,11 @@ import json
 import logging
 import os
 from pathlib import Path
+import re
 import sqlite3
 import time
 from typing import Annotated, Any, Literal
+from uuid import uuid4
 
 from fastapi import (
     Depends,
@@ -60,6 +62,8 @@ from .program_recommendation_interpreter import (
 )
 from .program_recommendation_narrator import ProgramRecommendationNarrator
 from .rate_limit import InMemoryRateLimiter
+from .runtime_context import bind_request_id, current_request_id, reset_request_id
+from .runtime_logging import log_event, runtime_logger
 from .plan_narrator import StudyPlanNarrator
 from .australian_terminology import AustralianTerminologyGlossary
 from .recruitment_knowledge import (
@@ -78,6 +82,8 @@ from campuspilot_core.transcript_parser import (
 FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
 REPO_ROOT = FRONTEND_DIR.parent
 LOGGER = logging.getLogger(__name__)
+RUNTIME_LOGGER = runtime_logger("api")
+REQUEST_ID_PATTERN = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
 
 
 @dataclass(frozen=True)
@@ -564,23 +570,76 @@ def create_app(
     }
 
     @app.middleware("http")
-    async def limit_expensive_requests(request: Request, call_next):
-        if (
-            rate_limiter is not None
-            and request.method == "POST"
-            and request.url.path in expensive_paths
-        ):
-            client_host = request.client.host if request.client else "unknown"
-            allowed, retry_after = rate_limiter.allow(
-                f"{client_host}:{request.url.path}"
-            )
-            if not allowed:
-                return JSONResponse(
-                    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                    content={"detail": "request rate limit exceeded"},
-                    headers={"Retry-After": str(retry_after)},
+    async def runtime_request_middleware(request: Request, call_next):
+        supplied_request_id = request.headers.get("X-Request-ID", "").strip()
+        request_id = (
+            supplied_request_id
+            if REQUEST_ID_PATTERN.fullmatch(supplied_request_id)
+            else uuid4().hex
+        )
+        token = bind_request_id(request_id)
+        started_at = time.perf_counter()
+        method = request.method
+        path = request.url.path
+        request.state.request_id = request_id
+        log_event(
+            RUNTIME_LOGGER,
+            "request_started",
+            method=method,
+            path=path,
+        )
+        try:
+            if (
+                rate_limiter is not None
+                and method == "POST"
+                and path in expensive_paths
+            ):
+                client_host = request.client.host if request.client else "unknown"
+                allowed, retry_after = rate_limiter.allow(
+                    f"{client_host}:{path}"
                 )
-        return await call_next(request)
+                if not allowed:
+                    response = JSONResponse(
+                        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                        content={"detail": "request rate limit exceeded"},
+                        headers={"Retry-After": str(retry_after)},
+                    )
+                else:
+                    response = await call_next(request)
+            else:
+                response = await call_next(request)
+        except Exception as exc:
+            duration_ms = round((time.perf_counter() - started_at) * 1000, 1)
+            log_event(
+                RUNTIME_LOGGER,
+                "request_failed",
+                level=logging.ERROR,
+                method=method,
+                path=path,
+                duration_ms=duration_ms,
+                error_type=type(exc).__name__,
+                error_category="application_error",
+            )
+            raise
+        else:
+            duration_ms = round((time.perf_counter() - started_at) * 1000, 1)
+            response.headers["X-Request-ID"] = request_id
+            log_event(
+                RUNTIME_LOGGER,
+                "request_completed",
+                level=(
+                    logging.WARNING
+                    if response.status_code >= 500
+                    else logging.INFO
+                ),
+                method=method,
+                path=path,
+                status_code=response.status_code,
+                duration_ms=duration_ms,
+            )
+            return response
+        finally:
+            reset_request_id(token)
 
     # Keep the public URL stable while the repository uses an explicit frontend/
     # production boundary.

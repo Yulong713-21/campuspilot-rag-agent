@@ -45,6 +45,9 @@ class ProductionDeploymentTest(unittest.TestCase):
         self.assertIn('item.get("url")', verify)
         self.assertIn("PREVIOUS_IMAGE", rollback)
         self.assertIn("/health/ready", rollback)
+        self.assertIn("stable cross-version contract", rollback)
+        self.assertIn("/api/plans/generate", rollback)
+        self.assertNotIn('"$SCRIPT_DIR/verify.sh"', rollback)
 
 
 if __name__ == "__main__":

@@ -54,6 +54,36 @@ if [[ -n "${PREVIOUS_NGINX_BACKUP:-}" && -f "$PREVIOUS_NGINX_BACKUP" ]]; then
   systemctl reload nginx
 fi
 
-"$SCRIPT_DIR/verify.sh" http://127.0.0.1:8010
-"$SCRIPT_DIR/verify.sh" http://127.0.0.1
+TEMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TEMP_DIR"' EXIT
+curl -fsS --max-time 10 http://127.0.0.1:8010/health/live \
+  -o "$TEMP_DIR/live.json"
+curl -fsS --max-time 10 http://127.0.0.1:8010/health/ready \
+  -o "$TEMP_DIR/ready.json"
+curl -fsS --max-time 10 http://127.0.0.1/ -o "$TEMP_DIR/frontend.html"
+curl -fsS --max-time 30 \
+  -H "Content-Type: application/json" \
+  --data '{"program_variant_id":"MONASH-C6001-EL2","handbook_year":2026,"study_stream":"Industry Experience","completed_courses":["FIT5057"],"max_courses_per_semester":4,"preserve_policy_flexibility":true,"start_semester":"2026-S2"}' \
+  http://127.0.0.1:8010/api/plans/generate -o "$TEMP_DIR/planner.json"
+
+# Rollback verification intentionally checks the stable cross-version contract.
+# A previous release may not contain the newest frontend marker or evidence fields.
+python3 - "$TEMP_DIR" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+root = Path(sys.argv[1])
+live = json.loads((root / "live.json").read_text(encoding="utf-8"))
+ready = json.loads((root / "ready.json").read_text(encoding="utf-8"))
+planner = json.loads((root / "planner.json").read_text(encoding="utf-8"))
+frontend = (root / "frontend.html").read_text(encoding="utf-8")
+
+assert live.get("status") == "alive", live
+assert ready.get("status") == "ready", ready
+assert frontend.strip(), "rollback frontend is empty"
+assert planner.get("plans"), "rollback planner returned no plans"
+assert (planner.get("validation") or {}).get("all_valid") is True
+PY
+
 echo "ROLLBACK PASS image=$PREVIOUS_IMAGE sha=${PREVIOUS_SHA:-unknown}"

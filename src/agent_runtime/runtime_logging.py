@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import json
 import logging
+import os
 import sys
 from typing import Any
 
@@ -40,7 +41,7 @@ def configure_runtime_logging(level: str | int | None = None) -> logging.Logger:
         handler.setFormatter(JsonLineFormatter())
         handler.campuspilot_json_handler = True  # type: ignore[attr-defined]
         logger.addHandler(handler)
-    configured_level = level or "INFO"
+    configured_level = level or os.environ.get("CAMPUSPILOT_LOG_LEVEL", "INFO")
     logger.setLevel(configured_level)
     logger.propagate = False
     return logger

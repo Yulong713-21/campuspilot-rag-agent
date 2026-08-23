@@ -7,7 +7,7 @@ from uuid import uuid4
 from langgraph.graph import END, StateGraph
 
 from .campuspilot import CampusPilotConversationAgent
-from .llm_errors import CampusPilotLLMError, normalize_llm_exception
+from .llm_errors import CampusPilotLLMError
 
 
 class CampusPilotConversationState(TypedDict, total=False):
@@ -303,9 +303,8 @@ class CampusPilotConversationGraph:
                 ],
             }
         except Exception as exc:
-            normalized = normalize_llm_exception(exc)
             error = (
-                normalized.category.value
+                exc.category.value
                 if isinstance(exc, CampusPilotLLMError)
                 else type(exc).__name__
             )

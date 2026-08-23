@@ -35,6 +35,7 @@ class ProductionDeploymentTest(unittest.TestCase):
 
         self.assertIn("git merge --ff-only origin/main", deploy)
         self.assertIn("docker build", deploy)
+        self.assertIn('--build-arg "GIT_SHA=$CANDIDATE_SHA"', deploy)
         self.assertIn('cp -a "$BACKUP_DIR/logs/." "$RUNTIME_DIR/logs/"', deploy)
         self.assertIn("nginx -t", deploy)
         self.assertIn('"$SCRIPT_DIR/rollback.sh"', deploy)
@@ -48,6 +49,22 @@ class ProductionDeploymentTest(unittest.TestCase):
         self.assertIn("stable cross-version contract", rollback)
         self.assertIn("/api/plans/generate", rollback)
         self.assertNotIn('"$SCRIPT_DIR/verify.sh"', rollback)
+
+    def test_image_and_status_collection_expose_safe_revision_data(self) -> None:
+        dockerfile = (REPO_ROOT / "Dockerfile").read_text(encoding="utf-8")
+        status_script = (
+            REPO_ROOT / "scripts" / "ops" / "collect_runtime_status.sh"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("ARG GIT_SHA=unknown", dockerfile)
+        self.assertIn("CAMPUSPILOT_GIT_SHA=$GIT_SHA", dockerfile)
+        self.assertIn("/health/live", status_script)
+        self.assertIn("/health/ready", status_script)
+        self.assertIn("/health", status_script)
+        self.assertIn('docker logs --tail 100 "$APP_NAME"', status_script)
+        self.assertNotIn("printenv", status_script)
+        self.assertNotIn("docker inspect", status_script)
+        self.assertNotIn(".env", status_script)
 
 
 if __name__ == "__main__":

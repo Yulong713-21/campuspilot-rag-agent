@@ -212,6 +212,10 @@ class OpenAICompatibleChatClient:
             return "openai"
         return "openai_compatible"
 
+    @property
+    def provider_name(self) -> str:
+        return self._provider_name(self.base_url)
+
     @classmethod
     def from_environment(cls) -> OpenAICompatibleChatClient:
         return cls(

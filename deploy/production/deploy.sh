@@ -130,6 +130,7 @@ CANDIDATE_IMAGE="campuspilot:$CANDIDATE_SHA"
 
 echo "Building $CANDIDATE_IMAGE"
 docker build \
+  --build-arg "GIT_SHA=$CANDIDATE_SHA" \
   --label "org.opencontainers.image.revision=$CANDIDATE_SHA" \
   --tag "$CANDIDATE_IMAGE" \
   --tag campuspilot:latest \
@@ -184,4 +185,3 @@ fi
 docker ps --filter "name=^/${APP_NAME}$"
 free -h
 df -h /
-

@@ -86,7 +86,6 @@ from campuspilot_core.transcript_parser import (
 
 FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
 REPO_ROOT = FRONTEND_DIR.parent
-LOGGER = logging.getLogger(__name__)
 RUNTIME_LOGGER = runtime_logger("api")
 REQUEST_ID_PATTERN = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
 
@@ -370,8 +369,13 @@ def _create_evidence_retriever(
             ),
         )
     except Exception as exc:
-        LOGGER.exception(
-            "Vector retrieval initialization failed; falling back to BM25"
+        log_event(
+            RUNTIME_LOGGER,
+            "retrieval_degraded",
+            level=logging.WARNING,
+            component="vector_retrieval",
+            error_type=type(exc).__name__,
+            fallback="full_corpus_bm25",
         )
         try:
             full_bm25 = CampusPilotHybridRetriever(
@@ -384,9 +388,14 @@ def _create_evidence_retriever(
                 vector_error=type(exc).__name__,
                 retrieval_mode="full_corpus_bm25_degraded",
             )
-        except Exception:
-            LOGGER.exception(
-                "Full corpus BM25 initialization failed; using catalog fallback"
+        except Exception as fallback_exc:
+            log_event(
+                RUNTIME_LOGGER,
+                "retrieval_degraded",
+                level=logging.WARNING,
+                component="full_corpus_bm25",
+                error_type=type(fallback_exc).__name__,
+                fallback="catalog_bm25",
             )
         return EvidenceRetrieverRuntime(
             retriever=fallback,
@@ -895,7 +904,7 @@ def create_app(
             ),
             "cloud_llm_enabled": cloud_llm_enabled,
             "llm_provider": (
-                cloud_client._provider_name(cloud_client.base_url)
+                cloud_client.provider_name
                 if cloud_client is not None
                 else None
             ),

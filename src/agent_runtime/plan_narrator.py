@@ -5,7 +5,7 @@ import re
 from typing import Any
 
 from .openai_compatible_client import OpenAICompatibleChatClient
-from .llm_errors import CampusPilotLLMError, normalize_llm_exception
+from .llm_errors import normalize_llm_exception
 from .runtime_logging import log_event, runtime_logger
 
 

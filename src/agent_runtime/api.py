@@ -56,6 +56,11 @@ from .handbook_vector import (
 from .handbook_qa import HandbookQuestionAnsweringAgent, HandbookQueryRewriter
 from .semester_advisor import create_semester_advice_agent_with_cloud
 from .openai_compatible_client import OpenAICompatibleChatClient
+from .llm_errors import (
+    CampusPilotLLMError,
+    LLMErrorCategory,
+    llm_error_http_status,
+)
 from .planning_goal_interpreter import CloudPlanningGoalInterpreter
 from .program_recommendation_interpreter import (
     CloudRecommendationProfileInterpreter,
@@ -545,6 +550,7 @@ def create_app(
     )
     app.state.cloud_client = cloud_client
     app.state.config_store = config_store
+    app.state.started_at = time.monotonic()
     cors_origins = [
         value.strip()
         for value in os.environ.get(
@@ -560,6 +566,37 @@ def create_app(
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    @app.exception_handler(CampusPilotLLMError)
+    async def handle_llm_error(
+        request: Request,
+        exc: CampusPilotLLMError,
+    ) -> JSONResponse:
+        request_id = current_request_id() or getattr(
+            request.state,
+            "request_id",
+            uuid4().hex,
+        )
+        log_event(
+            RUNTIME_LOGGER,
+            "application_error_returned",
+            level=logging.ERROR,
+            path=request.url.path,
+            error_category=exc.category.value,
+            error_code=exc.public_code,
+            provider=exc.provider,
+            model=exc.model,
+        )
+        return JSONResponse(
+            status_code=llm_error_http_status(exc),
+            content={
+                "error": {
+                    "code": exc.public_code,
+                    "message": exc.public_message,
+                    "request_id": request_id,
+                }
+            },
+        )
 
     expensive_paths = {
         "/api/session",
@@ -822,10 +859,13 @@ def create_app(
                 max_tokens=test.max_tokens,
             )
             elapsed_ms = round((time.perf_counter() - started) * 1000, 1)
+        except CampusPilotLLMError:
+            raise
         except Exception as exc:
-            raise HTTPException(
-                status_code=status.HTTP_502_BAD_GATEWAY,
-                detail=f"{type(exc).__name__}: {str(exc)[:300]}",
+            raise CampusPilotLLMError(
+                category=LLMErrorCategory.UNKNOWN,
+                provider="openai_compatible",
+                detail_type=type(exc).__name__,
             ) from exc
         content = result["message"].get("content")
         return {
@@ -837,10 +877,15 @@ def create_app(
         }
 
     @app.get("/health")
-    def health() -> dict[str, str]:
+    def health() -> dict[str, Any]:
+        git_sha = os.environ.get("CAMPUSPILOT_GIT_SHA", "unknown")
         return {
             "status": "ok",
             "product": "CampusPilot",
+            "version": app.version,
+            "commit": git_sha[:12] if git_sha != "unknown" else git_sha,
+            "environment": os.environ.get("CAMPUSPILOT_ENV", "development"),
+            "uptime_seconds": round(time.monotonic() - app.state.started_at, 1),
             "data_mode": campus_catalog.data["data_mode"],
             "retrieval_mode": (
                 retriever_runtime.retrieval_mode
@@ -848,6 +893,14 @@ def create_app(
             "goal_interpreter": (
                 "cloud_openai_compatible" if cloud_llm_enabled else "deterministic"
             ),
+            "cloud_llm_enabled": cloud_llm_enabled,
+            "llm_provider": (
+                cloud_client._provider_name(cloud_client.base_url)
+                if cloud_client is not None
+                else None
+            ),
+            "llm_model": cloud_client.model if cloud_client is not None else None,
+            "vector_search_enabled": retriever_runtime.vector_active,
         }
 
     @app.get("/health/live")
@@ -924,7 +977,19 @@ def create_app(
         request: StudyPlanRequest,
     ) -> dict[str, Any]:
         try:
-            return planning_agent.plan(request.model_dump())
+            result = planning_agent.plan(request.model_dump())
+            result.setdefault("degraded", False)
+            result.setdefault("degradation", None)
+            log_event(
+                RUNTIME_LOGGER,
+                "planner_completed",
+                route="/api/plans/generate",
+                plan_count=len(result.get("plans", [])),
+                all_valid=(result.get("validation") or {}).get("all_valid"),
+                retrieval_mode=retriever_runtime.retrieval_mode,
+                fallback=False,
+            )
+            return result
         except ValueError as exc:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -986,7 +1051,16 @@ def create_app(
         request: AgentChatRequest,
     ) -> dict[str, Any]:
         try:
-            return conversation_agent.respond(request.model_dump(exclude_unset=True))
+            result = conversation_agent.respond(request.model_dump(exclude_unset=True))
+            log_event(
+                RUNTIME_LOGGER,
+                "route_selected",
+                route=result.get("conversation_route"),
+                thread_id=(result.get("thread_state") or {}).get("thread_id"),
+                fallback=bool(result.get("degraded")),
+                error_category=(result.get("degradation") or {}).get("reason"),
+            )
+            return result
         except ValueError as exc:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -1004,6 +1078,14 @@ def create_app(
             discipline_id=request.discipline_id,
             program_code=request.program_code,
             k=request.k,
+        )
+        log_event(
+            RUNTIME_LOGGER,
+            "retrieval_completed",
+            route="/api/evidence/search",
+            retrieval_mode=retriever_runtime.retrieval_mode,
+            result_count=len(documents),
+            fallback=retriever_runtime.vector_degraded,
         )
         return {
             "documents": documents,

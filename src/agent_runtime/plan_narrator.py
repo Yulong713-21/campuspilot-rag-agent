@@ -5,6 +5,11 @@ import re
 from typing import Any
 
 from .openai_compatible_client import OpenAICompatibleChatClient
+from .llm_errors import CampusPilotLLMError, normalize_llm_exception
+from .runtime_logging import log_event, runtime_logger
+
+
+LOGGER = runtime_logger("planner")
 
 
 class StudyPlanNarrator:
@@ -87,15 +92,33 @@ class StudyPlanNarrator:
                 ],
             }
         except Exception as exc:
+            error = normalize_llm_exception(
+                exc,
+                provider="openai_compatible",
+                model=getattr(self.client, "model", None),
+            )
+            log_event(
+                LOGGER,
+                "llm_fallback_activated",
+                level=30,
+                component="plan_narrator",
+                error_category=error.category.value,
+                fallback="deterministic_plan_explanation",
+            )
             return {
                 "message": fallback,
                 "answer_source": "deterministic_plan_explanation",
+                "degraded": True,
+                "degradation": {
+                    "component": "llm",
+                    "reason": error.category.value,
+                },
                 "trace": [
                     {
                         "tool": "generate_plan_explanation",
                         "ok": False,
                         "source": "openai_compatible_llm",
-                        "error": type(exc).__name__,
+                        "error": error.category.value,
                     },
                     {
                         "tool": "fallback_to_plan_summary",

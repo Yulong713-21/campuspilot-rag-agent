@@ -7,6 +7,7 @@ from uuid import uuid4
 from langgraph.graph import END, StateGraph
 
 from .campuspilot import CampusPilotConversationAgent
+from .llm_errors import CampusPilotLLMError, normalize_llm_exception
 
 
 class CampusPilotConversationState(TypedDict, total=False):
@@ -302,7 +303,12 @@ class CampusPilotConversationGraph:
                 ],
             }
         except Exception as exc:
-            error = type(exc).__name__
+            normalized = normalize_llm_exception(exc)
+            error = (
+                normalized.category.value
+                if isinstance(exc, CampusPilotLLMError)
+                else type(exc).__name__
+            )
             return {
                 "intent_decision": None,
                 "intent_validation_error": error,
@@ -464,6 +470,38 @@ class CampusPilotConversationGraph:
         *,
         intent_locked: bool,
     ) -> CampusPilotConversationState:
+        llm_reasons = {
+            "rate_limited",
+            "quota_exhausted",
+            "timeout",
+            "upstream_5xx",
+            "auth_error",
+            "model_unavailable",
+            "invalid_response",
+            "network_error",
+            "unknown",
+        }
+        degradation_reason = (
+            state.get("intent_validation_error")
+            if state.get("intent_validation_error") in llm_reasons
+            else None
+        )
+        for item in response.get("trace", []):
+            if (
+                item.get("source") == "openai_compatible_llm"
+                and item.get("ok") is False
+                and item.get("error") in llm_reasons
+            ):
+                degradation_reason = item["error"]
+        if degradation_reason:
+            response["degraded"] = True
+            response["degradation"] = {
+                "component": "llm",
+                "reason": degradation_reason,
+            }
+        else:
+            response.setdefault("degraded", False)
+            response.setdefault("degradation", None)
         return {
             "response": response,
             "last_intent": response.get("intent") or state.get("last_intent"),

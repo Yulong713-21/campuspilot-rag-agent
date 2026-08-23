@@ -7,7 +7,7 @@
     <title>CampusPilot · AI Workspace</title>
     <link rel="icon" href="data:,">
     <link rel="preload" as="image" href="/static/assets/campuspilot-campus.png">
-    <link rel="stylesheet" href="/static/planner.css?v=20260823-pia-visual-2">
+    <link rel="stylesheet" href="/static/planner.css?v=20260824-open-workspace-3">
   </head>
   <body>
     <header class="topbar">
@@ -69,31 +69,36 @@
               </article>
             </div>
 
-            <section id="verifiedWorkflow" class="verified-workflow" aria-labelledby="verifiedTitle">
-              <div class="verified-copy">
-                <div class="verified-kicker"><span>Verified</span><small>STARTER WORKFLOW</small></div>
-                <h2 id="verifiedTitle">Monash C6001 · 2026</h2>
-                <p>生成三套路径，并校验学分、先修、开课学期、负荷与 Capstone；结果附官方依据。</p>
-                <div class="workflow-proof" aria-label="工作流校验项">
-                  <span>✓ Credits</span><span>✓ Prerequisites</span><span>✓ Availability</span><span>✓ Capstone</span>
-                </div>
-              </div>
-              <button id="runVerifiedButton" class="primary-button" type="button" disabled aria-controls="planResults">
-                试试 C6001 规划
-              </button>
-            </section>
-
-            <form id="chatForm" class="chat-composer">
+            <form id="chatForm" class="chat-composer open-composer">
               <label class="sr-only" for="chatInput">给 Pia 发送消息</label>
-              <textarea id="chatInput" rows="2" maxlength="4000" placeholder="例如：FIT5120 有什么先修要求？" required></textarea>
-              <button id="sendButton" type="submit" aria-label="发送消息">发送</button>
-              <p>AI 用于理解和解释；毕业规则由确定性 Planner 校验。</p>
+              <textarea id="chatInput" rows="2" maxlength="4000" placeholder="问问课程、申请、学校比较，或告诉 Pia 你的目标…" required></textarea>
+              <button id="sendButton" type="submit" aria-label="发送消息"><span aria-hidden="true">↑</span></button>
+              <p>直接描述你的问题；涉及毕业规则时，Pia 会调用确定性 Planner 校验。</p>
             </form>
 
-            <div class="suggestions" aria-label="推荐问题">
-              <span>推荐问题</span>
-              <button type="button" data-prompt="我还差多少学分？">我还差多少学分？</button>
-              <button type="button" data-prompt="FIT5120 的课程要求是什么？">FIT5120 的课程要求</button>
+            <div class="starter-grid" aria-label="Pia 能力与快捷场景">
+              <button class="starter-card" type="button" data-prompt="FIT5120 的先修、开课学期和课程要求是什么？">
+                <span class="starter-icon" aria-hidden="true">⌕</span>
+                <span><strong>课程与规则</strong><small>先修、学分与开课信息</small></span>
+              </button>
+              <button class="starter-card" type="button" data-prompt="请帮我梳理申请 Monash 信息技术硕士需要准备的材料和步骤。">
+                <span class="starter-icon" aria-hidden="true">＋</span>
+                <span><strong>申请建议</strong><small>材料、流程与下一步</small></span>
+              </button>
+              <button class="starter-card" type="button" data-prompt="请从课程方向、学制和官方信息角度比较 Monash 与 UNSW 的信息技术硕士。">
+                <span class="starter-icon" aria-hidden="true">⇄</span>
+                <span><strong>项目比较</strong><small>学校与项目差异</small></span>
+              </button>
+              <section id="verifiedWorkflow" class="starter-card verified-workflow" aria-labelledby="verifiedTitle">
+                <div class="verified-copy">
+                  <div class="verified-kicker"><span>Verified</span></div>
+                  <h2 id="verifiedTitle">C6001 规划</h2>
+                  <p>三套路径 · 规则校验 · 官方依据</p>
+                </div>
+                <button id="runVerifiedButton" class="starter-action" type="button" disabled aria-label="试试 C6001 规划" aria-controls="planResults">
+                  开始 <span aria-hidden="true">→</span>
+                </button>
+              </section>
             </div>
 
             <section id="planningOutput" class="planning-output" aria-live="polite" aria-busy="false">
@@ -179,6 +184,6 @@
       <span id="retrievedDate">Data snapshot · -</span>
     </footer>
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
-    <script type="module" src="/static/js/workspace-page.js?v=20260823-pia-visual-2"></script>
+    <script type="module" src="/static/js/workspace-page.js?v=20260824-open-workspace-3"></script>
   </body>
 </html>

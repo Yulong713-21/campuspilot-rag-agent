@@ -35,6 +35,7 @@ class ProductionDeploymentTest(unittest.TestCase):
 
         self.assertIn("git merge --ff-only origin/main", deploy)
         self.assertIn("docker build", deploy)
+        self.assertIn('cp -a "$BACKUP_DIR/logs/." "$RUNTIME_DIR/logs/"', deploy)
         self.assertIn("nginx -t", deploy)
         self.assertIn('"$SCRIPT_DIR/rollback.sh"', deploy)
         self.assertNotIn("docker system prune", deploy)

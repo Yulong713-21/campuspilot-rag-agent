@@ -107,6 +107,7 @@ if docker inspect "$APP_NAME" >/dev/null 2>&1; then
   PREVIOUS_IMAGE="campuspilot:${PREVIOUS_SHA:0:12}"
   docker tag "$CURRENT_IMAGE_ID" "$PREVIOUS_IMAGE"
   docker cp "$APP_NAME:/app/logs/." "$BACKUP_DIR/logs/" >/dev/null 2>&1 || true
+  cp -a "$BACKUP_DIR/logs/." "$RUNTIME_DIR/logs/"
 fi
 
 PREVIOUS_NGINX_BACKUP=""

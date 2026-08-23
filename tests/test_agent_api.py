@@ -61,25 +61,29 @@ class AgentAPITest(unittest.TestCase):
         self.assertEqual(missing.status_code, 401)
         self.assertEqual(invalid.status_code, 401)
 
-    def test_root_serves_demo_first_c6001_planner(self) -> None:
+    def test_root_serves_pia_workspace_with_verified_c6001_workflow(self) -> None:
         with self.client() as client:
             response = client.get("/")
             stylesheet = client.get("/static/planner.css")
-            page_script = client.get("/static/js/planner-page.js")
+            page_script = client.get("/static/js/workspace-page.js")
             api_script = client.get("/static/js/core/api.js")
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("CampusPilot", response.text)
-        self.assertIn("C6001 Planner Demo", response.text)
+        self.assertIn("CampusPilot · AI Workspace", response.text)
+        self.assertIn('id="chatForm"', response.text)
+        self.assertIn('id="verifiedWorkflow"', response.text)
+        self.assertIn('id="runVerifiedButton"', response.text)
         self.assertIn('id="planForm"', response.text)
         self.assertIn('id="evidenceGrid"', response.text)
         self.assertIn("planner.css?v=", response.text)
-        self.assertIn("/static/js/planner-page.js?v=", response.text)
-        self.assertNotIn('id="chatForm"', response.text)
+        self.assertIn("/static/js/workspace-page.js?v=", response.text)
         self.assertNotIn('id="admissionForm"', response.text)
+        self.assertNotIn("C6001 Planner Demo", response.text)
         self.assertEqual(stylesheet.status_code, 200)
         self.assertEqual(page_script.status_code, 200)
         self.assertIn("/api/plans/generate", page_script.text)
+        self.assertIn("/api/agent/chat", page_script.text)
         self.assertIn("runButtonTask", api_script.text)
         self.assertNotIn("alice-demo-token", page_script.text)
 

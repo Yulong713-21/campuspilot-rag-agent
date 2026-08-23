@@ -69,6 +69,10 @@ class CampusPilotCatalogTest(unittest.TestCase):
 
         self.assertEqual(documents[0]["document_id"], "DOC-FIT5120-2026")
         self.assertGreater(documents[0]["score"], 0)
+        self.assertEqual(
+            documents[0]["source_url"],
+            "https://handbook.monash.edu/2026/units/FIT5120",
+        )
 
     def test_go8_directory_has_eight_current_members(self) -> None:
         result = self.catalog.list_go8_universities("computing")

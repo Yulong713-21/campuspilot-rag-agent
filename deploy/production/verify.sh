@@ -69,7 +69,9 @@ assert "C6001 Planner Demo" in frontend, "Demo-first frontend marker missing"
 plans = planner.get("plans") or []
 validation = planner.get("validation") or {}
 evidence = planner.get("evidence") or []
-official_links = [item for item in evidence if item.get("source_url")]
+official_links = [
+    item for item in evidence if item.get("source_url") or item.get("url")
+]
 assert len(plans) == 3, f"expected three plans, got {len(plans)}"
 assert validation and validation.get("all_valid") is True, validation
 assert evidence, "planner evidence is missing"

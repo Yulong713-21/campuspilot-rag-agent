@@ -42,6 +42,7 @@ class ProductionDeploymentTest(unittest.TestCase):
         self.assertIn("/api/plans/generate", verify)
         self.assertIn("expected three plans", verify)
         self.assertIn("official evidence links are missing", verify)
+        self.assertIn('item.get("url")', verify)
         self.assertIn("PREVIOUS_IMAGE", rollback)
         self.assertIn("/health/ready", rollback)
 

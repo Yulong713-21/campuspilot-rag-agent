@@ -152,6 +152,15 @@ class CampusPilotCatalog:
             self.data: dict[str, Any] = json.load(file)
         with Path(go8_catalog_path).open(encoding="utf-8") as file:
             self.go8_data: dict[str, Any] = json.load(file)
+        source_urls = {
+            item["source_id"]: item.get("url")
+            for item in self.data.get("sources", [])
+            if item.get("source_id") and item.get("url")
+        }
+        for document in self.data.get("official_documents", []):
+            source_url = source_urls.get(document.get("source_id"))
+            if source_url:
+                document.setdefault("source_url", source_url)
         self.programs = {
             item["program_variant_id"]: item for item in self.data["programs"]
         }

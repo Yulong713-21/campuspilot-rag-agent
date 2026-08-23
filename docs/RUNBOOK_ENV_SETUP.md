@@ -29,6 +29,11 @@ timeout and upstream 5xx failures retry at most twice. Authentication, quota and
 invalid-request failures are never retried. Configure the bound with
 `CAMPUSPILOT_OPENAI_MAX_RETRIES=2` (allowed range: 0-2).
 
+- `LLM_RATE_LIMITED`: the provider is throttling requests; retry later.
+- `LLM_QUOTA_EXHAUSTED`: the configured account has no usable quota.
+- `LLM_TIMEOUT`: the provider did not complete within the configured timeout.
+- `LLM_UNAVAILABLE`: the provider, model, network or response is unavailable.
+
 The deterministic Planner remains available when the LLM is unavailable.
 Responses that use a deterministic fallback explicitly include degraded status
 and a normalized reason; operations with no truthful fallback return a stable

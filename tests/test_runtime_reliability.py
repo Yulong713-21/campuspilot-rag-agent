@@ -186,6 +186,46 @@ class RuntimeReliabilityTest(unittest.TestCase):
         )
         self.assertEqual(response.headers["X-Request-ID"], "llm-timeout-001")
 
+    def test_generic_chat_llm_failure_has_stable_public_error(self) -> None:
+        failure = CampusPilotLLMError(
+            LLMErrorCategory.MODEL_UNAVAILABLE,
+            provider="openai_compatible",
+            model="test-model",
+            retryable=True,
+        )
+        database = Path(self.temp_dir.name) / "generic-chat-error.sqlite3"
+        with (
+            patch(
+                "agent_runtime.api.CampusPilotConversationGraph.respond",
+                side_effect=failure,
+            ),
+            TestClient(create_app(database_path=database)) as client,
+        ):
+            response = client.post(
+                "/api/agent/chat",
+                headers={"X-Request-ID": "generic-chat-failure-001"},
+                json={"message": "Help me choose a program"},
+            )
+
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(
+            response.json(),
+            {
+                "error": {
+                    "code": "LLM_UNAVAILABLE",
+                    "message": (
+                        "AI assistant is temporarily unavailable. "
+                        "Deterministic planning and university data services remain available."
+                    ),
+                    "request_id": "generic-chat-failure-001",
+                }
+            },
+        )
+        self.assertEqual(
+            response.headers["X-Request-ID"],
+            "generic-chat-failure-001",
+        )
+
     def test_health_exposes_safe_runtime_metadata(self) -> None:
         database = Path(self.temp_dir.name) / "health-metadata.sqlite3"
         with (

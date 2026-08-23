@@ -67,6 +67,8 @@ class AgentAPITest(unittest.TestCase):
             stylesheet = client.get("/static/planner.css")
             page_script = client.get("/static/js/workspace-page.js")
             api_script = client.get("/static/js/core/api.js")
+            campus_image = client.get("/static/assets/campuspilot-campus.png")
+            pia_avatar = client.get("/static/assets/pia-avatar.png")
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("CampusPilot", response.text)
@@ -86,6 +88,10 @@ class AgentAPITest(unittest.TestCase):
         self.assertIn("/api/agent/chat", page_script.text)
         self.assertIn("runButtonTask", api_script.text)
         self.assertNotIn("alice-demo-token", page_script.text)
+        self.assertEqual(campus_image.status_code, 200)
+        self.assertEqual(campus_image.headers["content-type"], "image/png")
+        self.assertEqual(pia_avatar.status_code, 200)
+        self.assertEqual(pia_avatar.headers["content-type"], "image/png")
 
     def test_anonymous_session_can_own_approval_thread(self) -> None:
         with self.client() as client:

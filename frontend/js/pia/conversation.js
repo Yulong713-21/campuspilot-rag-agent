@@ -3,10 +3,11 @@ function messageArticle(role, text, { requestId = "" } = {}) {
   article.className = `message ${role === "user" ? "user-message" : "assistant-message"}`;
 
   if (role === "assistant") {
-    const avatar = document.createElement("span");
+    const avatar = document.createElement("img");
     avatar.className = "avatar";
+    avatar.src = "/static/assets/pia-avatar.png";
+    avatar.alt = "";
     avatar.setAttribute("aria-hidden", "true");
-    avatar.textContent = "P";
     article.append(avatar);
   }
 

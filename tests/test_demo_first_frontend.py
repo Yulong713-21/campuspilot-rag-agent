@@ -29,6 +29,9 @@ class PiaFirstFrontendTest(unittest.TestCase):
         self.assertIn("Verified", response.text)
         self.assertIn("id=\"planForm\"", response.text)
         self.assertIn("id=\"evidenceGrid\"", response.text)
+        self.assertIn('class="workspace-heading workspace-hero"', response.text)
+        self.assertIn('/static/assets/campuspilot-campus.png', response.text)
+        self.assertIn('/static/assets/pia-avatar.png', response.text)
         self.assertNotIn("id=\"admissionForm\"", response.text)
         self.assertNotIn("C6001 Planner Demo", response.text)
         self.assertNotIn("运行推荐演示", response.text)
@@ -49,6 +52,7 @@ class PiaFirstFrontendTest(unittest.TestCase):
         self.assertIn("runButtonTask", javascript)
         self.assertIn('/api/agent/chat', javascript)
         self.assertIn('/api/plans/generate', javascript)
+        self.assertIn('/static/assets/pia-avatar.png', javascript)
 
     def test_workspace_exposes_accessible_navigation_and_scoped_surfaces(self) -> None:
         index = (FRONTEND_ROOT / "index.html").read_text(encoding="utf-8")

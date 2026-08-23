@@ -6,7 +6,8 @@
     <meta name="description" content="CampusPilot AI Workspace：申请、课程与可验证学业规划">
     <title>CampusPilot · AI Workspace</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="/static/planner.css?v=20260823-pia-workspace-1">
+    <link rel="preload" as="image" href="/static/assets/campuspilot-campus.png">
+    <link rel="stylesheet" href="/static/planner.css?v=20260823-pia-visual-2">
   </head>
   <body>
     <header class="topbar">
@@ -40,20 +41,27 @@
       </aside>
 
       <section id="pia" class="workspace" aria-labelledby="workspaceTitle">
-        <header class="workspace-heading">
-          <div>
+        <header class="workspace-heading workspace-hero">
+          <div class="workspace-heading-copy">
             <p class="eyebrow">PIA ASSISTANT</p>
             <h1 id="workspaceTitle">你好，我是 Pia。</h1>
             <p>我可以帮你理解课程规则、检查学分，并把目标变成可以验证的学习路径。</p>
+            <span class="context-chip">Monash · C6001 · 2026</span>
           </div>
-          <span class="context-chip">Monash · C6001 · 2026</span>
+          <img
+            class="pia-portrait"
+            src="/static/assets/pia-avatar.png"
+            alt="Pia，CampusPilot 的 AI 规划助手"
+            width="260"
+            height="260"
+          >
         </header>
 
         <div class="conversation-layout">
           <section class="chat-panel" aria-label="与 Pia 对话">
             <div id="conversation" class="conversation" role="log" aria-live="polite" aria-relevant="additions">
               <article class="message assistant-message">
-                <span class="avatar" aria-hidden="true">P</span>
+                <img class="avatar" src="/static/assets/pia-avatar.png" alt="" aria-hidden="true">
                 <div>
                   <strong>Pia</strong>
                   <p>告诉我你的课程或毕业目标。我会区分官方原文检索与确定性规则校验，并在有依据时把来源一起展示。</p>
@@ -171,6 +179,6 @@
       <span id="retrievedDate">Data snapshot · -</span>
     </footer>
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
-    <script type="module" src="/static/js/workspace-page.js?v=20260823-pia-workspace-1"></script>
+    <script type="module" src="/static/js/workspace-page.js?v=20260823-pia-visual-2"></script>
   </body>
 </html>

@@ -15,8 +15,11 @@ from agent_runtime.retrieval import (  # noqa: E402
     CampusPilotHybridRetriever,
     CampusPilotMilvusStore,
     DenseRetriever,
+    EvidenceRetriever,
     InMemoryBM25Retriever,
     LexicalRetriever,
+    RetrievalRequest,
+    RetrievalScope,
     SentenceTransformerReranker,
 )
 
@@ -43,7 +46,12 @@ class RetrievalArchitectureTest(unittest.TestCase):
             self.assertIn("university_id", annotations)
             self.assertIn("discipline_id", annotations)
             self.assertIn("program_code", annotations)
+            self.assertIn("specialisation_code", annotations)
             self.assertIn("source_type", annotations)
+
+    def test_hybrid_retriever_implements_business_evidence_interface(self) -> None:
+        self.assertIn("request", EvidenceRetriever.retrieve.__annotations__)
+        self.assertEqual(RetrievalRequest("query").scope, RetrievalScope())
 
     def test_hybrid_retriever_uses_in_memory_bm25_by_default(self) -> None:
         chunk = handbook_vector.HandbookChunk(

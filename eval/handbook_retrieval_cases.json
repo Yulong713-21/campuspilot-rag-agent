@@ -1,0 +1,52 @@
+{
+  "dataset_version": "2026.09.05-v1",
+  "corpus": "data/official_sources/handbook-chunks.jsonl",
+  "cases": [
+    {
+      "case_id": "lexical-monash-c6001-credit-points",
+      "scenario": "lexical",
+      "query": "C6001 credit points",
+      "scope": {"university_id": "monash", "program_code": "C6001", "handbook_year": 2026},
+      "expected_source_ids": ["monash-c6001-2026"],
+      "expected_identifier": "C6001"
+    },
+    {
+      "case_id": "lexical-unsw-8543-specialisations",
+      "scenario": "lexical",
+      "query": "UNSW 8543 specialisations",
+      "scope": {"university_id": "unsw", "program_code": "8543", "handbook_year": 2026},
+      "expected_source_ids": ["unsw-8543-2026"],
+      "expected_identifier": "8543"
+    },
+    {
+      "case_id": "semantic-anu-career-transition",
+      "scenario": "semantic",
+      "query": "a computing degree for someone without a computing background who wants professional software skills",
+      "scope": {"university_id": "anu", "program_code": "7706XMCOMP", "handbook_year": 2026},
+      "expected_source_ids": ["anu-7706xmcomp-2026"]
+    },
+    {
+      "case_id": "semantic-monash-advanced-it-practice",
+      "scenario": "semantic",
+      "query": "prepare me to handle advanced information technology problems across different industries",
+      "scope": {"university_id": "monash", "program_code": "C6001", "handbook_year": 2026},
+      "expected_source_ids": ["monash-c6001-2026"]
+    },
+    {
+      "case_id": "hybrid-unsw-ai-specialisation",
+      "scenario": "hybrid",
+      "query": "Which artificial intelligence specialisation belongs to UNSW program 8543?",
+      "scope": {"university_id": "unsw", "program_code": "8543", "handbook_year": 2026},
+      "expected_source_ids": ["unsw-8543-2026"],
+      "expected_channels": ["bm25", "dense"]
+    },
+    {
+      "case_id": "hybrid-sydney-capstone-after-60cp",
+      "scenario": "hybrid",
+      "query": "What capstone options can a Sydney MCS student take after completing 60 credit points?",
+      "scope": {"university_id": "sydney", "program_code": "MACOMPSC-01", "handbook_year": 2026},
+      "expected_source_ids": ["sydney-mcs-2026"],
+      "expected_channels": ["bm25", "dense"]
+    }
+  ]
+}

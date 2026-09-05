@@ -17,6 +17,10 @@ if str(SRC_ROOT) not in sys.path:
 
 from agent_runtime.handbook_vector import read_chunks  # noqa: E402
 from agent_runtime.retrieval import ElasticsearchHandbookStore  # noqa: E402
+from agent_runtime.retrieval import (  # noqa: E402
+    IndexState,
+    plan_incremental_index,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -42,6 +46,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--batch-size", type=int, default=500)
     parser.add_argument(
+        "--state-path",
+        type=Path,
+        default=REPO_ROOT / "logs" / "handbook-lexical-index-state.json",
+        help="Last successfully published source hashes and chunk IDs.",
+    )
+    parser.add_argument(
         "--recreate",
         action="store_true",
         help="Delete and recreate the target index before indexing.",
@@ -59,15 +69,27 @@ def main() -> None:
     store = ElasticsearchHandbookStore(url=args.url, index_name=args.index)
     if args.recreate:
         store.recreate_index()
+        previous = IndexState.empty()
     else:
         store.ensure_ready()
-    indexed = store.ingest(chunks, chunk_size=args.batch_size)
+        previous = IndexState.read(args.state_path)
+    plan = plan_incremental_index(chunks, previous)
+    deleted = store.delete(list(plan.delete_chunk_ids))
+    indexed = store.ingest(
+        plan.upsert_chunks,
+        chunk_size=args.batch_size,
+    )
+    plan.next_state.write(args.state_path)
     print(
         json.dumps(
             {
                 "index": args.index,
                 "elasticsearch_url": args.url,
                 "indexed_chunks": indexed,
+                "deleted_chunks": deleted,
+                "changed_sources": list(plan.changed_sources),
+                "unchanged_source_count": len(plan.unchanged_sources),
+                "removed_sources": list(plan.removed_sources),
                 "source_count": len({chunk.source_id for chunk in chunks}),
                 "elapsed_seconds": round(time.monotonic() - started, 3),
             },

@@ -40,6 +40,7 @@ from .approval_service import (
 )
 from .approval_workflow import LangGraphApprovalWorkflow
 from .admin_config import EnvironmentConfigStore, env_flag
+from .deployment_profiles import resolve_deployment_profile
 from .anonymous_session import AnonymousSessionRepository
 from .campuspilot import (
     CampusPilotCatalog,
@@ -58,8 +59,12 @@ from .handbook_vector import (
 from .handbook_qa import HandbookQuestionAnsweringAgent, HandbookQueryRewriter
 from .retrieval import (
     ElasticsearchHandbookStore,
+    EvidenceRetriever,
     FallbackLexicalRetriever,
     InMemoryBM25Retriever,
+    RetrievalRequest,
+    RetrievalScope,
+    RetrievalScopeResolver,
 )
 from .semester_advisor import create_semester_advice_agent_with_cloud
 from .openai_compatible_client import OpenAICompatibleChatClient
@@ -83,6 +88,7 @@ from .recruitment_knowledge import (
     RecruitmentQuestionAnsweringAgent,
 )
 from campuspilot_core.admission_mvp import AdmissionMvpService
+from campuspilot_core.coverage import AcademicCoverageRegistry
 from campuspilot_core.institution_catalog import InstitutionCatalog
 from campuspilot_core.program_recommendation import ProgramRecommendationService
 from campuspilot_core.transcript_parser import (
@@ -104,7 +110,7 @@ class EvidenceRetrieverRuntime:
     Requested and active states are separate because optional infrastructure
     may be configured yet unavailable during startup or a later request.
     """
-    retriever: Any
+    retriever: EvidenceRetriever
     vector_requested: bool
     vector_error: str | None = None
     retrieval_mode: str = "catalog_bm25"
@@ -269,6 +275,7 @@ class EvidenceSearchRequest(BaseModel):
     university_id: str | None = None
     discipline_id: str | None = None
     program_code: str | None = None
+    specialisation_code: str | None = None
     source_type: str | None = None
     k: int = Field(default=3, ge=1, le=10)
 
@@ -332,9 +339,10 @@ def _create_evidence_retriever(
         "CAMPUSPILOT_RETRIEVAL_MODE",
         "",
     ).strip().lower()
+    deployment = resolve_deployment_profile(os.environ)
     enabled = os.environ.get(
         "CAMPUSPILOT_VECTOR_SEARCH_ENABLED",
-        "0",
+        "1" if deployment.vector_search_enabled else "0",
     ).lower() in {"1", "true", "yes"}
     fallback = CampusPilotEvidenceRetriever(
         catalog.data.get("official_documents", [])
@@ -342,7 +350,7 @@ def _create_evidence_retriever(
     elasticsearch_url = os.environ.get("ELASTICSEARCH_URL", "").strip()
     lexical_backend = os.environ.get(
         "CAMPUSPILOT_LEXICAL_BACKEND",
-        "elasticsearch" if elasticsearch_url else "memory",
+        deployment.lexical_backend,
     ).strip().lower()
     lexical_requested = lexical_backend == "elasticsearch"
 
@@ -465,7 +473,7 @@ def _create_evidence_retriever(
         reranker = None
         reranker_enabled = os.environ.get(
             "CAMPUSPILOT_RERANKER_ENABLED",
-            "0",
+            "1" if deployment.reranker_enabled else "0",
         ).lower() in {"1", "true", "yes"}
         if reranker_enabled:
             reranker_path = os.environ.get("CAMPUSPILOT_RERANKER_MODEL_PATH")
@@ -597,7 +605,10 @@ def create_app(
         os.environ.get("CAMPUSPILOT_ENV_FILE", str(REPO_ROOT / ".env"))
     )
     config_store = EnvironmentConfigStore(env_file)
+    deployment = resolve_deployment_profile(os.environ)
     campus_catalog = CampusPilotCatalog()
+    academic_coverage = AcademicCoverageRegistry.from_path()
+    retrieval_scope_resolver = RetrievalScopeResolver()
     admission_service = AdmissionMvpService()
     institution_catalog = InstitutionCatalog()
     transcript_parser = transcript_service or TranscriptParseService()
@@ -1033,6 +1044,8 @@ def create_app(
             "version": app.version,
             "commit": git_sha[:12] if git_sha != "unknown" else git_sha,
             "environment": os.environ.get("CAMPUSPILOT_ENV", "development"),
+            "deployment_profile": deployment.profile.value,
+            "academic_coverage": academic_coverage.summary(),
             "uptime_seconds": round(time.monotonic() - app.state.started_at, 1),
             "data_mode": campus_catalog.data["data_mode"],
             "retrieval_mode": (
@@ -1094,6 +1107,36 @@ def create_app(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail=str(exc),
             ) from exc
+
+    @app.get("/api/coverage/capabilities")
+    def get_academic_coverage(
+        university_id: str = Query(min_length=1),
+        program_code: str | None = Query(default=None),
+        handbook_year: int | None = Query(default=None, ge=2020, le=2100),
+        specialisation_code: str | None = Query(default=None),
+    ) -> dict[str, Any]:
+        record = academic_coverage.resolve(
+            university_id=university_id,
+            program_code=program_code,
+            handbook_year=handbook_year,
+            specialisation_code=specialisation_code,
+        )
+        return {
+            "scope": {
+                "university_id": university_id.lower(),
+                "program_code": (
+                    program_code.upper() if program_code else None
+                ),
+                "handbook_year": handbook_year,
+                "specialisation_code": (
+                    specialisation_code.upper()
+                    if specialisation_code
+                    else None
+                ),
+            },
+            "coverage": record.to_dict() if record else None,
+            "model": "CATALOG -> STRUCTURED -> VERIFIED",
+        }
 
     @app.post("/api/programs/compare")
     def compare_programs(
@@ -1225,14 +1268,23 @@ def create_app(
     def search_official_evidence(
         request: EvidenceSearchRequest,
     ) -> dict[str, Any]:
-        documents = evidence_retriever.search(
+        scope = retrieval_scope_resolver.resolve(
             request.query,
-            handbook_year=request.handbook_year,
-            university_id=request.university_id,
-            discipline_id=request.discipline_id,
-            program_code=request.program_code,
-            source_type=request.source_type,
-            k=request.k,
+            explicit=RetrievalScope(
+                handbook_year=request.handbook_year,
+                university_id=request.university_id,
+                discipline_id=request.discipline_id,
+                program_code=request.program_code,
+                specialisation_code=request.specialisation_code,
+                source_type=request.source_type,
+            ),
+        )
+        documents = evidence_retriever.retrieve(
+            RetrievalRequest(
+                query=request.query,
+                scope=scope,
+                k=request.k,
+            )
         )
         log_event(
             RUNTIME_LOGGER,
@@ -1249,6 +1301,7 @@ def create_app(
             "documents": documents,
             "count": len(documents),
             "answer_source": retriever_runtime.retrieval_mode,
+            "scope": scope.to_search_kwargs(),
         }
 
     @app.post("/api/terminology/search")

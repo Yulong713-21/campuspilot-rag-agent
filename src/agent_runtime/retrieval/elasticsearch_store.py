@@ -22,6 +22,7 @@ HANDBOOK_INDEX_MAPPINGS: dict[str, Any] = {
         "program_code": {"type": "keyword"},
         "program_codes": {"type": "keyword"},
         "discipline_ids": {"type": "keyword"},
+        "specialisation_codes": {"type": "keyword"},
         "source_type": {"type": "keyword"},
         "identifiers": {"type": "keyword"},
         "title": {
@@ -129,6 +130,35 @@ class ElasticsearchHandbookStore:
         )
         return int(succeeded)
 
+    def upsert(self, chunks: list[HandbookChunk]) -> int:
+        """Upsert changed chunks using their stable chunk IDs."""
+
+        if not chunks:
+            return 0
+        return self.ingest(chunks)
+
+    def delete(self, chunk_ids: list[str]) -> int:
+        """Delete chunks removed by changed or retired sources."""
+
+        if not chunk_ids:
+            return 0
+        from elasticsearch.helpers import bulk
+
+        succeeded, _ = bulk(
+            self.client,
+            (
+                {
+                    "_op_type": "delete",
+                    "_index": self.index_name,
+                    "_id": chunk_id,
+                }
+                for chunk_id in chunk_ids
+            ),
+            refresh=True,
+            raise_on_error=True,
+        )
+        return int(succeeded)
+
     def search(
         self,
         query: str,
@@ -137,6 +167,7 @@ class ElasticsearchHandbookStore:
         university_id: str | None = None,
         discipline_id: str | None = None,
         program_code: str | None = None,
+        specialisation_code: str | None = None,
         source_type: str | None = None,
         k: int = 10,
     ) -> list[dict[str, Any]]:
@@ -148,6 +179,7 @@ class ElasticsearchHandbookStore:
             ("university_id", university_id),
             ("discipline_ids", discipline_id),
             ("source_type", source_type),
+            ("specialisation_codes", specialisation_code),
         ):
             if value is not None:
                 filters.append({"term": {field: value}})

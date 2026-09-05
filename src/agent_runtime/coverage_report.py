@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from campuspilot_core.coverage import AcademicCoverageRegistry
+
 
 def _read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -24,6 +26,9 @@ def build_coverage_report(repo_root: str | Path) -> dict[str, Any]:
         data / "admissions" / "go8_business_catalog_2026.json"
     )
     reviewed = _read_json(data / "admissions" / "reviewed_rules.json")
+    academic_coverage = AcademicCoverageRegistry.from_path(
+        data / "academic_coverage.json"
+    )
     faq = _read_json(data / "campuspilot_faq.json")
     assessments = _read_json(data / "campuspilot_unit_assessments_2026.json")
 
@@ -76,6 +81,7 @@ def build_coverage_report(repo_root: str | Path) -> dict[str, Any]:
             ),
         },
         "institutions": institutions.get("counts", {}),
+        "academic_coverage": academic_coverage.summary(),
         "faq_entries": len(faq.get("entries", [])),
         "unit_assessments": len(assessments.get("units", [])),
         "quality_gate": {

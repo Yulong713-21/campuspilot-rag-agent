@@ -33,6 +33,7 @@ class InMemoryBM25Retriever:
         university_id: str | None = None,
         discipline_id: str | None = None,
         program_code: str | None = None,
+        specialisation_code: str | None = None,
         source_type: str | None = None,
         k: int = 10,
     ) -> list[dict[str, Any]]:
@@ -62,6 +63,7 @@ class InMemoryBM25Retriever:
                 university_id=university_id,
                 discipline_id=discipline_id,
                 program_code=program_code,
+                specialisation_code=specialisation_code,
                 source_type=source_type,
             ):
                 continue
@@ -85,6 +87,7 @@ class InMemoryBM25Retriever:
         university_id: str | None,
         discipline_id: str | None,
         program_code: str | None,
+        specialisation_code: str | None = None,
         source_type: str | None = None,
     ) -> bool:
         return all(
@@ -98,6 +101,8 @@ class InMemoryBM25Retriever:
                 program_code is None
                 or program_code in chunk.program_codes
                 or chunk.program_code == program_code,
+                specialisation_code is None
+                or specialisation_code in chunk.specialisation_codes,
                 source_type is None or chunk.source_type == source_type,
             )
         )
@@ -139,6 +144,7 @@ class FallbackLexicalRetriever:
         university_id: str | None = None,
         discipline_id: str | None = None,
         program_code: str | None = None,
+        specialisation_code: str | None = None,
         source_type: str | None = None,
         k: int = 10,
     ) -> list[dict[str, Any]]:
@@ -149,6 +155,7 @@ class FallbackLexicalRetriever:
                 university_id=university_id,
                 discipline_id=discipline_id,
                 program_code=program_code,
+                specialisation_code=specialisation_code,
                 source_type=source_type,
                 k=k,
             )
@@ -164,6 +171,7 @@ class FallbackLexicalRetriever:
                 university_id=university_id,
                 discipline_id=discipline_id,
                 program_code=program_code,
+                specialisation_code=specialisation_code,
                 source_type=source_type,
                 k=k,
             )

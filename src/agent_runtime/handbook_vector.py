@@ -39,6 +39,7 @@ class HandbookChunk:
     source_url: str
     source_sha256: str
     program_codes: list[str] = field(default_factory=list)
+    specialisation_codes: list[str] = field(default_factory=list)
 
     @property
     def embedding_text(self) -> str:
@@ -154,6 +155,9 @@ class HandbookChunker:
                                     if source.get("program_code")
                                     else []
                                 )
+                            ),
+                            specialisation_codes=list(
+                                source.get("specialisation_codes", [])
                             ),
                         )
                     )

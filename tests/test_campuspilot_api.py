@@ -575,6 +575,33 @@ class CampusPilotAPITest(unittest.TestCase):
         self.assertTrue(ready.json()["catalog_loaded"])
         self.assertTrue(ready.json()["retriever_ready"])
 
+    def test_health_exposes_deployment_and_academic_coverage_models(self) -> None:
+        payload = self.client.get("/health").json()
+
+        self.assertEqual(payload["deployment_profile"], "lite")
+        self.assertEqual(
+            payload["academic_coverage"]["model"],
+            "CATALOG -> STRUCTURED -> VERIFIED",
+        )
+
+    def test_coverage_endpoint_resolves_verified_program_override(self) -> None:
+        response = self.client.get(
+            "/api/coverage/capabilities",
+            params={
+                "university_id": "monash",
+                "program_code": "c6001",
+                "handbook_year": 2026,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["coverage"]["level"], "VERIFIED")
+        self.assertTrue(
+            response.json()["coverage"]["capabilities"][
+                "deterministic_planning"
+            ]
+        )
+
     def test_vector_startup_failure_degrades_to_bm25(self) -> None:
         logs_dir = REPO_ROOT / "logs"
         with TemporaryDirectory(dir=logs_dir) as temp_dir:

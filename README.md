@@ -45,6 +45,11 @@ flowchart LR
 - Milvus 用于描述性内容和相似语义召回；
 - Agent 与 LLM 将规划结果和官方证据组织成易理解的回答。
 
+数据覆盖按 `Catalog → Structured → Verified` 逐级发展：先连接全澳院校与
+项目目录，再沉淀结构化事实，最后为成熟范围提供版本化 deterministic planning。
+这让 CampusPilot 逐步形成 **Academic Planning Platform + Agent Interface**，
+而不是把所有 Handbook 内容统一当作向量语料。
+
 ## Repository map
 
 ```text
@@ -130,6 +135,7 @@ CrossEncoder 重排和父块去重。两类索引共享同一份版本化 chunk 
 
 ## Deployment
 
+- `CAMPUSPILOT_DEPLOYMENT_PROFILE=lite|standard|full`：按环境选择检索组件；
 - `Dockerfile`：FastAPI + production frontend 单容器；
 - `deploy/production/`：Compose、Nginx/Caddy 与环境示例；
 - `deploy/postgres/`：本地结构化数据服务与迁移入口；

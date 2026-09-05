@@ -22,6 +22,7 @@ MILVUS_VARCHAR_LIMITS = {
     "program_codes": 2048,
     "source_type": 64,
     "discipline_ids": 256,
+    "specialisation_codes": 1024,
     "title": 1024,
     "heading": 2048,
     "content": 65535,
@@ -43,6 +44,11 @@ def validate_milvus_chunks(chunks: Iterable[HandbookChunk]) -> None:
         row = {
             **chunk.to_dict(),
             "discipline_ids": "|".join(chunk.discipline_ids),
+            "specialisation_codes": (
+                "|" + "|".join(chunk.specialisation_codes) + "|"
+                if chunk.specialisation_codes
+                else ""
+            ),
             "program_codes": (
                 "|" + "|".join(chunk.program_codes) + "|"
                 if chunk.program_codes
@@ -134,10 +140,15 @@ class CampusPilotMilvusStore:
             client = MilvusClient(uri=uri)
         self.client = client
 
+    def has_collection(self) -> bool:
+        """Return whether the configured semantic collection exists."""
+
+        return bool(self.client.has_collection(self.collection_name))
+
     def recreate_collection(self) -> None:
         from pymilvus import DataType
 
-        if self.client.has_collection(self.collection_name):
+        if self.has_collection():
             self.client.drop_collection(self.collection_name)
         schema = self.client.create_schema(
             auto_id=False,
@@ -157,6 +168,7 @@ class CampusPilotMilvusStore:
             "program_codes",
             "source_type",
             "discipline_ids",
+            "specialisation_codes",
             "title",
             "heading",
             "source_url",
@@ -201,24 +213,7 @@ class CampusPilotMilvusStore:
         inserted = 0
         for offset in range(0, len(chunks), batch_size):
             batch = chunks[offset : offset + batch_size]
-            vectors = self.embedder.encode(
-                [chunk.embedding_text for chunk in batch]
-            )
-            # List metadata is delimiter-wrapped because this schema stores it
-            # in VARCHAR fields and still needs exact containment filters.
-            rows = [
-                {
-                    **chunk.to_dict(),
-                    "discipline_ids": "|".join(chunk.discipline_ids),
-                    "program_codes": (
-                        "|" + "|".join(chunk.program_codes) + "|"
-                        if chunk.program_codes
-                        else ""
-                    ),
-                    "dense_vector": vector,
-                }
-                for chunk, vector in zip(batch, vectors, strict=True)
-            ]
+            rows = self._rows(batch)
             self.client.insert(
                 collection_name=self.collection_name,
                 data=rows,
@@ -228,6 +223,62 @@ class CampusPilotMilvusStore:
                 progress_callback(inserted, len(chunks) - inserted)
         self.client.flush(self.collection_name)
         return inserted
+
+    def upsert(
+        self,
+        chunks: list[HandbookChunk],
+        *,
+        batch_size: int = 64,
+    ) -> int:
+        """Encode and replace changed chunks without rebuilding collection."""
+
+        if not chunks:
+            return 0
+        for offset in range(0, len(chunks), batch_size):
+            batch = chunks[offset : offset + batch_size]
+            self.client.upsert(
+                collection_name=self.collection_name,
+                data=self._rows(batch),
+            )
+        self.client.flush(self.collection_name)
+        return len(chunks)
+
+    def delete(self, chunk_ids: list[str]) -> int:
+        """Delete stale semantic vectors by stable chunk identity."""
+
+        if not chunk_ids:
+            return 0
+        self.client.delete(
+            collection_name=self.collection_name,
+            ids=chunk_ids,
+        )
+        self.client.flush(self.collection_name)
+        return len(chunk_ids)
+
+    def _rows(self, chunks: list[HandbookChunk]) -> list[dict[str, Any]]:
+        vectors = self.embedder.encode(
+            [chunk.embedding_text for chunk in chunks]
+        )
+        # List metadata is delimiter-wrapped because this schema stores it in
+        # VARCHAR fields and still needs exact containment filters.
+        return [
+            {
+                **chunk.to_dict(),
+                "discipline_ids": "|".join(chunk.discipline_ids),
+                "specialisation_codes": (
+                    "|" + "|".join(chunk.specialisation_codes) + "|"
+                    if chunk.specialisation_codes
+                    else ""
+                ),
+                "program_codes": (
+                    "|" + "|".join(chunk.program_codes) + "|"
+                    if chunk.program_codes
+                    else ""
+                ),
+                "dense_vector": vector,
+            }
+            for chunk, vector in zip(chunks, vectors, strict=True)
+        ]
 
     def row_count(self) -> int:
         stats = self.client.get_collection_stats(self.collection_name)
@@ -250,6 +301,7 @@ class CampusPilotMilvusStore:
         university_id: str | None = None,
         discipline_id: str | None = None,
         program_code: str | None = None,
+        specialisation_code: str | None = None,
         source_type: str | None = None,
         k: int = 10,
     ) -> list[dict[str, Any]]:
@@ -274,6 +326,11 @@ class CampusPilotMilvusStore:
             filters.append(
                 f'source_type == "{self._escape(source_type)}"'
             )
+        if specialisation_code:
+            filters.append(
+                "specialisation_codes like "
+                f'"%|{self._escape(specialisation_code)}|%"'
+            )
         result = self.client.search(
             collection_name=self.collection_name,
             data=[vector],
@@ -290,6 +347,7 @@ class CampusPilotMilvusStore:
                 "program_codes",
                 "source_type",
                 "discipline_ids",
+                "specialisation_codes",
                 "title",
                 "heading",
                 "content",

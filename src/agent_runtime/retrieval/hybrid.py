@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from typing import Any, TYPE_CHECKING
 
-from .interfaces import DenseRetriever, LexicalRetriever
+from .interfaces import DenseRetriever, LexicalRetriever, RetrievalRequest
 from .lexical import InMemoryBM25Retriever
 
 if TYPE_CHECKING:
@@ -82,6 +82,7 @@ class CampusPilotHybridRetriever:
         university_id: str | None = None,
         discipline_id: str | None = None,
         program_code: str | None = None,
+        specialisation_code: str | None = None,
         source_type: str | None = None,
         k: int = 3,
     ) -> list[dict[str, Any]]:
@@ -94,6 +95,7 @@ class CampusPilotHybridRetriever:
             university_id=university_id,
             discipline_id=discipline_id,
             program_code=program_code,
+            specialisation_code=specialisation_code,
             source_type=source_type,
             k=candidate_k,
         )
@@ -108,6 +110,7 @@ class CampusPilotHybridRetriever:
                     university_id=university_id,
                     discipline_id=discipline_id,
                     program_code=program_code,
+                    specialisation_code=specialisation_code,
                     source_type=source_type,
                     k=candidate_k,
                 )
@@ -212,6 +215,15 @@ class CampusPilotHybridRetriever:
                 break
         return selected
 
+    def retrieve(self, request: RetrievalRequest) -> list[dict[str, Any]]:
+        """Execute a storage-independent request after scope resolution."""
+
+        return self.search(
+            request.query,
+            **request.scope.to_search_kwargs(),
+            k=request.k,
+        )
+
     def _lexical_search(
         self,
         query: str,
@@ -220,6 +232,7 @@ class CampusPilotHybridRetriever:
         university_id: str | None,
         discipline_id: str | None,
         program_code: str | None,
+        specialisation_code: str | None = None,
         source_type: str | None = None,
         k: int,
     ) -> list[dict[str, Any]]:
@@ -229,6 +242,7 @@ class CampusPilotHybridRetriever:
             university_id=university_id,
             discipline_id=discipline_id,
             program_code=program_code,
+            specialisation_code=specialisation_code,
             source_type=source_type,
             k=k,
         )
@@ -278,6 +292,7 @@ class CampusPilotHybridRetriever:
         university_id: str | None,
         discipline_id: str | None,
         program_code: str | None,
+        specialisation_code: str | None = None,
         source_type: str | None = None,
     ) -> bool:
         return InMemoryBM25Retriever.matches(
@@ -286,6 +301,7 @@ class CampusPilotHybridRetriever:
             university_id=university_id,
             discipline_id=discipline_id,
             program_code=program_code,
+            specialisation_code=specialisation_code,
             source_type=source_type,
         )
 

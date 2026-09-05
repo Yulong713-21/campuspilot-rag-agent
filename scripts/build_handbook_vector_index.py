@@ -13,13 +13,17 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from agent_runtime.handbook_vector import (
+from agent_runtime.handbook_vector import (  # noqa: E402
     CampusPilotMilvusStore,
     build_ready_corpus,
     create_dense_embedder,
     read_chunks,
     validate_milvus_chunks,
     write_chunks,
+)
+from agent_runtime.retrieval import (  # noqa: E402
+    IndexState,
+    plan_incremental_index,
 )
 
 
@@ -84,6 +88,17 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Continue from the verified current Milvus row count.",
     )
+    parser.add_argument(
+        "--recreate",
+        action="store_true",
+        help="Recreate the collection before publishing the current corpus.",
+    )
+    parser.add_argument(
+        "--state-path",
+        type=Path,
+        default=REPO_ROOT / "logs" / "handbook-vector-index-state.json",
+        help="Last successfully published source hashes and chunk IDs.",
+    )
     return parser.parse_args()
 
 
@@ -110,9 +125,16 @@ def main() -> None:
         collection_name=args.collection,
         embedder=embedder,
     )
+    if args.recreate and (args.resume or args.resume_offset):
+        raise ValueError("--recreate cannot be combined with resume options")
     if args.resume and args.resume_offset:
         raise ValueError("use either --resume or --resume-offset, not both")
     resume_offset = store.row_count() if args.resume else args.resume_offset
+    changed_sources: list[str] = []
+    unchanged_source_count = 0
+    removed_sources: list[str] = []
+    deleted = 0
+    collection_recreated = False
     if resume_offset:
         current_count = store.row_count()
         if current_count != resume_offset:
@@ -129,8 +151,9 @@ def main() -> None:
                 "existing Milvus chunk IDs do not match the "
                 "current corpus prefix"
             )
-    else:
+    elif args.recreate or not store.has_collection():
         store.recreate_collection()
+        collection_recreated = True
 
     def report_progress(inserted: int, pending: int) -> None:
         print(
@@ -147,11 +170,28 @@ def main() -> None:
             flush=True,
         )
 
-    inserted = store.ingest(
-        chunks[resume_offset:],
-        batch_size=args.batch_size,
-        progress_callback=report_progress,
-    )
+    if resume_offset:
+        inserted = store.ingest(
+            chunks[resume_offset:],
+            batch_size=args.batch_size,
+            progress_callback=report_progress,
+        )
+    else:
+        previous = (
+            IndexState.empty()
+            if collection_recreated
+            else IndexState.read(args.state_path)
+        )
+        plan = plan_incremental_index(chunks, previous)
+        deleted = store.delete(list(plan.delete_chunk_ids))
+        inserted = store.upsert(
+            list(plan.upsert_chunks),
+            batch_size=args.batch_size,
+        )
+        plan.next_state.write(args.state_path)
+        changed_sources = list(plan.changed_sources)
+        unchanged_source_count = len(plan.unchanged_sources)
+        removed_sources = list(plan.removed_sources)
     total_elapsed = time.monotonic() - started
     print(
         json.dumps(
@@ -168,7 +208,11 @@ def main() -> None:
                 "child_chunks": chunk_count,
                 "resume_offset": resume_offset,
                 "inserted_this_run": inserted,
-                "indexed_entities": resume_offset + inserted,
+                "deleted_this_run": deleted,
+                "changed_sources": changed_sources,
+                "unchanged_source_count": unchanged_source_count,
+                "removed_sources": removed_sources,
+                "indexed_entities": store.row_count(),
                 "chunk_seconds": round(chunk_elapsed, 3),
                 "embedding_and_index_seconds": round(
                     total_elapsed - (index_started - started),

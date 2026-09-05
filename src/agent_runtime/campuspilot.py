@@ -6,7 +6,7 @@ import json
 import math
 from pathlib import Path
 import re
-from typing import Any, TypedDict
+from typing import Any, TYPE_CHECKING, TypedDict
 
 from langgraph.graph import END, StateGraph
 
@@ -16,6 +16,9 @@ from .campuspilot_faq import CampusPilotFaqService
 from .recruitment_knowledge import RecruitmentQuestionAnsweringAgent
 from .plan_narrator import StudyPlanNarrator
 from campuspilot_core.program_recommendation import ProgramRecommendationService
+
+if TYPE_CHECKING:
+    from .retrieval.interfaces import RetrievalRequest
 
 CATALOG_PATH = (
     Path(__file__).resolve().parents[2] / "data" / "campuspilot_official_sample.json"
@@ -86,6 +89,7 @@ class CampusPilotEvidenceRetriever:
         university_id: str | None = None,
         discipline_id: str | None = None,
         program_code: str | None = None,
+        specialisation_code: str | None = None,
         source_type: str | None = None,
         k: int = 3,
     ) -> list[dict[str, Any]]:
@@ -93,6 +97,25 @@ class CampusPilotEvidenceRetriever:
         scores: list[tuple[float, dict[str, Any]]] = []
         for index, document in enumerate(self.documents):
             if handbook_year is not None and document["handbook_year"] != handbook_year:
+                continue
+            if (
+                university_id is not None
+                and document.get("university_id") is not None
+                and document["university_id"] != university_id
+            ):
+                continue
+            if (
+                discipline_id is not None
+                and document.get("discipline_ids") is not None
+                and discipline_id not in document.get("discipline_ids", [])
+            ):
+                continue
+            if (
+                specialisation_code is not None
+                and document.get("specialisation_codes") is not None
+                and specialisation_code
+                not in document.get("specialisation_codes", [])
+            ):
                 continue
             searchable = " ".join(
                 [
@@ -120,6 +143,15 @@ class CampusPilotEvidenceRetriever:
             }
             for score, document in scores[:k]
         ]
+
+    def retrieve(self, request: RetrievalRequest) -> list[dict[str, Any]]:
+        """Support the storage-independent evidence request contract."""
+
+        return self.search(
+            request.query,
+            **request.scope.to_search_kwargs(),
+            k=request.k,
+        )
 
     def _bm25_term_score(self, term: str, tokens: list[str]) -> float:
         frequency = tokens.count(term)

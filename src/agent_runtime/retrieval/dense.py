@@ -9,6 +9,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Callable, Iterable, Protocol, TYPE_CHECKING
 
+from .interfaces import RetrievalRequest
+from .semantic import classify_semantic_eligibility, semantic_embedding_text
+
 if TYPE_CHECKING:
     from ..handbook_vector import HandbookChunk
 
@@ -23,12 +26,7 @@ MILVUS_VARCHAR_LIMITS = {
     "source_type": 64,
     "discipline_ids": 256,
     "specialisation_codes": 1024,
-    "title": 1024,
-    "heading": 2048,
-    "content": 65535,
-    "parent_content": 65535,
-    "source_url": 4096,
-    "source_sha256": 64,
+    "semantic_category": 64,
 }
 
 
@@ -41,13 +39,24 @@ class DenseEmbedder(Protocol):
 def validate_milvus_chunks(chunks: Iterable[HandbookChunk]) -> None:
     """Fail before ingestion when a chunk exceeds the fixed Milvus schema."""
     for position, chunk in enumerate(chunks):
+        eligibility = classify_semantic_eligibility(chunk)
         row = {
-            **chunk.to_dict(),
+            "chunk_id": chunk.chunk_id,
+            "parent_id": chunk.parent_id,
+            "source_id": chunk.source_id,
+            "university_id": chunk.university_id,
+            "program_code": chunk.program_code,
+            "source_type": chunk.source_type,
             "discipline_ids": "|".join(chunk.discipline_ids),
             "specialisation_codes": (
                 "|" + "|".join(chunk.specialisation_codes) + "|"
                 if chunk.specialisation_codes
                 else ""
+            ),
+            "semantic_category": (
+                eligibility.category.value
+                if eligibility.category
+                else "unclassified"
             ),
             "program_codes": (
                 "|" + "|".join(chunk.program_codes) + "|"
@@ -130,10 +139,14 @@ class CampusPilotMilvusStore:
         collection_name: str,
         embedder: DenseEmbedder,
         client: Any | None = None,
+        canonical_chunks: Iterable[HandbookChunk] | None = None,
     ) -> None:
         self.uri = uri
         self.collection_name = collection_name
         self.embedder = embedder
+        self.canonical_chunks = {
+            chunk.chunk_id: chunk for chunk in (canonical_chunks or [])
+        }
         if client is None:
             from pymilvus import MilvusClient
 
@@ -169,10 +182,7 @@ class CampusPilotMilvusStore:
             "source_type",
             "discipline_ids",
             "specialisation_codes",
-            "title",
-            "heading",
-            "source_url",
-            "source_sha256",
+            "semantic_category",
         ):
             schema.add_field(
                 field_name=field_name,
@@ -180,12 +190,6 @@ class CampusPilotMilvusStore:
                 max_length=MILVUS_VARCHAR_LIMITS[field_name],
             )
         schema.add_field(field_name="handbook_year", datatype=DataType.INT64)
-        for field_name in ("content", "parent_content"):
-            schema.add_field(
-                field_name=field_name,
-                datatype=DataType.VARCHAR,
-                max_length=MILVUS_VARCHAR_LIMITS[field_name],
-            )
         schema.add_field(
             field_name="dense_vector",
             datatype=DataType.FLOAT_VECTOR,
@@ -257,13 +261,19 @@ class CampusPilotMilvusStore:
 
     def _rows(self, chunks: list[HandbookChunk]) -> list[dict[str, Any]]:
         vectors = self.embedder.encode(
-            [chunk.embedding_text for chunk in chunks]
+            [semantic_embedding_text(chunk) for chunk in chunks]
         )
         # List metadata is delimiter-wrapped because this schema stores it in
         # VARCHAR fields and still needs exact containment filters.
         return [
             {
-                **chunk.to_dict(),
+                "chunk_id": chunk.chunk_id,
+                "parent_id": chunk.parent_id,
+                "source_id": chunk.source_id,
+                "university_id": chunk.university_id,
+                "handbook_year": chunk.handbook_year,
+                "program_code": chunk.program_code,
+                "source_type": chunk.source_type,
                 "discipline_ids": "|".join(chunk.discipline_ids),
                 "specialisation_codes": (
                     "|" + "|".join(chunk.specialisation_codes) + "|"
@@ -274,6 +284,11 @@ class CampusPilotMilvusStore:
                     "|" + "|".join(chunk.program_codes) + "|"
                     if chunk.program_codes
                     else ""
+                ),
+                "semantic_category": (
+                    result.category.value
+                    if (result := classify_semantic_eligibility(chunk)).category
+                    else "unclassified"
                 ),
                 "dense_vector": vector,
             }
@@ -348,22 +363,54 @@ class CampusPilotMilvusStore:
                 "source_type",
                 "discipline_ids",
                 "specialisation_codes",
-                "title",
-                "heading",
-                "content",
-                "parent_content",
-                "source_url",
+                "semantic_category",
             ],
             search_params={"metric_type": "COSINE", "params": {}},
         )
         return [
-            {
-                **hit["entity"],
-                "document_id": hit["entity"]["chunk_id"],
-                "dense_score": round(float(hit["distance"]), 6),
-            }
-            for hit in result[0]
+            self._normalize_hit(hit, rank)
+            for rank, hit in enumerate(result[0], start=1)
         ]
+
+    def retrieve(self, request: RetrievalRequest) -> list[dict[str, Any]]:
+        """Accept the shared business request while keeping Milvus internal."""
+
+        return self.search(
+            request.query,
+            **request.scope.to_search_kwargs(),
+            k=request.k,
+        )
+
+    def _normalize_hit(self, hit: dict[str, Any], rank: int) -> dict[str, Any]:
+        """Convert one Milvus hit into the stable retrieval result schema."""
+
+        entity = dict(hit.get("entity") or {})
+        chunk_id = str(entity.get("chunk_id") or hit.get("id") or "")
+        canonical = self.canonical_chunks.get(chunk_id)
+        document = canonical.to_dict() if canonical is not None else {}
+        document.update(entity)
+        for field in ("program_codes", "specialisation_codes"):
+            value = document.get(field)
+            if isinstance(value, str):
+                document[field] = [item for item in value.split("|") if item]
+        discipline = document.get("discipline_ids")
+        if isinstance(discipline, str):
+            document["discipline_ids"] = [
+                item for item in discipline.split("|") if item
+            ]
+        document.update(
+            {
+                "chunk_id": chunk_id,
+                "document_id": chunk_id,
+                "rank": rank,
+                "dense_score": round(
+                    float(hit.get("distance", hit.get("score", 0.0))),
+                    6,
+                ),
+                "retrieval_channels": ["dense"],
+            }
+        )
+        return document
 
     @staticmethod
     def _escape(value: str) -> str:

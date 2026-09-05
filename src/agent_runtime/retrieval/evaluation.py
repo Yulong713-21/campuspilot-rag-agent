@@ -36,13 +36,17 @@ class RetrievalEvaluationReport:
 
     case_results: tuple[dict[str, Any], ...]
     scenario_metrics: dict[str, dict[str, float]]
+    semantic_subset_coverage: dict[str, int | float] | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload: dict[str, Any] = {
             "case_count": len(self.case_results),
             "scenario_metrics": self.scenario_metrics,
             "cases": list(self.case_results),
         }
+        if self.semantic_subset_coverage is not None:
+            payload["semantic_subset_coverage"] = self.semantic_subset_coverage
+        return payload
 
 
 def load_retrieval_cases(
@@ -71,6 +75,9 @@ class RetrievalScenarioEvaluator:
         self,
         cases: list[RetrievalEvaluationCase],
         retrievers: Mapping[RetrievalScenario, EvidenceRetriever],
+        *,
+        total_chunks: int | None = None,
+        embedded_chunks: int | None = None,
     ) -> RetrievalEvaluationReport:
         results = [
             self._evaluate_case(case, retrievers[case.scenario])
@@ -89,22 +96,47 @@ class RetrievalScenarioEvaluator:
                 {
                     name
                     for result in selected
-                    for name in result["checks"]
+                    for name in (
+                        set(result["checks"]) | set(result["metrics"])
+                    )
                 }
             )
             metrics[scenario.value] = {
                 name: round(
                     sum(
-                        result["checks"][name]
+                        (
+                            result["metrics"][name]
+                            if name in result["metrics"]
+                            else result["checks"][name]
+                        )
                         for result in selected
                         if name in result["checks"]
+                        or name in result["metrics"]
                     )
-                    / sum(name in result["checks"] for result in selected),
+                    / sum(
+                        name in result["checks"]
+                        or name in result["metrics"]
+                        for result in selected
+                    ),
                     4,
                 )
                 for name in metric_names
             }
-        return RetrievalEvaluationReport(tuple(results), metrics)
+        subset_coverage = None
+        if total_chunks is not None and embedded_chunks is not None:
+            subset_coverage = {
+                "embedded_chunks": embedded_chunks,
+                "total_chunks": total_chunks,
+                "ratio": round(
+                    embedded_chunks / total_chunks if total_chunks else 0.0,
+                    6,
+                ),
+            }
+        return RetrievalEvaluationReport(
+            tuple(results),
+            metrics,
+            subset_coverage,
+        )
 
     def _evaluate_case(
         self,
@@ -118,6 +150,13 @@ class RetrievalScenarioEvaluator:
             item
             for item in documents
             if item.get("source_id") in case.expected_source_ids
+        ]
+        returned_sources = [item.get("source_id") for item in documents]
+        matched_sources = set(returned_sources) & set(case.expected_source_ids)
+        expected_ranks = [
+            rank
+            for rank, source_id in enumerate(returned_sources, start=1)
+            if source_id in case.expected_source_ids
         ]
         checks: dict[str, bool] = {
             "expected_source_found": bool(matching),
@@ -152,9 +191,23 @@ class RetrievalScenarioEvaluator:
             "case_id": case.case_id,
             "scenario": case.scenario.value,
             "checks": checks,
-            "returned_source_ids": [
-                item.get("source_id") for item in documents
-            ],
+            "metrics": {
+                "recall_at_k": round(
+                    len(matched_sources) / len(case.expected_source_ids),
+                    4,
+                ),
+                "reciprocal_rank": round(
+                    1.0 / min(expected_ranks) if expected_ranks else 0.0,
+                    4,
+                ),
+                "scope_precision": 1.0
+                if checks["scope_precision"]
+                else 0.0,
+            },
+            "expected_source_rank": (
+                min(expected_ranks) if expected_ranks else None
+            ),
+            "returned_source_ids": returned_sources,
         }
 
     @staticmethod

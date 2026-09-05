@@ -469,6 +469,7 @@ def _create_evidence_retriever(
                 "campuspilot_handbook_v2",
             ),
             embedder=embedder,
+            canonical_chunks=chunks,
         )
         reranker = None
         reranker_enabled = os.environ.get(

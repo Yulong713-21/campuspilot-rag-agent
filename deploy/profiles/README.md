@@ -13,5 +13,7 @@ environment variables override the profile defaults, so environments can be
 tuned without adding more profile names.
 
 When an existing Elasticsearch or Milvus deployment first adopts these
-profiles, rebuild its Handbook index once with `--recreate` to establish the
-incremental state file and the `specialisation_codes` field.
+profiles, rebuild its Handbook indexes once with `--recreate` to establish the
+incremental state files. The Milvus rebuild also adopts the lightweight
+semantic-subset schema; Elasticsearch continues to retain the full evidence
+corpus.

@@ -119,13 +119,15 @@ py -3.10 -m venv .venv
 
 ## RAG and evaluation
 
-Handbook 检索使用 Elasticsearch BM25 与 Dense/Milvus 双路召回，再进行 RRF 融合、可选
-CrossEncoder 重排和父块去重。两类索引共享同一份版本化 chunk corpus 与 `chunk_id`。
+Handbook 检索使用 Elasticsearch BM25 与 semantic-subset Milvus 双路召回，再进行 RRF
+融合、可选 CrossEncoder 重排和父块去重。两类索引共享版本化 chunk corpus 与
+`chunk_id`，Milvus 只保存适合语义发现的轻量记录。
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements-rag.txt
 .\.venv\Scripts\python.exe scripts\build_handbook_lexical_index.py --recreate
-.\.venv\Scripts\python.exe scripts\build_handbook_vector_index.py `
+.\.venv\Scripts\python.exe scripts\build_handbook_vector_index.py --report-only
+.\.venv\Scripts\python.exe scripts\build_handbook_vector_index.py --recreate `
   --chunks-path data\official_sources\handbook-chunks.jsonl
 .\scripts\run_project_checks.ps1
 ```

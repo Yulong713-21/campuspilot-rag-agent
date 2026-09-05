@@ -12,7 +12,7 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from agent_runtime.handbook_vector import (
+from agent_runtime.handbook_vector import (  # noqa: E402
     CampusPilotHybridRetriever,
     CampusPilotMilvusStore,
     HandbookChunk,
@@ -48,13 +48,11 @@ class FakeMilvusClient:
                         "university_id": "monash",
                         "handbook_year": 2026,
                         "program_code": "C6001",
+                        "program_codes": "|C6001|",
                         "source_type": "program_handbook",
                         "discipline_ids": "computing",
-                        "title": "Master of Information Technology",
-                        "heading": "Requirements",
-                        "content": "Complete 96 credit points.",
-                        "parent_content": "Requirements: 96 credit points.",
-                        "source_url": "https://handbook.monash.edu",
+                        "specialisation_codes": "",
+                        "semantic_category": "program_description",
                     },
                 }
             ]
@@ -163,16 +161,17 @@ Complete the core courses listed below.
             source_type="program_handbook",
             discipline_ids=["computing"],
             title="Test Program",
-            heading="x" * 2049,
+            heading="A normal heading",
             content="valid content",
             parent_content="valid parent content",
             source_url="https://example.edu/program",
             source_sha256="abc",
+            program_codes=["X" * 2049],
         )
 
         with self.assertRaisesRegex(
             ValueError,
-            "field heading has length 2049",
+            "field program_codes has length 2051",
         ):
             validate_milvus_chunks([chunk])
 
@@ -407,6 +406,10 @@ class CampusPilotMilvusStoreTest(unittest.TestCase):
         self.assertEqual(inserted, 3)
         self.assertEqual(progress, [(2, 1), (3, 0)])
         self.assertEqual(len(client.inserted_rows), 3)
+        self.assertEqual(client.inserted_rows[0]["chunk_id"], "chunk-0")
+        self.assertNotIn("content", client.inserted_rows[0])
+        self.assertNotIn("parent_content", client.inserted_rows[0])
+        self.assertNotIn("source_url", client.inserted_rows[0])
 
     def test_program_scope_query_is_detected_without_matching_unit_query(self) -> None:
         self.assertTrue(
@@ -447,6 +450,7 @@ class CampusPilotMilvusStoreTest(unittest.TestCase):
 
         self.assertEqual(result[0]["document_id"], "chunk-1")
         self.assertEqual(result[0]["dense_score"], 0.91)
+        self.assertEqual(result[0]["rank"], 1)
         self.assertEqual(
             client.last_search["filter"],
             (

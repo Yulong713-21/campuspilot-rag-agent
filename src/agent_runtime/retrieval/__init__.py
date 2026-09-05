@@ -37,6 +37,14 @@ from .indexing import (
 )
 from .lexical import FallbackLexicalRetriever, InMemoryBM25Retriever
 from .scope import RetrievalScope, RetrievalScopeResolver
+from .semantic import (
+    SEMANTIC_POLICY_VERSION,
+    SemanticCategory,
+    SemanticEligibility,
+    classify_semantic_eligibility,
+    semantic_embedding_text,
+    should_embed,
+)
 
 __all__ = [
     "BGEM3DenseEmbedder",
@@ -59,6 +67,9 @@ __all__ = [
     "SentenceTransformerDenseEmbedder",
     "SentenceTransformerReranker",
     "SemanticEvidenceRetriever",
+    "SEMANTIC_POLICY_VERSION",
+    "SemanticCategory",
+    "SemanticEligibility",
     "SourceIndexState",
     "RetrievalEvaluationCase",
     "RetrievalEvaluationReport",
@@ -68,8 +79,11 @@ __all__ = [
     "RetrievalScope",
     "RetrievalScopeResolver",
     "apply_incremental_plan",
+    "classify_semantic_eligibility",
     "create_dense_embedder",
     "load_retrieval_cases",
     "plan_incremental_index",
+    "semantic_embedding_text",
+    "should_embed",
     "validate_milvus_chunks",
 ]

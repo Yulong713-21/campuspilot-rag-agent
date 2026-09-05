@@ -43,8 +43,13 @@ class HandbookChunk:
 
     @property
     def embedding_text(self) -> str:
-        labels = [self.title, self.heading, self.content]
-        return "\n".join(item for item in labels if item).strip()
+        """Return the stable text used by semantic embedding adapters."""
+
+        # Local import avoids a package initialization cycle while preserving
+        # this long-standing compatibility property for callers and tests.
+        from .retrieval.semantic import semantic_embedding_text
+
+        return semantic_embedding_text(self)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

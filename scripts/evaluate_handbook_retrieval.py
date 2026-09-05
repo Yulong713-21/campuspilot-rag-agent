@@ -24,6 +24,7 @@ from agent_runtime.retrieval import (  # noqa: E402
     RetrievalScenario,
     RetrievalScenarioEvaluator,
     SemanticEvidenceRetriever,
+    should_embed,
     create_dense_embedder,
     load_retrieval_cases,
 )
@@ -91,6 +92,7 @@ def main() -> None:
                 "campuspilot_handbook_v2",
             ),
             embedder=embedder,
+            canonical_chunks=chunks,
         )
         retrievers[RetrievalScenario.SEMANTIC] = SemanticEvidenceRetriever(
             dense_backend
@@ -106,7 +108,12 @@ def main() -> None:
         for case in load_retrieval_cases(args.cases)
         if case.scenario in requested
     ]
-    report = RetrievalScenarioEvaluator().evaluate(cases, retrievers)
+    report = RetrievalScenarioEvaluator().evaluate(
+        cases,
+        retrievers,
+        total_chunks=len(chunks),
+        embedded_chunks=sum(should_embed(chunk) for chunk in chunks),
+    )
     print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2))
 
 

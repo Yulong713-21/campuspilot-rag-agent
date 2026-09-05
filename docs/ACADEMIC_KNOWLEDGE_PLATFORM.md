@@ -37,6 +37,28 @@ query + conversation context
 Business code sends a `RetrievalRequest`; Elasticsearch and Milvus remain
 behind lexical/dense interfaces and composition code.
 
+### Semantic subset
+
+Milvus is a semantic candidate index, not a second Handbook store. A
+deterministic classifier includes descriptions, learning outcomes,
+specialisation narratives, policy or eligibility explanations, career content,
+academic advice and other sufficiently rich prose. It skips navigation,
+metadata-only fragments, exact code lists, credit or prerequisite tables,
+teaching-period tables and other structured numeric records.
+
+Milvus stores stable IDs, scope fields, semantic category and the vector. The
+canonical chunk corpus resolves display and citation text after retrieval;
+Elasticsearch retains the complete lexical evidence corpus. Measure the current
+subset without loading an embedding model or connecting to Milvus:
+
+```powershell
+python scripts/build_handbook_vector_index.py --report-only
+```
+
+For the checked-in 2026 corpus, the current policy selects 6,806 of 16,797
+chunks (40.5191%). This is a measured outcome of the content rules, not a fixed
+percentage target.
+
 ## Incremental publication
 
 Both Handbook indexers compare the current corpus with the last successful
@@ -50,9 +72,11 @@ source unchanged       → no backend write
 source removed         → delete all previous chunks
 ```
 
-State is written atomically only after backend operations succeed. Use
-`--recreate` once when bootstrapping state for an existing index, when adopting
-the `specialisation_codes` schema field, or for an intentional full rebuild.
+State is written atomically only after backend operations succeed. The semantic
+index passes only eligible chunks into this pipeline, so eligibility transitions
+produce the same upsert/delete operations as content changes. Use `--recreate`
+once when adopting the lightweight semantic schema or for an intentional full
+rebuild.
 
 ## Deployment profiles
 
@@ -68,9 +92,14 @@ an environment independently.
 `eval/handbook_retrieval_cases.json` contains corpus-grounded lexical,
 semantic, and hybrid cases. Metrics remain scenario-specific: exact identifier
 ranking for lexical search, concept discovery for semantic search, and channel
-coverage for hybrid fusion, with scope precision measured for every scenario.
+coverage for hybrid fusion. Recall@K, reciprocal rank and scope precision are
+reported per scenario alongside semantic subset coverage.
 
 ```powershell
 python scripts/evaluate_handbook_retrieval.py --scenarios lexical
 python scripts/evaluate_handbook_retrieval.py --scenarios lexical semantic hybrid
 ```
+
+The real Milvus integration test is opt-in through
+`CAMPUSPILOT_TEST_MILVUS_URI`; ordinary unit and API tests remain
+infrastructure-independent.

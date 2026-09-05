@@ -15,7 +15,9 @@ from agent_runtime.retrieval import (  # noqa: E402
     RetrievalScenario,
     RetrievalScenarioEvaluator,
     load_retrieval_cases,
+    should_embed,
 )
+from agent_runtime.handbook_vector import read_chunks  # noqa: E402
 
 
 class RetrievalEvaluationTest(unittest.TestCase):
@@ -40,6 +42,15 @@ class RetrievalEvaluationTest(unittest.TestCase):
         )
         for case in cases:
             self.assertTrue(set(case.expected_source_ids) <= source_ids)
+
+        eligible_source_ids = {
+            chunk.source_id for chunk in read_chunks() if should_embed(chunk)
+        }
+        for case in cases:
+            if case.scenario is RetrievalScenario.SEMANTIC:
+                self.assertTrue(
+                    set(case.expected_source_ids) & eligible_source_ids
+                )
 
     def test_reports_metrics_separately_for_each_retrieval_scenario(self) -> None:
         cases = load_retrieval_cases(
@@ -75,6 +86,8 @@ class RetrievalEvaluationTest(unittest.TestCase):
                 scenario: ExpectedRetriever(scenario)
                 for scenario in RetrievalScenario
             },
+            total_chunks=100,
+            embedded_chunks=40,
         )
 
         self.assertEqual(
@@ -92,6 +105,18 @@ class RetrievalEvaluationTest(unittest.TestCase):
         self.assertEqual(
             report.scenario_metrics["hybrid"]["channel_coverage"],
             1.0,
+        )
+        self.assertEqual(
+            report.scenario_metrics["semantic"]["recall_at_k"],
+            1.0,
+        )
+        self.assertEqual(
+            report.scenario_metrics["semantic"]["reciprocal_rank"],
+            1.0,
+        )
+        self.assertEqual(
+            report.semantic_subset_coverage,
+            {"embedded_chunks": 40, "total_chunks": 100, "ratio": 0.4},
         )
 
 

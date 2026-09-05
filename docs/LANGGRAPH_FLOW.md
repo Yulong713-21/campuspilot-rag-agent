@@ -12,7 +12,7 @@ Agent 实例中，不写入 state，避免 Checkpoint 序列化外部连接对�
 
 ## CampusPilot 对话主图
 
-CampusPilot 现在采用两层 LangGraph。外层对话主图负责识别当前轮动作并选择业务路径，内层学习规划图负责加载规则、计算学分、生成候选方案和确定性校验。
+CampusPilot 现在采用两层 LangGraph。外层对话主图负责识别当前轮动作并选择业务路径，内层学习规划图负责加载版本化规则、计算学分、生成候选方案并完成 deterministic planning。
 
 ```mermaid
 flowchart TD

@@ -64,7 +64,7 @@
                 <img class="avatar" src="/static/assets/pia-avatar.png" alt="" aria-hidden="true">
                 <div>
                   <strong>Pia</strong>
-                  <p>告诉我你的课程或毕业目标。我会区分官方原文检索与确定性规则校验，并在有依据时把来源一起展示。</p>
+                  <p>告诉我你的课程或毕业目标。我会结合官方原文检索与版本化规则引擎，并把规划依据一起展示。</p>
                 </div>
               </article>
             </div>
@@ -73,7 +73,7 @@
               <label class="sr-only" for="chatInput">给 Pia 发送消息</label>
               <textarea id="chatInput" rows="2" maxlength="4000" placeholder="问问课程、申请、学校比较，或告诉 Pia 你的目标…" required></textarea>
               <button id="sendButton" type="submit" aria-label="发送消息"><span aria-hidden="true">↑</span></button>
-              <p>直接描述你的问题；涉及毕业规则时，Pia 会调用确定性 Planner 校验。</p>
+              <p>直接描述你的问题；涉及毕业规则时，Pia 会调用 deterministic Planner 生成规划。</p>
             </form>
 
             <div class="starter-grid" aria-label="Pia 能力与快捷场景">
@@ -93,7 +93,7 @@
                 <div class="verified-copy">
                   <div class="verified-kicker"><span>Verified</span></div>
                   <h2 id="verifiedTitle">C6001 规划</h2>
-                  <p>三套路径 · 规则校验 · 官方依据</p>
+                  <p>三套路径 · 确定性规划 · 官方依据</p>
                 </div>
                 <button id="runVerifiedButton" class="starter-action" type="button" disabled aria-label="试试 C6001 规划" aria-controls="planResults">
                   开始 <span aria-hidden="true">→</span>
@@ -118,7 +118,7 @@
                   <div><span>有效方案</span><strong id="summaryValid">-</strong></div>
                   <div><span>规则结论</span><strong id="summaryRules">-</strong></div>
                 </div>
-                <div id="ruleChecks" class="rule-checks" aria-label="规则校验结果"></div>
+                <div id="ruleChecks" class="rule-checks" aria-label="确定性规划结果"></div>
                 <div id="warningList" class="warning-list"></div>
                 <div id="planTabs" class="plan-tabs" role="tablist" aria-label="规划方案"></div>
                 <article class="selected-plan">

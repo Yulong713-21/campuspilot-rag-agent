@@ -1,6 +1,6 @@
 # CampusPilot
 
-一个以官方证据和确定性规则生成可校验毕业路径的海外高校规划 Agent，目前先期版本针对澳洲高校。
+一个结合官方证据与版本化规则引擎生成可解释、可复核毕业路径的海外高校规划 Agent，目前先期版本针对澳洲高校。
 
 [运行 C6001 Demo](#quick-start) · [查看架构](#architecture) · [打开 API 文档](http://127.0.0.1:8010/docs)
 
@@ -17,7 +17,7 @@
 
 | 状态 | 范围 | 公开能力 |
 | --- | --- | --- |
-| **Verified** | Monash C6001 2026 | 三套毕业路径、规则校验、官方 Evidence 卡片 |
+| **Verified** | Monash C6001 2026 | 三套毕业路径、确定性规划、官方 Evidence 卡片 |
 | **Discovery** | 澳洲八校公开目录 | 来源发现、目录检索与覆盖率报告；不宣称全量规则覆盖 |
 | **Beta API** | Admission / Compare / Pia | 后端接口保留，待 Planner 稳定后逐页迁移前端 |
 

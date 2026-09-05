@@ -111,7 +111,7 @@ async function runVerifiedWorkflow() {
         { requestId },
       );
       renderPlanningResult(plans);
-      showToast("C6001 路径已完成确定性校验。", "success");
+      showToast("C6001 路径已由版本化规则引擎生成。", "success");
     });
   } catch (error) {
     if (error.name !== "AbortError") {
@@ -142,7 +142,7 @@ async function generateCustomPlan(triggerButton) {
         signal: controller.signal,
       });
       if (controller !== activePlanningRequest) return;
-      conversation.addAssistant(`已按新约束生成 ${payload.plans?.length || 3} 套路径，并完成规则校验。`, { requestId });
+      conversation.addAssistant(`已按新约束完成 deterministic planning，并生成 ${payload.plans?.length || 3} 套路径。`, { requestId });
       renderPlanningResult(payload);
       showToast("自定义路径已校验。", "success");
     });

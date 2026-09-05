@@ -1,3 +1,5 @@
+"""Deterministic queries and degree-audit calculations over structured data."""
+
 from __future__ import annotations
 
 from collections import defaultdict
@@ -17,14 +19,15 @@ from .enums import (
 from .models import (
     Course,
     CourseExclusion,
+    CourseOffering,
     CourseVersion,
     PrerequisiteGroup,
     PrerequisiteOption,
+    Program,
     ProgramVersion,
     RequirementGroup,
     RequirementGroupCourse,
     Specialisation,
-    StudentCourseRecord,
     StudentProfile,
     StudyPlan,
     StudyPlanTerm,
@@ -32,6 +35,8 @@ from .models import (
 from .schemas import (
     CourseRequirementView,
     CourseRoleResponse,
+    CourseOfferingView,
+    CourseOfferingsResponse,
     DegreeProgressResponse,
     EvidenceItem,
     GroupProgress,
@@ -61,10 +66,160 @@ class DomainLookupError(ValueError):
 
 
 class DegreeAuditService:
-    """Deterministic degree-audit services with evidence-bearing results."""
+    """Deterministic audit service over versioned structured rule data.
+
+    This boundary owns SQLAlchemy queries and evidence references. It never
+    consults lexical retrieval, vector search, or an LLM for rule truth.
+    """
 
     def __init__(self, session: Session) -> None:
         self.session = session
+
+    def get_program_version(
+        self,
+        *,
+        university_id: int,
+        program_code: str,
+        handbook_year: int,
+    ) -> ProgramVersion:
+        """Load one exact program and Handbook version."""
+
+        version = self.session.scalar(
+            select(ProgramVersion)
+            .join(ProgramVersion.program)
+            .where(
+                Program.university_id == university_id,
+                Program.code == program_code,
+                ProgramVersion.handbook_year == handbook_year,
+            )
+        )
+        if version is None:
+            raise self._lookup_error(
+                ErrorCode.PROGRAM_VERSION_NOT_FOUND,
+                "指定的项目方向与 Handbook 年份不存在。",
+                "program_version",
+                0,
+            )
+        return version
+
+    def get_course_version(
+        self,
+        *,
+        university_id: int,
+        course_code: str,
+        handbook_year: int,
+    ) -> CourseVersion:
+        """Load one exact unit version without relying on text retrieval."""
+
+        version = self.session.scalar(
+            select(CourseVersion)
+            .join(CourseVersion.course)
+            .where(
+                Course.university_id == university_id,
+                Course.code == course_code,
+                CourseVersion.handbook_year == handbook_year,
+            )
+        )
+        if version is None:
+            raise self._lookup_error(
+                ErrorCode.COURSE_NOT_FOUND,
+                "指定的课程与 Handbook 年份不存在。",
+                "course_version",
+                0,
+            )
+        return version
+
+    def get_course_offerings(
+        self,
+        *,
+        course_version_id: int,
+    ) -> CourseOfferingsResponse:
+        """Return authoritative offerings for an exact unit version."""
+
+        version = self.session.scalar(
+            select(CourseVersion)
+            .where(CourseVersion.id == course_version_id)
+            .options(selectinload(CourseVersion.course))
+        )
+        if version is None:
+            raise self._lookup_error(
+                ErrorCode.COURSE_NOT_FOUND,
+                "指定的课程版本不存在。",
+                "course_version",
+                course_version_id,
+            )
+        offerings = list(
+            self.session.scalars(
+                select(CourseOffering)
+                .where(CourseOffering.course_version_id == version.id)
+                .order_by(
+                    CourseOffering.teaching_period,
+                )
+            )
+        )
+        return CourseOfferingsResponse(
+            course_id=version.course_id,
+            course_code=version.course.code,
+            handbook_year=version.handbook_year,
+            offerings=[
+                CourseOfferingView(
+                    teaching_period=item.teaching_period,
+                    evidence=self._evidence(
+                        "course_offering",
+                        item.id,
+                        item.evidence,
+                    ),
+                )
+                for item in offerings
+            ],
+        )
+
+    def is_course_offered(
+        self,
+        *,
+        course_version_id: int,
+        teaching_period: str,
+    ) -> bool:
+        """Check one normalized teaching period deterministically."""
+
+        offering_id = self.session.scalar(
+            select(CourseOffering.id).where(
+                CourseOffering.course_version_id == course_version_id,
+                CourseOffering.teaching_period == teaching_period,
+            )
+        )
+        return offering_id is not None
+
+    def get_prerequisites(
+        self,
+        program_version_id: int,
+        specialisation_id: int,
+        course_id: int,
+    ) -> list[PrerequisiteGroup]:
+        """Load prerequisites scoped to variant, year, and study stream."""
+
+        self._load_scope(program_version_id, specialisation_id)
+        return list(
+            self.session.scalars(
+                select(PrerequisiteGroup)
+                .where(
+                    PrerequisiteGroup.program_version_id
+                    == program_version_id,
+                    PrerequisiteGroup.course_id == course_id,
+                    or_(
+                        PrerequisiteGroup.specialisation_id.is_(None),
+                        PrerequisiteGroup.specialisation_id
+                        == specialisation_id,
+                    ),
+                )
+                .options(
+                    selectinload(
+                        PrerequisiteGroup.options
+                    ).selectinload(PrerequisiteOption.prerequisite_course)
+                )
+                .order_by(PrerequisiteGroup.group_index)
+            )
+        )
 
     def get_program_requirements(
         self,
@@ -75,6 +230,8 @@ class DegreeAuditService:
             program_version_id,
             specialisation_id,
         )
+        # The loader merges program-wide rules with only the requested stream;
+        # sibling specialisation rules never enter this response.
         groups = self._load_requirement_groups(
             program_version_id,
             specialisation_id,
@@ -232,26 +389,10 @@ class DegreeAuditService:
                 course_id,
             )
         completed = set(completed_course_ids)
-        groups = list(
-            self.session.scalars(
-                select(PrerequisiteGroup)
-                .where(
-                    PrerequisiteGroup.program_version_id
-                    == program_version_id,
-                    PrerequisiteGroup.course_id == course_id,
-                    or_(
-                        PrerequisiteGroup.specialisation_id.is_(None),
-                        PrerequisiteGroup.specialisation_id
-                        == specialisation_id,
-                    ),
-                )
-                .options(
-                    selectinload(
-                        PrerequisiteGroup.options
-                    ).selectinload(PrerequisiteOption.prerequisite_course)
-                )
-                .order_by(PrerequisiteGroup.group_index)
-            )
+        groups = self.get_prerequisites(
+            program_version_id,
+            specialisation_id,
+            course_id,
         )
         group_results = []
         for group in groups:

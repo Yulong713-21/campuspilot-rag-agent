@@ -1,3 +1,5 @@
 CampusPilot 单数据库 Alembic 迁移目录。
 
-默认连接本地 SQLite；设置 CAMPUSPILOT_DATABASE_URL 后可迁移 MySQL。
+默认连接本地 PostgreSQL。应用与 Alembic 共用数据库 URL 解析规则：优先
+DATABASE_URL，其次兼容 CAMPUSPILOT_DATABASE_URL。SQLite 仅用于轻量测试，
+PyMySQL 暂时保留给旧部署。

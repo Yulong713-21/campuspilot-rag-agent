@@ -1,3 +1,5 @@
+"""FastAPI composition root for CampusPilot product and agent capabilities."""
+
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 import hmac
@@ -54,6 +56,11 @@ from .handbook_vector import (
     read_chunks,
 )
 from .handbook_qa import HandbookQuestionAnsweringAgent, HandbookQueryRewriter
+from .retrieval import (
+    ElasticsearchHandbookStore,
+    FallbackLexicalRetriever,
+    InMemoryBM25Retriever,
+)
 from .semester_advisor import create_semester_advice_agent_with_cloud
 from .openai_compatible_client import OpenAICompatibleChatClient
 from .llm_errors import (
@@ -92,10 +99,18 @@ REQUEST_ID_PATTERN = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
 
 @dataclass(frozen=True)
 class EvidenceRetrieverRuntime:
+    """Configured retrieval capabilities plus safe degradation diagnostics.
+
+    Requested and active states are separate because optional infrastructure
+    may be configured yet unavailable during startup or a later request.
+    """
     retriever: Any
     vector_requested: bool
     vector_error: str | None = None
     retrieval_mode: str = "catalog_bm25"
+    lexical_requested: bool = False
+    lexical_backend: str = "catalog_bm25"
+    lexical_error: str | None = None
 
     @property
     def vector_active(self) -> bool:
@@ -107,6 +122,23 @@ class EvidenceRetrieverRuntime:
     @property
     def vector_degraded(self) -> bool:
         return self.vector_requested and not self.vector_active
+
+    @property
+    def lexical_search_error(self) -> str | None:
+        lexical = getattr(self.retriever, "lexical_retriever", None)
+        return self.lexical_error or getattr(lexical, "last_error", None)
+
+    @property
+    def lexical_active(self) -> bool:
+        return (
+            self.lexical_requested
+            and self.lexical_backend == "elasticsearch"
+            and self.lexical_search_error is None
+        )
+
+    @property
+    def lexical_degraded(self) -> bool:
+        return self.lexical_requested and not self.lexical_active
 
 
 class ActionRequest(BaseModel):
@@ -237,6 +269,7 @@ class EvidenceSearchRequest(BaseModel):
     university_id: str | None = None
     discipline_id: str | None = None
     program_code: str | None = None
+    source_type: str | None = None
     k: int = Field(default=3, ge=1, le=10)
 
 
@@ -294,6 +327,7 @@ class RemainingAverageRequest(BaseModel):
 def _create_evidence_retriever(
     catalog: CampusPilotCatalog,
 ) -> EvidenceRetrieverRuntime:
+    """Initialize lexical, dense, and reranking capabilities independently."""
     retrieval_mode = os.environ.get(
         "CAMPUSPILOT_RETRIEVAL_MODE",
         "",
@@ -305,7 +339,14 @@ def _create_evidence_retriever(
     fallback = CampusPilotEvidenceRetriever(
         catalog.data.get("official_documents", [])
     )
-    if retrieval_mode == "full_bm25":
+    elasticsearch_url = os.environ.get("ELASTICSEARCH_URL", "").strip()
+    lexical_backend = os.environ.get(
+        "CAMPUSPILOT_LEXICAL_BACKEND",
+        "elasticsearch" if elasticsearch_url else "memory",
+    ).strip().lower()
+    lexical_requested = lexical_backend == "elasticsearch"
+
+    if retrieval_mode == "full_bm25" and not lexical_requested:
         return EvidenceRetrieverRuntime(
             retriever=CampusPilotHybridRetriever(
                 chunks=read_chunks(),
@@ -313,13 +354,92 @@ def _create_evidence_retriever(
             ),
             vector_requested=False,
             retrieval_mode="full_corpus_bm25",
+            lexical_backend="memory_bm25",
         )
-    if not enabled:
+    if not enabled and not lexical_requested:
         return EvidenceRetrieverRuntime(
             retriever=fallback,
             vector_requested=False,
             retrieval_mode="catalog_bm25",
         )
+
+    # The published chunk corpus is the common local fallback and the shared
+    # identity source for Elasticsearch and Milvus.
+    try:
+        chunks = read_chunks()
+        memory_lexical = InMemoryBM25Retriever(chunks)
+    except Exception as exc:
+        log_event(
+            RUNTIME_LOGGER,
+            "retrieval_degraded",
+            level=logging.WARNING,
+            component="handbook_corpus",
+            error_type=type(exc).__name__,
+            fallback="catalog_bm25",
+        )
+        return EvidenceRetrieverRuntime(
+            retriever=fallback,
+            vector_requested=enabled,
+            vector_error=type(exc).__name__ if enabled else None,
+            retrieval_mode="catalog_bm25_degraded",
+            lexical_requested=lexical_requested,
+            lexical_backend="catalog_bm25",
+            lexical_error=type(exc).__name__ if lexical_requested else None,
+        )
+
+    # Elasticsearch is canonical when configured. Wrapping it preserves an
+    # in-process fallback for failures that happen after a healthy startup.
+    lexical_retriever: Any = memory_lexical
+    active_lexical_backend = "memory_bm25"
+    lexical_error = None
+    if lexical_requested:
+        try:
+            elasticsearch_store = ElasticsearchHandbookStore(
+                url=elasticsearch_url or "http://127.0.0.1:9200",
+                index_name=os.environ.get(
+                    "ELASTICSEARCH_INDEX",
+                    "campuspilot-handbook-v1",
+                ),
+                request_timeout=float(
+                    os.environ.get("ELASTICSEARCH_TIMEOUT_SECONDS", "3")
+                ),
+            )
+            elasticsearch_store.ensure_ready()
+            lexical_retriever = FallbackLexicalRetriever(
+                elasticsearch_store,
+                memory_lexical,
+            )
+            active_lexical_backend = "elasticsearch"
+        except Exception as exc:
+            lexical_error = type(exc).__name__
+            log_event(
+                RUNTIME_LOGGER,
+                "retrieval_degraded",
+                level=logging.WARNING,
+                component="elasticsearch",
+                error_type=lexical_error,
+                fallback="full_corpus_bm25",
+            )
+
+    if not enabled:
+        return EvidenceRetrieverRuntime(
+            retriever=CampusPilotHybridRetriever(
+                chunks=chunks,
+                vector_store=None,
+                lexical_retriever=lexical_retriever,
+            ),
+            vector_requested=False,
+            retrieval_mode=(
+                "elasticsearch_bm25"
+                if active_lexical_backend == "elasticsearch"
+                else "full_corpus_bm25_degraded"
+            ),
+            lexical_requested=lexical_requested,
+            lexical_backend=active_lexical_backend,
+            lexical_error=lexical_error,
+        )
+    # Dense retrieval and reranking are initialized after lexical retrieval so
+    # either component can degrade without discarding available BM25 evidence.
     try:
         backend = os.environ.get(
             "CAMPUSPILOT_EMBEDDING_BACKEND",
@@ -356,17 +476,25 @@ def _create_evidence_retriever(
             reranker = SentenceTransformerReranker(reranker_path)
         return EvidenceRetrieverRuntime(
             retriever=CampusPilotHybridRetriever(
-                chunks=read_chunks(),
+                chunks=chunks,
                 vector_store=vector_store,
                 reranker=reranker,
+                lexical_retriever=lexical_retriever,
             ),
             vector_requested=True,
             retrieval_mode=(
-                "bm25_"
+                (
+                    "elasticsearch_"
+                    if active_lexical_backend == "elasticsearch"
+                    else "bm25_"
+                )
                 + backend.replace("-", "_")
                 + "_milvus_rrf"
                 + ("_reranked" if reranker is not None else "")
             ),
+            lexical_requested=lexical_requested,
+            lexical_backend=active_lexical_backend,
+            lexical_error=lexical_error,
         )
     except Exception as exc:
         log_event(
@@ -379,14 +507,22 @@ def _create_evidence_retriever(
         )
         try:
             full_bm25 = CampusPilotHybridRetriever(
-                chunks=read_chunks(),
+                chunks=chunks,
                 vector_store=None,
+                lexical_retriever=lexical_retriever,
             )
             return EvidenceRetrieverRuntime(
                 retriever=full_bm25,
                 vector_requested=True,
                 vector_error=type(exc).__name__,
-                retrieval_mode="full_corpus_bm25_degraded",
+                retrieval_mode=(
+                    "elasticsearch_bm25_vector_degraded"
+                    if active_lexical_backend == "elasticsearch"
+                    else "full_corpus_bm25_degraded"
+                ),
+                lexical_requested=lexical_requested,
+                lexical_backend=active_lexical_backend,
+                lexical_error=lexical_error,
             )
         except Exception as fallback_exc:
             log_event(
@@ -402,6 +538,9 @@ def _create_evidence_retriever(
             vector_requested=True,
             vector_error=type(exc).__name__,
             retrieval_mode="catalog_bm25_degraded",
+            lexical_requested=lexical_requested,
+            lexical_backend="catalog_bm25",
+            lexical_error=lexical_error,
         )
 
 
@@ -910,6 +1049,8 @@ def create_app(
             ),
             "llm_model": cloud_client.model if cloud_client is not None else None,
             "vector_search_enabled": retriever_runtime.vector_active,
+            "lexical_search_backend": retriever_runtime.lexical_backend,
+            "lexical_search_degraded": retriever_runtime.lexical_degraded,
         }
 
     @app.get("/health/live")
@@ -927,6 +1068,10 @@ def create_app(
             "vector_search_requested": retriever_runtime.vector_requested,
             "vector_search_degraded": retriever_runtime.vector_degraded,
             "vector_search_error": retriever_runtime.vector_error,
+            "lexical_search_enabled": retriever_runtime.lexical_active,
+            "lexical_search_requested": retriever_runtime.lexical_requested,
+            "lexical_search_degraded": retriever_runtime.lexical_degraded,
+            "lexical_search_error": retriever_runtime.lexical_search_error,
             "cloud_llm_enabled": cloud_llm_enabled,
         }
 
@@ -1086,6 +1231,7 @@ def create_app(
             university_id=request.university_id,
             discipline_id=request.discipline_id,
             program_code=request.program_code,
+            source_type=request.source_type,
             k=request.k,
         )
         log_event(
@@ -1094,7 +1240,10 @@ def create_app(
             route="/api/evidence/search",
             retrieval_mode=retriever_runtime.retrieval_mode,
             result_count=len(documents),
-            fallback=retriever_runtime.vector_degraded,
+            fallback=(
+                retriever_runtime.vector_degraded
+                or retriever_runtime.lexical_degraded
+            ),
         )
         return {
             "documents": documents,

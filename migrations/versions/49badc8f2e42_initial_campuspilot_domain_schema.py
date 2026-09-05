@@ -262,8 +262,8 @@ def upgrade() -> None:
     sa.CheckConstraint('sequence_number > 0', name=op.f('ck_study_plan_terms_positive_sequence_number')),
     sa.ForeignKeyConstraint(['study_plan_id'], ['study_plans.id'], name=op.f('fk_study_plan_terms_study_plan_id_study_plans'), ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_study_plan_terms')),
-    sa.UniqueConstraint('study_plan_id', 'sequence_number', name=op.f('uq_study_plan_terms_study_plan_id')),
-    sa.UniqueConstraint('study_plan_id', 'term_code', name=op.f('uq_study_plan_terms_study_plan_id'))
+    sa.UniqueConstraint('study_plan_id', 'sequence_number', name='uq_study_plan_terms_plan_sequence'),
+    sa.UniqueConstraint('study_plan_id', 'term_code', name='uq_study_plan_terms_plan_term')
     )
     op.create_index(op.f('ix_study_plan_terms_study_plan_id'), 'study_plan_terms', ['study_plan_id'], unique=False)
     op.create_table('study_plan_courses',

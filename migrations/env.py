@@ -1,5 +1,4 @@
 from logging.config import fileConfig
-import os
 from pathlib import Path
 import sys
 
@@ -14,8 +13,8 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from campuspilot_core.db import Base
-from campuspilot_core import models  # noqa: F401
+from campuspilot_core.db import Base, resolve_database_url  # noqa: E402
+from campuspilot_core import models  # noqa: E402, F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -32,9 +31,10 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
-database_url = os.getenv("CAMPUSPILOT_DATABASE_URL")
-if database_url:
-    config.set_main_option("sqlalchemy.url", database_url)
+database_url = resolve_database_url(
+    default=config.get_main_option("sqlalchemy.url")
+)
+config.set_main_option("sqlalchemy.url", database_url.replace("%", "%%"))
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

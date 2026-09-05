@@ -1,6 +1,9 @@
+"""Database bootstrap shared by the application, scripts, and Alembic."""
+
 from __future__ import annotations
 
 from collections.abc import Iterator
+import os
 
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import Engine
@@ -21,11 +24,12 @@ class Base(DeclarativeBase):
 
 
 def create_session_factory(
-    database_url: str,
+    database_url: str | None = None,
     *,
     echo: bool = False,
 ) -> sessionmaker[Session]:
-    engine = create_engine(database_url, echo=echo)
+    """Create sessions without coupling domain services to a SQL dialect."""
+    engine = create_engine(database_url or resolve_database_url(), echo=echo)
     return sessionmaker(
         bind=engine,
         autoflush=False,
@@ -33,7 +37,28 @@ def create_session_factory(
     )
 
 
+def resolve_database_url(*, default: str | None = None) -> str:
+    """Resolve the canonical URL while preserving the legacy environment key.
+
+    `DATABASE_URL` wins so deployment platforms can use their conventional
+    variable. A caller may explicitly supply SQLite for isolated local tools.
+    """
+
+    database_url = (
+        os.getenv("DATABASE_URL")
+        or os.getenv("CAMPUSPILOT_DATABASE_URL")
+        or default
+    )
+    if not database_url:
+        raise RuntimeError(
+            "DATABASE_URL is required (CAMPUSPILOT_DATABASE_URL remains "
+            "supported for compatibility)"
+        )
+    return database_url
+
+
 def session_scope(factory: sessionmaker[Session]) -> Iterator[Session]:
+    """Commit one unit of work or roll it back before closing the session."""
     session = factory()
     try:
         yield session
@@ -46,4 +71,5 @@ def session_scope(factory: sessionmaker[Session]) -> Iterator[Session]:
 
 
 def create_schema(engine: Engine) -> None:
+    """Create tables for tests; production schema evolution uses Alembic."""
     Base.metadata.create_all(engine)

@@ -681,6 +681,112 @@ class CampusPilotAPITest(unittest.TestCase):
         )
         self.assertTrue(ready.json()["vector_search_enabled"])
 
+    def test_elasticsearch_runtime_exposes_lexical_health(self) -> None:
+        class FakeElasticsearchStore:
+            def __init__(self, **kwargs):
+                self.options = kwargs
+
+            def ensure_ready(self):
+                return None
+
+            def search(self, query, **kwargs):
+                return []
+
+        chunk = HandbookChunk(
+            chunk_id="fit9136-1",
+            parent_id="fit9136-parent",
+            source_id="monash-fit9136-2026",
+            university_id="monash",
+            handbook_year=2026,
+            program_code="C6001",
+            source_type="unit_handbook",
+            discipline_ids=["computing"],
+            title="FIT9136 Introduction to Python programming",
+            heading="Availability",
+            content="FIT9136 is available in Semester 2.",
+            parent_content="Official FIT9136 availability evidence.",
+            source_url="https://example.edu/fit9136",
+            source_sha256="abc",
+            program_codes=["C6001"],
+        )
+        logs_dir = REPO_ROOT / "logs"
+        with TemporaryDirectory(dir=logs_dir) as temp_dir:
+            database = Path(temp_dir) / "elasticsearch-active.sqlite3"
+            with (
+                patch.dict(
+                    "os.environ",
+                    {
+                        "CAMPUSPILOT_VECTOR_SEARCH_ENABLED": "0",
+                        "CAMPUSPILOT_LEXICAL_BACKEND": "elasticsearch",
+                        "ELASTICSEARCH_URL": "http://elasticsearch:9200",
+                        "ELASTICSEARCH_INDEX": "handbook-test",
+                    },
+                ),
+                patch(
+                    "agent_runtime.api.ElasticsearchHandbookStore",
+                    FakeElasticsearchStore,
+                ),
+                patch("agent_runtime.api.read_chunks", return_value=[chunk]),
+                TestClient(create_app(database_path=database)) as client,
+            ):
+                health = client.get("/health")
+                ready = client.get("/health/ready")
+
+        self.assertEqual(health.json()["retrieval_mode"], "elasticsearch_bm25")
+        self.assertEqual(
+            health.json()["lexical_search_backend"],
+            "elasticsearch",
+        )
+        self.assertTrue(ready.json()["lexical_search_enabled"])
+        self.assertFalse(ready.json()["lexical_search_degraded"])
+
+    def test_elasticsearch_startup_failure_degrades_to_memory_bm25(self) -> None:
+        chunk = HandbookChunk(
+            chunk_id="fit9136-1",
+            parent_id="fit9136-parent",
+            source_id="monash-fit9136-2026",
+            university_id="monash",
+            handbook_year=2026,
+            program_code="C6001",
+            source_type="unit_handbook",
+            discipline_ids=["computing"],
+            title="FIT9136 Introduction to Python programming",
+            heading="Availability",
+            content="FIT9136 is available in Semester 2.",
+            parent_content="Official FIT9136 availability evidence.",
+            source_url="https://example.edu/fit9136",
+            source_sha256="abc",
+            program_codes=["C6001"],
+        )
+        logs_dir = REPO_ROOT / "logs"
+        with TemporaryDirectory(dir=logs_dir) as temp_dir:
+            database = Path(temp_dir) / "elasticsearch-degraded.sqlite3"
+            with (
+                patch.dict(
+                    "os.environ",
+                    {
+                        "CAMPUSPILOT_VECTOR_SEARCH_ENABLED": "0",
+                        "CAMPUSPILOT_LEXICAL_BACKEND": "elasticsearch",
+                        "ELASTICSEARCH_URL": "http://elasticsearch:9200",
+                    },
+                ),
+                patch(
+                    "agent_runtime.api.ElasticsearchHandbookStore",
+                    side_effect=ConnectionError("elasticsearch unavailable"),
+                ),
+                patch("agent_runtime.api.read_chunks", return_value=[chunk]),
+                TestClient(create_app(database_path=database)) as client,
+            ):
+                ready = client.get("/health/ready")
+
+        payload = ready.json()
+        self.assertEqual(ready.status_code, 200)
+        self.assertTrue(payload["retriever_ready"])
+        self.assertTrue(payload["lexical_search_requested"])
+        self.assertFalse(payload["lexical_search_enabled"])
+        self.assertTrue(payload["lexical_search_degraded"])
+        self.assertEqual(payload["lexical_search_error"], "ConnectionError")
+
     def test_full_bm25_mode_uses_runtime_handbook_chunks(self) -> None:
         chunk = HandbookChunk(
             chunk_id="business-1",

@@ -1,8 +1,11 @@
+"""Synthetic, version-isolated domain data for tests and smoke checks."""
+
 from __future__ import annotations
 
 from collections.abc import Iterable
 from typing import Any
 
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .enums import (
@@ -15,6 +18,7 @@ from .enums import (
 from .models import (
     Course,
     CourseExclusion,
+    CourseOffering,
     CourseVersion,
     PrerequisiteGroup,
     PrerequisiteOption,
@@ -64,8 +68,112 @@ COURSE_TITLES = {
 }
 
 
+def inspect_minimal_seed_fixture(
+    session: Session,
+) -> tuple[str, dict[str, int]]:
+    """Return absent, complete, or incomplete for the synthetic fixture.
+
+    Checking both fixture identity and expected shape prevents an unrelated
+    university row or interrupted seed from being reported as complete.
+    """
+
+    university = session.scalar(
+        select(University).where(University.code == "CPTU")
+    )
+    if university is None:
+        return "absent", {}
+
+    counts = {
+        "programs": int(
+            session.scalar(
+                select(func.count())
+                .select_from(Program)
+                .where(Program.university_id == university.id)
+            )
+            or 0
+        ),
+        "program_versions": int(
+            session.scalar(
+                select(func.count())
+                .select_from(ProgramVersion)
+                .join(Program)
+                .where(Program.university_id == university.id)
+            )
+            or 0
+        ),
+        "courses": int(
+            session.scalar(
+                select(func.count())
+                .select_from(Course)
+                .where(Course.university_id == university.id)
+            )
+            or 0
+        ),
+        "course_versions": int(
+            session.scalar(
+                select(func.count())
+                .select_from(CourseVersion)
+                .join(Course)
+                .where(Course.university_id == university.id)
+            )
+            or 0
+        ),
+        "course_offerings": int(
+            session.scalar(
+                select(func.count())
+                .select_from(CourseOffering)
+                .join(CourseVersion)
+                .join(Course)
+                .where(Course.university_id == university.id)
+            )
+            or 0
+        ),
+        "requirement_groups": int(
+            session.scalar(
+                select(func.count())
+                .select_from(RequirementGroup)
+                .join(ProgramVersion)
+                .join(Program)
+                .where(Program.university_id == university.id)
+            )
+            or 0
+        ),
+        "requirement_links": int(
+            session.scalar(
+                select(func.count())
+                .select_from(RequirementGroupCourse)
+                .join(RequirementGroup)
+                .join(ProgramVersion)
+                .join(Program)
+                .where(Program.university_id == university.id)
+            )
+            or 0
+        ),
+    }
+    # Stable entity counts are exact. Rule/link tables can grow with coverage,
+    # so completeness only requires that those layers are populated.
+    expected_exact = {
+        "programs": 2,
+        "program_versions": 4,
+        "courses": len(COURSE_TITLES),
+        "course_versions": len(COURSE_TITLES) * 2,
+        "course_offerings": len(COURSE_TITLES) * 4 - 2,
+    }
+    complete = all(
+        counts[key] == expected for key, expected in expected_exact.items()
+    ) and all(
+        counts[key] > 0
+        for key in ("requirement_groups", "requirement_links")
+    )
+    return ("complete" if complete else "incomplete"), counts
+
+
 def seed_minimal_domain_data(session: Session) -> dict[str, Any]:
-    """Create synthetic fixtures only; never present these as official data."""
+    """Create a version-isolated synthetic rules fixture for tests and smoke.
+
+    The caller owns fixture-state policy. Keeping repair decisions outside this
+    builder avoids silently mutating partially loaded production-like data.
+    """
 
     evidence = {
         "source_id": "SYNTHETIC-DOMAIN-FIXTURE",
@@ -104,6 +212,31 @@ def seed_minimal_domain_data(session: Session) -> dict[str, Any]:
             session.add(version)
             course_versions[(code, year)] = version
     session.flush()
+
+    for (code, year), version in course_versions.items():
+        # CPT100 changes period across years so isolation tests catch accidental
+        # course-code-only offering queries.
+        periods = (
+            ["Semester 1"]
+            if code == "CPT100" and year == 2025
+            else ["Semester 2"]
+            if code == "CPT100" and year == 2026
+            else ["Semester 1", "Semester 2"]
+        )
+        session.add_all(
+            [
+                CourseOffering(
+                    course_version_id=version.id,
+                    teaching_period=period,
+                    evidence={
+                        **evidence,
+                        "course_code": code,
+                        "handbook_year": year,
+                    },
+                )
+                for period in periods
+            ]
+        )
 
     programs = {
         "MIT": Program(

@@ -9,9 +9,9 @@
 
 ## What makes it different
 
-- **Deterministic degree planning**：Rule Engine 负责学分、先修、开课学期、工作负荷和 Capstone 校验；Planner 不依赖 LLM。
-- **Hybrid RAG with official evidence**：BM25、Dense/Milvus、RRF 与可选 reranker 用于召回官方原文、解释和引用。
-- **Graceful degradation**：Milvus 不可用时保留 BM25；reranker 不可用时保留 BM25 + Dense/RRF；可选模型故障不会拖垮 Planner。
+- **Open product exploration**：先围绕选课、培养方案、专业方向和学习路径持续扩展可用场景，再逐步沉淀通用工程能力。
+- **Structured planning foundation**：PostgreSQL 保存版本化课程、学分、先修和开课信息，Rule Engine 负责可复用的规划计算。
+- **Layered Handbook retrieval**：Elasticsearch 处理代码与关键词检索，Milvus 补充语义召回，RRF 和 reranker 组合官方证据。
 
 ## Demo coverage
 
@@ -26,21 +26,24 @@
 ```mermaid
 flowchart LR
     UI["Demo-first frontend"] --> API["FastAPI"]
-    API --> RULES["Deterministic planner"]
     API --> AGENT["LangGraph runtime"]
-    API --> RAG["Hybrid retrieval"]
-    RULES --> CHECKS["Credits · prerequisites · offering · capstone"]
-    RAG --> EVIDENCE["Official evidence"]
-    AGENT --> EVIDENCE
-    CHECKS --> RESULT["Three validated plans"]
-    EVIDENCE --> RESULT
+    API --> RULES["Planner · Rule Engine"]
+    RULES --> PG["PostgreSQL structured data"]
+    AGENT --> ES["Elasticsearch BM25"]
+    AGENT --> MV["Milvus semantic retrieval"]
+    ES --> FUSION["RRF · optional reranker"]
+    MV --> FUSION
+    PG --> RESULT["Planning result"]
+    FUSION --> RESULT
+    RESULT --> LLM["Explanation · citations"]
 ```
 
-RAG 和 Rule Engine 的职责严格分开：
+整体思路是让不同数据形态使用合适的能力：
 
-- RAG → 官方 Handbook、Course Map、Unit 与政策原文的召回、解释和引用；
-- Rule Engine → 版本化学分、课程角色、先修、开课学期和 Capstone 的确定性计算；
-- `program_variant_id + handbook_year + study_stream` → 共同限定规则作用域。
+- PostgreSQL 组织课程、版本、学分、先修和开课学期等结构化信息；
+- Elasticsearch 负责 Handbook 原文中的代码、标题和关键词检索；
+- Milvus 用于描述性内容和相似语义召回；
+- Agent 与 LLM 将规划结果和官方证据组织成易理解的回答。
 
 ## Repository map
 
@@ -111,11 +114,12 @@ py -3.10 -m venv .venv
 
 ## RAG and evaluation
 
-Handbook 检索使用 BM25 与 Dense/Milvus 双路召回、RRF 融合、可选 CrossEncoder 重排和父块去重。
-低成本部署默认使用 MiniLM 系列模型；重型组件保持可选，并通过 readiness 暴露安全的降级状态。
+Handbook 检索使用 Elasticsearch BM25 与 Dense/Milvus 双路召回，再进行 RRF 融合、可选
+CrossEncoder 重排和父块去重。两类索引共享同一份版本化 chunk corpus 与 `chunk_id`。
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements-rag.txt
+.\.venv\Scripts\python.exe scripts\build_handbook_lexical_index.py --recreate
 .\.venv\Scripts\python.exe scripts\build_handbook_vector_index.py `
   --chunks-path data\official_sources\handbook-chunks.jsonl
 .\scripts\run_project_checks.ps1
@@ -128,6 +132,7 @@ Handbook 检索使用 BM25 与 Dense/Milvus 双路召回、RRF 融合、可选 C
 
 - `Dockerfile`：FastAPI + production frontend 单容器；
 - `deploy/production/`：Compose、Nginx/Caddy 与环境示例；
+- `deploy/postgres/`：本地结构化数据服务与迁移入口；
 - `deploy/milvus/`：可选 Milvus 配置；
 - `scripts/verify_server_deployment.ps1`：live、ready、health、catalog、Planner 和 Evidence 烟测。
 
@@ -146,12 +151,10 @@ GitHub 流程为 `feature -> develop CI -> main -> GHCR immutable image`。镜�
 
 ## Limitations
 
-- 经验证的毕业规则当前聚焦 Monash C6001 2026；八校目录接入不代表八校规则全量覆盖。
-- Admission 首批目录覆盖 Monash 常见硕士项目，但只有人工核验的路径才能做硬规则判断。
+- 当前产品体验聚焦 Monash C6001 2026，并持续扩充澳洲高校、项目和课程场景。
+- Admission、Compare、Pia 和 Planner 会随着数据覆盖与交互验证逐步开放更多能力。
 - `campuspilot_core.seed` 是验证通用规则的合成数据，不属于官方知识库。
-- 当前不宣称无法复现的数据量、准确率或线上降本指标。
 - 规划结果用于学习辅助；签证提示不构成移民或法律建议。
-- SQLite、静态演示 token 和本地单实例配置不等同于完整生产架构。
 
 ## Documentation
 

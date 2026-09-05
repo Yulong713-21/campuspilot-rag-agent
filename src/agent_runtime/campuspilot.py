@@ -1,3 +1,5 @@
+"""CampusPilot catalogue, lightweight evidence search, and planning agents."""
+
 from __future__ import annotations
 
 import json
@@ -84,6 +86,7 @@ class CampusPilotEvidenceRetriever:
         university_id: str | None = None,
         discipline_id: str | None = None,
         program_code: str | None = None,
+        source_type: str | None = None,
         k: int = 3,
     ) -> list[dict[str, Any]]:
         query_tokens = set(self._tokenize(query))
@@ -99,6 +102,11 @@ class CampusPilotEvidenceRetriever:
                 ]
             ).lower()
             if program_code is not None and program_code.lower() not in searchable:
+                continue
+            if (
+                source_type is not None
+                and document.get("source_type") != source_type
+            ):
                 continue
             tokens = self.tokenized[index]
             score = sum(self._bm25_term_score(term, tokens) for term in query_tokens)

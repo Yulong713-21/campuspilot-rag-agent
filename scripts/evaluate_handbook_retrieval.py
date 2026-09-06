@@ -1,4 +1,4 @@
-"""Run lexical, semantic, and hybrid evaluation as separate scenarios."""
+"""Run lexical, semantic, hybrid, and reranked evaluation separately."""
 
 from __future__ import annotations
 
@@ -24,6 +24,7 @@ from agent_runtime.retrieval import (  # noqa: E402
     RetrievalScenario,
     RetrievalScenarioEvaluator,
     SemanticEvidenceRetriever,
+    SentenceTransformerReranker,
     should_embed,
     create_dense_embedder,
     load_retrieval_cases,
@@ -68,7 +69,12 @@ def main() -> None:
             lexical_backend
         )
     }
-    if requested & {RetrievalScenario.SEMANTIC, RetrievalScenario.HYBRID}:
+    hybrid_scenarios = {
+        RetrievalScenario.SEMANTIC,
+        RetrievalScenario.HYBRID,
+        RetrievalScenario.HYBRID_RERANKED,
+    }
+    if requested & hybrid_scenarios:
         model_path = os.environ.get("CAMPUSPILOT_EMBEDDING_MODEL_PATH")
         if not model_path:
             raise RuntimeError(
@@ -102,6 +108,23 @@ def main() -> None:
             vector_store=dense_backend,
             lexical_retriever=lexical_backend,
         )
+        if RetrievalScenario.HYBRID_RERANKED in requested:
+            reranker_path = os.environ.get(
+                "CAMPUSPILOT_RERANKER_MODEL_PATH"
+            )
+            if not reranker_path:
+                raise RuntimeError(
+                    "CAMPUSPILOT_RERANKER_MODEL_PATH is required for "
+                    "hybrid_reranked evaluation"
+                )
+            retrievers[
+                RetrievalScenario.HYBRID_RERANKED
+            ] = CampusPilotHybridRetriever(
+                chunks=chunks,
+                vector_store=dense_backend,
+                reranker=SentenceTransformerReranker(reranker_path),
+                lexical_retriever=lexical_backend,
+            )
 
     cases = [
         case

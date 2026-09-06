@@ -27,6 +27,7 @@ from .execution import (
     StructuredCandidateResolver,
     StructuredResolution,
 )
+from .fusion import EvidenceHit, reciprocal_rank_fuse
 from .hybrid import CampusPilotHybridRetriever, SentenceTransformerReranker
 from .interfaces import (
     DenseRetriever,
@@ -67,6 +68,7 @@ __all__ = [
     "DenseEmbedder",
     "DenseRetriever",
     "EvidenceRetriever",
+    "EvidenceHit",
     "ElasticsearchHandbookStore",
     "FallbackLexicalRetriever",
     "HANDBOOK_INDEX_MAPPINGS",
@@ -105,6 +107,7 @@ __all__ = [
     "create_dense_embedder",
     "load_retrieval_cases",
     "plan_incremental_index",
+    "reciprocal_rank_fuse",
     "semantic_embedding_text",
     "should_embed",
     "validate_milvus_chunks",

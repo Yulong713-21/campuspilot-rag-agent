@@ -43,7 +43,7 @@ RAG 擅长从 Handbook 找到 FIT5120 的描述、开课学期和门槛原文，
 普通单元测试使用轻量假实现，保证测试不依赖外部服务；Linux 展示环境已完成真实
 Handbook 混合检索建库。2,139 份通过质量门禁的正文按标题层级生成 16,035 个父块和
 16,797 个子块，子块同时进入 BM25 与 MiniLM/Milvus Lite 召回。两路结果先经 RRF
-融合，CrossEncoder Reranker 再作为第三路排名信号参与融合，最后按 `parent_id` 去重并
+融合，CrossEncoder Reranker 再完整重排有限的 RRF 候选前缀，最后按 `parent_id` 去重并
 返回父块作为生成上下文。开发环境仍可切换到 BGE-M3。
 
 检索前可按 `university_id`、`program_code`、`discipline_id` 和

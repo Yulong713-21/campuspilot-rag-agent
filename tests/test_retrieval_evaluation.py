@@ -65,7 +65,11 @@ class RetrievalEvaluationTest(unittest.TestCase):
                 case = next(item for item in cases if item.query == request.query)
                 channels = (
                     ["bm25", "dense"]
-                    if self.scenario is RetrievalScenario.HYBRID
+                    if self.scenario
+                    in {
+                        RetrievalScenario.HYBRID,
+                        RetrievalScenario.HYBRID_RERANKED,
+                    }
                     else [self.scenario.value]
                 )
                 return [
@@ -92,7 +96,7 @@ class RetrievalEvaluationTest(unittest.TestCase):
 
         self.assertEqual(
             set(report.scenario_metrics),
-            {"lexical", "semantic", "hybrid"},
+            {"lexical", "semantic", "hybrid", "hybrid_reranked"},
         )
         self.assertEqual(
             report.scenario_metrics["lexical"]["exact_identifier_ranked"],
@@ -107,11 +111,21 @@ class RetrievalEvaluationTest(unittest.TestCase):
             1.0,
         )
         self.assertEqual(
+            report.scenario_metrics["hybrid_reranked"][
+                "promoted_by_fusion"
+            ],
+            1.0,
+        )
+        self.assertEqual(
             report.scenario_metrics["semantic"]["recall_at_k"],
             1.0,
         )
         self.assertEqual(
             report.scenario_metrics["semantic"]["reciprocal_rank"],
+            1.0,
+        )
+        self.assertEqual(
+            report.scenario_metrics["semantic"]["mrr"],
             1.0,
         )
         self.assertEqual(

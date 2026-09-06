@@ -119,19 +119,40 @@ class RetrievalPlanExecutor:
         dense_error = backend.get("dense_error")
         if semantic_capability_unavailable and dense_error is None:
             dense_error = "Unavailable"
-        diagnostics = {
-            "planned_route": list(plan.route),
-            "route": list(effective_plan.route),
-            "structured_used": structured_used,
-            "lexical_used": (
-                effective_plan.use_lexical
-                and retrieval_error is None
-            ),
-            "semantic_used": (
+        degradation_reasons = list(backend.get("degradation_reasons", []))
+        for reason in (
+            f"lexical:{lexical_error}" if lexical_error else None,
+            f"semantic:{dense_error}" if dense_error else None,
+            f"retrieval:{retrieval_error}" if retrieval_error else None,
+        ):
+            if reason and reason not in degradation_reasons:
+                degradation_reasons.append(reason)
+        lexical_used = (
+            backend.get("lexical_count", 0) > 0
+            if "lexical_count" in backend
+            else effective_plan.use_lexical and retrieval_error is None
+        )
+        semantic_used = (
+            backend.get("semantic_count", 0) > 0
+            if "semantic_count" in backend
+            else (
                 effective_plan.use_semantic
                 and dense_error is None
                 and retrieval_error is None
-            ),
+            )
+        )
+        evidence_unavailable = bool(retrieval_error) or (
+            not documents
+            and (not effective_plan.use_lexical or lexical_error is not None)
+            and (not effective_plan.use_semantic or dense_error is not None)
+        )
+        diagnostics = {
+            "planned_route": list(plan.route),
+            "route": list(effective_plan.route),
+            "effective_route": list(effective_plan.route),
+            "structured_used": structured_used,
+            "lexical_used": lexical_used,
+            "semantic_used": semantic_used,
             "scope": scope.to_search_kwargs(),
             "candidate_count": resolved_candidates.count,
             "router_reason": list(effective_plan.reasons),
@@ -139,11 +160,30 @@ class RetrievalPlanExecutor:
             "lexical_error": lexical_error,
             "semantic_error": dense_error,
             "retrieval_error": retrieval_error,
-            "evidence_degraded": bool(
-                lexical_error or dense_error or retrieval_error
-            ),
-            "evidence_unavailable": bool(retrieval_error),
+            "degraded": bool(degradation_reasons),
+            "degradation_reasons": degradation_reasons,
+            "evidence_degraded": bool(degradation_reasons),
+            "evidence_unavailable": evidence_unavailable,
         }
+        for field_name in (
+            "lexical_count",
+            "semantic_count",
+            "rrf_candidate_count",
+            "rrf_output_count",
+            "candidate_pool_size",
+            "reranker_requested",
+            "reranker_used",
+            "reranker_error",
+            "reranker_candidate_count",
+            "dedup_before_count",
+            "dedup_after_count",
+            "unresolved_evidence_count",
+            "hybrid_attempted",
+            "hybrid_contributed",
+            "latency_ms",
+        ):
+            if field_name in backend:
+                diagnostics[field_name] = backend[field_name]
         return RetrievalExecutionResult(
             plan=effective_plan,
             scope=scope,

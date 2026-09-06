@@ -69,6 +69,30 @@ route reasons, fallback use, and safe degradation categories. A Milvus failure
 retains Structured + Lexical execution; complete evidence failure preserves any
 structured result.
 
+### Evidence fusion and reranking
+
+Each requested evidence channel retrieves a bounded pool wider than the final
+answer count. Results are resolved and normalized into a common `EvidenceHit`
+before fusion. Dense hits must resolve by `chunk_id` through the canonical
+corpus; unresolved hits are skipped and counted.
+
+RRF combines only BM25 and dense rank positions with the existing constant 60.
+Raw BM25, cosine, and reranker scores remain observable but are not added
+together. PostgreSQL results stay outside RRF. The optional CrossEncoder fully
+reorders at most the configured RRF prefix (30 by default); an unavailable or
+failed reranker leaves the original RRF order unchanged.
+
+Parent deduplication runs after reranking. It retains the strongest child for
+each `parent_id` and merges channel provenance from sibling hits. The final
+evidence package exposes stable identity, source, title, heading, canonical
+content, URL, channels, fusion/rerank ranks, relevant metadata, and optional
+channel scores without backend SDK objects.
+
+Diagnostics report channel counts, fusion and dedup counts, unresolved
+evidence, reranker state, degradation reasons, and per-stage latency for
+lexical retrieval, semantic retrieval, resolution, fusion, reranking, and the
+total operation.
+
 ### Semantic subset
 
 Milvus is a semantic candidate index, not a second Handbook store. A
@@ -122,14 +146,17 @@ an environment independently.
 ## Evaluation
 
 `eval/handbook_retrieval_cases.json` contains corpus-grounded lexical,
-semantic, and hybrid cases. Metrics remain scenario-specific: exact identifier
-ranking for lexical search, concept discovery for semantic search, and channel
-coverage for hybrid fusion. Recall@K, reciprocal rank and scope precision are
-reported per scenario alongside semantic subset coverage.
+semantic, hybrid, and hybrid-plus-reranker cases. Metrics remain
+scenario-specific: exact identifier ranking for lexical search, concept
+discovery for semantic search, and recovery/promotion checks for fusion.
+Recall@K, MRR, and scope precision are reported per scenario alongside semantic
+subset coverage. Reranker gains are not claimed unless the real configured
+model is evaluated.
 
 ```powershell
 python scripts/evaluate_handbook_retrieval.py --scenarios lexical
 python scripts/evaluate_handbook_retrieval.py --scenarios lexical semantic hybrid
+python scripts/evaluate_handbook_retrieval.py --scenarios hybrid_reranked
 ```
 
 The real Milvus integration test is opt-in through

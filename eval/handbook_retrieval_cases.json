@@ -1,5 +1,5 @@
 {
-  "dataset_version": "2026.09.05-v2",
+  "dataset_version": "2026.09.06-v3",
   "corpus": "data/official_sources/handbook-chunks.jsonl",
   "cases": [
     {
@@ -57,6 +57,22 @@
     {
       "case_id": "hybrid-sydney-capstone-after-60cp",
       "scenario": "hybrid",
+      "query": "What capstone options can a Sydney MCS student take after completing 60 credit points?",
+      "scope": {"university_id": "sydney", "program_code": "MACOMPSC-01", "handbook_year": 2026},
+      "expected_source_ids": ["sydney-mcs-2026"],
+      "expected_channels": ["bm25", "dense"]
+    },
+    {
+      "case_id": "hybrid-reranked-unsw-ai-specialisation",
+      "scenario": "hybrid_reranked",
+      "query": "Which artificial intelligence specialisation belongs to UNSW program 8543?",
+      "scope": {"university_id": "unsw", "program_code": "8543", "handbook_year": 2026},
+      "expected_source_ids": ["unsw-8543-2026"],
+      "expected_channels": ["bm25", "dense"]
+    },
+    {
+      "case_id": "hybrid-reranked-sydney-capstone-after-60cp",
+      "scenario": "hybrid_reranked",
       "query": "What capstone options can a Sydney MCS student take after completing 60 credit points?",
       "scope": {"university_id": "sydney", "program_code": "MACOMPSC-01", "handbook_year": 2026},
       "expected_source_ids": ["sydney-mcs-2026"],

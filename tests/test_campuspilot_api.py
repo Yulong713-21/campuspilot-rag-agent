@@ -740,6 +740,69 @@ class CampusPilotAPITest(unittest.TestCase):
         )
         self.assertTrue(ready.json()["vector_search_enabled"])
 
+    def test_reranker_startup_failure_preserves_milvus_rrf(self) -> None:
+        class FakeVectorStore:
+            def search(self, query, **kwargs):
+                return []
+
+        chunk = HandbookChunk(
+            chunk_id="hybrid-1",
+            parent_id="hybrid-parent",
+            source_id="hybrid-source",
+            university_id="monash",
+            handbook_year=2026,
+            program_code="C6001",
+            source_type="program_handbook",
+            discipline_ids=["computing"],
+            title="Information Technology",
+            heading="Overview",
+            content="Information technology career outcomes.",
+            parent_content="Official information technology overview.",
+            source_url="https://example.edu/c6001",
+            source_sha256="abc",
+            program_codes=["C6001"],
+        )
+        logs_dir = REPO_ROOT / "logs"
+        with TemporaryDirectory(dir=logs_dir) as temp_dir:
+            database = Path(temp_dir) / "reranker-degraded.sqlite3"
+            with (
+                patch.dict(
+                    "os.environ",
+                    {
+                        "CAMPUSPILOT_VECTOR_SEARCH_ENABLED": "1",
+                        "CAMPUSPILOT_EMBEDDING_MODEL_PATH": "embedding-model",
+                        "CAMPUSPILOT_RERANKER_ENABLED": "1",
+                        "CAMPUSPILOT_RERANKER_MODEL_PATH": "missing-model",
+                    },
+                ),
+                patch(
+                    "agent_runtime.api.create_dense_embedder",
+                    return_value=object(),
+                ),
+                patch(
+                    "agent_runtime.api.CampusPilotMilvusStore",
+                    return_value=FakeVectorStore(),
+                ),
+                patch(
+                    "agent_runtime.api.SentenceTransformerReranker",
+                    side_effect=RuntimeError("model unavailable"),
+                ),
+                patch("agent_runtime.api.read_chunks", return_value=[chunk]),
+                TestClient(create_app(database_path=database)) as client,
+            ):
+                health = client.get("/health")
+                ready = client.get("/health/ready")
+
+        self.assertEqual(
+            health.json()["retrieval_mode"],
+            "bm25_sentence_transformer_milvus_rrf",
+        )
+        self.assertTrue(ready.json()["vector_search_enabled"])
+        self.assertTrue(ready.json()["reranker_requested"])
+        self.assertFalse(ready.json()["reranker_enabled"])
+        self.assertTrue(ready.json()["reranker_degraded"])
+        self.assertEqual(ready.json()["reranker_error"], "RuntimeError")
+
     def test_elasticsearch_runtime_exposes_lexical_health(self) -> None:
         class FakeElasticsearchStore:
             def __init__(self, **kwargs):

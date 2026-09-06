@@ -271,24 +271,35 @@ class CampusPilotMilvusStoreTest(unittest.TestCase):
         )
         self.assertEqual(result[0]["rerank_score"], 0.5)
 
-    def test_reranker_rank_is_blended_without_overriding_hybrid_consensus(
-        self,
-    ) -> None:
-        reranked = [
-            {"chunk_id": "weak", "rrf_score": 0.02, "rerank_score": 0.9},
-            {"chunk_id": "strong", "rrf_score": 0.04, "rerank_score": 0.2},
+    def test_reranker_fully_reorders_only_the_bounded_rrf_prefix(self) -> None:
+        class ReverseReranker:
+            def rerank(self, query, documents):
+                return list(reversed(documents))
+
+        class EmptyLexicalRetriever:
+            def search(self, query, **kwargs):
+                return []
+
+        retriever = CampusPilotHybridRetriever(
+            chunks=[],
+            vector_store=None,
+            reranker=ReverseReranker(),
+            lexical_retriever=EmptyLexicalRetriever(),
+        )
+        ranked = [
+            {"chunk_id": "one", "fusion_rank": 1},
+            {"chunk_id": "two", "fusion_rank": 2},
+            {"chunk_id": "three", "fusion_rank": 3},
         ]
 
-        blended = CampusPilotHybridRetriever._blend_reranker_rank(
-            reranked,
-            rrf_constant=60,
-        )
+        reranked = retriever._rerank_bounded("query", ranked, limit=2)
 
-        self.assertEqual(blended[0]["chunk_id"], "strong")
-        self.assertGreater(
-            blended[0]["rrf_score"],
-            blended[1]["rrf_score"],
+        self.assertEqual(
+            [item["chunk_id"] for item in reranked],
+            ["two", "one", "three"],
         )
+        self.assertEqual(reranked[0]["rerank_rank"], 1)
+        self.assertNotIn("rerank_rank", reranked[2])
 
     def test_bm25_only_search_uses_full_chunks_without_vector_store(self) -> None:
         class FakeReranker:

@@ -16,6 +16,7 @@ class RetrievalScenario(str, Enum):
     LEXICAL = "lexical"
     SEMANTIC = "semantic"
     HYBRID = "hybrid"
+    HYBRID_RERANKED = "hybrid_reranked"
 
 
 @dataclass(frozen=True)
@@ -178,7 +179,10 @@ class RetrievalScenarioEvaluator:
             )
         if case.scenario is RetrievalScenario.SEMANTIC:
             checks["semantic_concept_found"] = bool(matching)
-        if case.scenario is RetrievalScenario.HYBRID:
+        if case.scenario in {
+            RetrievalScenario.HYBRID,
+            RetrievalScenario.HYBRID_RERANKED,
+        }:
             observed_channels = {
                 channel
                 for item in matching
@@ -187,6 +191,13 @@ class RetrievalScenarioEvaluator:
             checks["channel_coverage"] = set(
                 case.expected_channels
             ).issubset(observed_channels)
+            checks["recovered_from_either_channel"] = bool(
+                matching and observed_channels & {"bm25", "dense"}
+            )
+            checks["promoted_by_fusion"] = bool(
+                expected_ranks
+                and min(expected_ranks) <= min(case.k, 3)
+            )
         return {
             "case_id": case.case_id,
             "scenario": case.scenario.value,
@@ -197,6 +208,10 @@ class RetrievalScenarioEvaluator:
                     4,
                 ),
                 "reciprocal_rank": round(
+                    1.0 / min(expected_ranks) if expected_ranks else 0.0,
+                    4,
+                ),
+                "mrr": round(
                     1.0 / min(expected_ranks) if expected_ranks else 0.0,
                     4,
                 ),

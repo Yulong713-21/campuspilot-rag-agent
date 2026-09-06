@@ -119,6 +119,8 @@ class EvidenceRetrieverRuntime:
     lexical_requested: bool = False
     lexical_backend: str = "catalog_bm25"
     lexical_error: str | None = None
+    reranker_requested: bool = False
+    reranker_error: str | None = None
 
     @property
     def vector_active(self) -> bool:
@@ -147,6 +149,17 @@ class EvidenceRetrieverRuntime:
     @property
     def lexical_degraded(self) -> bool:
         return self.lexical_requested and not self.lexical_active
+
+    @property
+    def reranker_active(self) -> bool:
+        return (
+            isinstance(self.retriever, CampusPilotHybridRetriever)
+            and self.retriever.reranker is not None
+        )
+
+    @property
+    def reranker_degraded(self) -> bool:
+        return self.reranker_requested and not self.reranker_active
 
 
 class ActionRequest(BaseModel):
@@ -333,6 +346,29 @@ class RemainingAverageRequest(BaseModel):
     total_credits: float | None = Field(default=None, gt=0)
 
 
+def _bounded_environment_integer(
+    name: str,
+    *,
+    default: int,
+    minimum: int,
+    maximum: int,
+) -> int:
+    """Read an optional tuning value without making startup fragile."""
+
+    try:
+        value = int(os.environ.get(name, str(default)))
+    except ValueError:
+        log_event(
+            RUNTIME_LOGGER,
+            "configuration_defaulted",
+            level=logging.WARNING,
+            setting=name,
+            error_type="ValueError",
+        )
+        value = default
+    return min(max(value, minimum), maximum)
+
+
 def _create_evidence_retriever(
     catalog: CampusPilotCatalog,
 ) -> EvidenceRetrieverRuntime:
@@ -448,8 +484,8 @@ def _create_evidence_retriever(
             lexical_backend=active_lexical_backend,
             lexical_error=lexical_error,
         )
-    # Dense retrieval and reranking are initialized after lexical retrieval so
-    # either component can degrade without discarding available BM25 evidence.
+    # Dense retrieval initializes independently so it remains available even
+    # when the optional cross-encoder cannot be loaded.
     try:
         backend = os.environ.get(
             "CAMPUSPILOT_EMBEDDING_BACKEND",
@@ -472,40 +508,6 @@ def _create_evidence_retriever(
             ),
             embedder=embedder,
             canonical_chunks=chunks,
-        )
-        reranker = None
-        reranker_enabled = os.environ.get(
-            "CAMPUSPILOT_RERANKER_ENABLED",
-            "1" if deployment.reranker_enabled else "0",
-        ).lower() in {"1", "true", "yes"}
-        if reranker_enabled:
-            reranker_path = os.environ.get("CAMPUSPILOT_RERANKER_MODEL_PATH")
-            if not reranker_path:
-                raise RuntimeError(
-                    "CAMPUSPILOT_RERANKER_MODEL_PATH is required when reranking is enabled"
-                )
-            reranker = SentenceTransformerReranker(reranker_path)
-        return EvidenceRetrieverRuntime(
-            retriever=CampusPilotHybridRetriever(
-                chunks=chunks,
-                vector_store=vector_store,
-                reranker=reranker,
-                lexical_retriever=lexical_retriever,
-            ),
-            vector_requested=True,
-            retrieval_mode=(
-                (
-                    "elasticsearch_"
-                    if active_lexical_backend == "elasticsearch"
-                    else "bm25_"
-                )
-                + backend.replace("-", "_")
-                + "_milvus_rrf"
-                + ("_reranked" if reranker is not None else "")
-            ),
-            lexical_requested=lexical_requested,
-            lexical_backend=active_lexical_backend,
-            lexical_error=lexical_error,
         )
     except Exception as exc:
         log_event(
@@ -553,6 +555,64 @@ def _create_evidence_retriever(
             lexical_backend="catalog_bm25",
             lexical_error=lexical_error,
         )
+
+    reranker = None
+    reranker_error = None
+    reranker_requested = os.environ.get(
+        "CAMPUSPILOT_RERANKER_ENABLED",
+        "1" if deployment.reranker_enabled else "0",
+    ).lower() in {"1", "true", "yes"}
+    if reranker_requested:
+        try:
+            reranker_path = os.environ.get("CAMPUSPILOT_RERANKER_MODEL_PATH")
+            if not reranker_path:
+                raise RuntimeError(
+                    "CAMPUSPILOT_RERANKER_MODEL_PATH is required when reranking is enabled"
+                )
+            reranker = SentenceTransformerReranker(reranker_path)
+        except Exception as exc:
+            reranker_error = type(exc).__name__
+            log_event(
+                RUNTIME_LOGGER,
+                "retrieval_degraded",
+                level=logging.WARNING,
+                component="reranker",
+                error_type=reranker_error,
+                fallback="milvus_rrf",
+            )
+
+    return EvidenceRetrieverRuntime(
+        retriever=CampusPilotHybridRetriever(
+            chunks=chunks,
+            vector_store=vector_store,
+            reranker=reranker,
+            lexical_retriever=lexical_retriever,
+            reranker_candidate_limit=_bounded_environment_integer(
+                "CAMPUSPILOT_RERANKER_CANDIDATE_LIMIT",
+                default=30,
+                minimum=1,
+                maximum=50,
+            ),
+            reranker_requested=reranker_requested,
+            reranker_initialization_error=reranker_error,
+        ),
+        vector_requested=True,
+        retrieval_mode=(
+            (
+                "elasticsearch_"
+                if active_lexical_backend == "elasticsearch"
+                else "bm25_"
+            )
+            + backend.replace("-", "_")
+            + "_milvus_rrf"
+            + ("_reranked" if reranker is not None else "")
+        ),
+        lexical_requested=lexical_requested,
+        lexical_backend=active_lexical_backend,
+        lexical_error=lexical_error,
+        reranker_requested=reranker_requested,
+        reranker_error=reranker_error,
+    )
 
 
 def create_app(
@@ -1077,6 +1137,8 @@ def create_app(
             "vector_search_enabled": retriever_runtime.vector_active,
             "lexical_search_backend": retriever_runtime.lexical_backend,
             "lexical_search_degraded": retriever_runtime.lexical_degraded,
+            "reranker_enabled": retriever_runtime.reranker_active,
+            "reranker_degraded": retriever_runtime.reranker_degraded,
         }
 
     @app.get("/health/live")
@@ -1098,6 +1160,10 @@ def create_app(
             "lexical_search_requested": retriever_runtime.lexical_requested,
             "lexical_search_degraded": retriever_runtime.lexical_degraded,
             "lexical_search_error": retriever_runtime.lexical_search_error,
+            "reranker_enabled": retriever_runtime.reranker_active,
+            "reranker_requested": retriever_runtime.reranker_requested,
+            "reranker_degraded": retriever_runtime.reranker_degraded,
+            "reranker_error": retriever_runtime.reranker_error,
             "cloud_llm_enabled": cloud_llm_enabled,
         }
 

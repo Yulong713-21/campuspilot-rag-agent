@@ -83,26 +83,53 @@ class CampusPilotHybridRetriever:
         discipline_id: str | None = None,
         program_code: str | None = None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
+        use_lexical: bool = True,
+        use_semantic: bool | None = None,
         k: int = 3,
     ) -> list[dict[str, Any]]:
+        semantic_requested = (
+            self.vector_store is not None
+            if use_semantic is None
+            else use_semantic
+        )
         # Over-fetch so RRF and parent deduplication can still return a diverse
         # final set after adjacent child chunks collapse to one parent.
         candidate_k = max(k * 4, 12)
-        lexical = self._lexical_search(
-            query,
-            handbook_year=handbook_year,
-            university_id=university_id,
-            discipline_id=discipline_id,
-            program_code=program_code,
-            specialisation_code=specialisation_code,
-            source_type=source_type,
-            k=candidate_k,
+        lexical = (
+            self._lexical_search(
+                query,
+                handbook_year=handbook_year,
+                university_id=university_id,
+                discipline_id=discipline_id,
+                program_code=program_code,
+                specialisation_code=specialisation_code,
+                candidate_course_codes=candidate_course_codes,
+                candidate_program_codes=candidate_program_codes,
+                candidate_specialisation_codes=(
+                    candidate_specialisation_codes
+                ),
+                source_type=source_type,
+                k=candidate_k,
+            )
+            if use_lexical
+            else []
         )
-        lexical_error = getattr(self.lexical_retriever, "last_error", None)
-        dense_error = None
+        lexical_error = (
+            getattr(self.lexical_retriever, "last_error", None)
+            if use_lexical
+            else None
+        )
+        dense_error = (
+            "Unavailable"
+            if semantic_requested and self.vector_store is None
+            else None
+        )
         dense: list[dict[str, Any]] = []
-        if self.vector_store is not None:
+        if semantic_requested and self.vector_store is not None:
             try:
                 dense = self.vector_store.search(
                     query,
@@ -111,6 +138,11 @@ class CampusPilotHybridRetriever:
                     discipline_id=discipline_id,
                     program_code=program_code,
                     specialisation_code=specialisation_code,
+                    candidate_course_codes=candidate_course_codes,
+                    candidate_program_codes=candidate_program_codes,
+                    candidate_specialisation_codes=(
+                        candidate_specialisation_codes
+                    ),
                     source_type=source_type,
                     k=candidate_k,
                 )
@@ -123,8 +155,12 @@ class CampusPilotHybridRetriever:
             "lexical_error": lexical_error,
             "degraded": (
                 lexical_error is not None
-                or (self.vector_store is not None and dense_error is not None)
+                or (
+                    semantic_requested and dense_error is not None
+                )
             ),
+            "lexical_requested": use_lexical,
+            "semantic_requested": semantic_requested,
         }
         # PostgreSQL facts never enter RRF. This map combines evidence rankings
         # only: lexical BM25 and optional dense semantic retrieval.
@@ -220,7 +256,13 @@ class CampusPilotHybridRetriever:
 
         return self.search(
             request.query,
-            **request.scope.to_search_kwargs(),
+            **request.to_search_kwargs(),
+            use_lexical=(
+                request.plan.use_lexical if request.plan else True
+            ),
+            use_semantic=(
+                request.plan.use_semantic if request.plan else True
+            ),
             k=request.k,
         )
 
@@ -233,6 +275,9 @@ class CampusPilotHybridRetriever:
         discipline_id: str | None,
         program_code: str | None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
         k: int,
     ) -> list[dict[str, Any]]:
@@ -243,6 +288,11 @@ class CampusPilotHybridRetriever:
             discipline_id=discipline_id,
             program_code=program_code,
             specialisation_code=specialisation_code,
+            candidate_course_codes=candidate_course_codes,
+            candidate_program_codes=candidate_program_codes,
+            candidate_specialisation_codes=(
+                candidate_specialisation_codes
+            ),
             source_type=source_type,
             k=k,
         )
@@ -293,6 +343,9 @@ class CampusPilotHybridRetriever:
         discipline_id: str | None,
         program_code: str | None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
     ) -> bool:
         return InMemoryBM25Retriever.matches(
@@ -302,6 +355,11 @@ class CampusPilotHybridRetriever:
             discipline_id=discipline_id,
             program_code=program_code,
             specialisation_code=specialisation_code,
+            candidate_course_codes=candidate_course_codes,
+            candidate_program_codes=candidate_program_codes,
+            candidate_specialisation_codes=(
+                candidate_specialisation_codes
+            ),
             source_type=source_type,
         )
 

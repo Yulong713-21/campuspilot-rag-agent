@@ -34,6 +34,9 @@ class InMemoryBM25Retriever:
         discipline_id: str | None = None,
         program_code: str | None = None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
         k: int = 10,
     ) -> list[dict[str, Any]]:
@@ -64,6 +67,11 @@ class InMemoryBM25Retriever:
                 discipline_id=discipline_id,
                 program_code=program_code,
                 specialisation_code=specialisation_code,
+                candidate_course_codes=candidate_course_codes,
+                candidate_program_codes=candidate_program_codes,
+                candidate_specialisation_codes=(
+                    candidate_specialisation_codes
+                ),
                 source_type=source_type,
             ):
                 continue
@@ -88,8 +96,19 @@ class InMemoryBM25Retriever:
         discipline_id: str | None,
         program_code: str | None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
     ) -> bool:
+        identity_text = " ".join(
+            (
+                chunk.source_id,
+                chunk.title,
+                chunk.heading,
+                chunk.content,
+            )
+        ).upper()
         return all(
             (
                 handbook_year is None
@@ -103,6 +122,19 @@ class InMemoryBM25Retriever:
                 or chunk.program_code == program_code,
                 specialisation_code is None
                 or specialisation_code in chunk.specialisation_codes,
+                not candidate_course_codes
+                or any(
+                    re.search(rf"\b{re.escape(code)}\b", identity_text)
+                    for code in candidate_course_codes
+                ),
+                not candidate_program_codes
+                or chunk.program_code in candidate_program_codes
+                or bool(set(chunk.program_codes) & set(candidate_program_codes)),
+                not candidate_specialisation_codes
+                or bool(
+                    set(chunk.specialisation_codes)
+                    & set(candidate_specialisation_codes)
+                ),
                 source_type is None or chunk.source_type == source_type,
             )
         )
@@ -145,6 +177,9 @@ class FallbackLexicalRetriever:
         discipline_id: str | None = None,
         program_code: str | None = None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
         k: int = 10,
     ) -> list[dict[str, Any]]:
@@ -156,6 +191,11 @@ class FallbackLexicalRetriever:
                 discipline_id=discipline_id,
                 program_code=program_code,
                 specialisation_code=specialisation_code,
+                candidate_course_codes=candidate_course_codes,
+                candidate_program_codes=candidate_program_codes,
+                candidate_specialisation_codes=(
+                    candidate_specialisation_codes
+                ),
                 source_type=source_type,
                 k=k,
             )
@@ -172,6 +212,11 @@ class FallbackLexicalRetriever:
                 discipline_id=discipline_id,
                 program_code=program_code,
                 specialisation_code=specialisation_code,
+                candidate_course_codes=candidate_course_codes,
+                candidate_program_codes=candidate_program_codes,
+                candidate_specialisation_codes=(
+                    candidate_specialisation_codes
+                ),
                 source_type=source_type,
                 k=k,
             )

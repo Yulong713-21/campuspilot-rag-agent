@@ -90,6 +90,9 @@ class CampusPilotEvidenceRetriever:
         discipline_id: str | None = None,
         program_code: str | None = None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
         k: int = 3,
     ) -> list[dict[str, Any]]:
@@ -131,6 +134,31 @@ class CampusPilotEvidenceRetriever:
                 and document.get("source_type") != source_type
             ):
                 continue
+            if candidate_course_codes and not any(
+                code.lower() in searchable
+                for code in candidate_course_codes
+            ):
+                continue
+            document_program_codes = {
+                str(code).upper()
+                for code in document.get("program_codes", [])
+            }
+            if document.get("program_code"):
+                document_program_codes.add(
+                    str(document["program_code"]).upper()
+                )
+            if candidate_program_codes and not (
+                document_program_codes & set(candidate_program_codes)
+            ):
+                continue
+            if candidate_specialisation_codes and not (
+                {
+                    str(code).upper()
+                    for code in document.get("specialisation_codes", [])
+                }
+                & set(candidate_specialisation_codes)
+            ):
+                continue
             tokens = self.tokenized[index]
             score = sum(self._bm25_term_score(term, tokens) for term in query_tokens)
             if score > 0:
@@ -149,7 +177,7 @@ class CampusPilotEvidenceRetriever:
 
         return self.search(
             request.query,
-            **request.scope.to_search_kwargs(),
+            **request.to_search_kwargs(),
             k=request.k,
         )
 

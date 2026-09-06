@@ -135,6 +135,38 @@ class CampusPilotAPITest(unittest.TestCase):
             response.json()["answer_source"],
             "catalog_bm25",
         )
+        self.assertEqual(response.json()["routing"]["route"], ["lexical"])
+        self.assertFalse(
+            response.json()["routing"]["router_fallback_used"]
+        )
+
+    def test_evidence_search_does_not_invent_candidates_from_scope(self) -> None:
+        response = self.client.post(
+            "/api/evidence/search",
+            json={
+                "query": (
+                    "Which course can I take that fits my interest in "
+                    "industry projects?"
+                ),
+                "university_id": "monash",
+                "program_code": "C6001",
+                "k": 2,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        routing = response.json()["routing"]
+        self.assertEqual(
+            routing["planned_route"],
+            ["structured", "lexical", "semantic"],
+        )
+        self.assertEqual(routing["route"], ["structured", "lexical"])
+        self.assertFalse(routing["structured_used"])
+        self.assertEqual(routing["candidate_count"], 0)
+        self.assertIn(
+            "semantic_skipped_without_candidate_scope",
+            routing["router_reason"],
+        )
 
     def test_compare_programs(self) -> None:
         response = self.client.post(

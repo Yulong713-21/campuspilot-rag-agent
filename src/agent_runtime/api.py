@@ -58,11 +58,13 @@ from .handbook_vector import (
 )
 from .handbook_qa import HandbookQuestionAnsweringAgent, HandbookQueryRewriter
 from .retrieval import (
+    PlannedEvidenceRetriever,
     ElasticsearchHandbookStore,
     EvidenceRetriever,
     FallbackLexicalRetriever,
     InMemoryBM25Retriever,
-    RetrievalRequest,
+    QueryRouter,
+    RetrievalPlanExecutor,
     RetrievalScope,
     RetrievalScopeResolver,
 )
@@ -558,6 +560,7 @@ def create_app(
     token_to_user: dict[str, str] | None = None,
     semester_advisor: Any | None = None,
     transcript_service: TranscriptParseService | None = None,
+    structured_candidate_resolver: Any | None = None,
 ) -> FastAPI:
     database = Path(database_path)
     if token_to_user is not None:
@@ -616,9 +619,18 @@ def create_app(
     terminology = AustralianTerminologyGlossary()
     retriever_runtime = _create_evidence_retriever(campus_catalog)
     evidence_retriever = retriever_runtime.retriever
+    retrieval_plan_executor = RetrievalPlanExecutor(
+        router=QueryRouter(),
+        evidence_retriever=evidence_retriever,
+        structured_resolver=structured_candidate_resolver,
+        semantic_available=retriever_runtime.vector_active,
+    )
+    planned_evidence_retriever = PlannedEvidenceRetriever(
+        retrieval_plan_executor
+    )
     planning_agent = CampusPilotPlanningAgent(
         campus_catalog,
-        evidence_retriever=evidence_retriever,
+        evidence_retriever=planned_evidence_retriever,
     )
     cloud_llm_enabled = os.environ.get(
         "CAMPUSPILOT_CLOUD_LLM_ENABLED",
@@ -640,7 +652,7 @@ def create_app(
         narrator=ProgramRecommendationNarrator(cloud_client),
     )
     handbook_qa_agent = HandbookQuestionAnsweringAgent(
-        evidence_retriever,
+        planned_evidence_retriever,
         client=cloud_client,
         query_rewriter=(
             HandbookQueryRewriter(cloud_client) if cloud_client is not None else None
@@ -1280,22 +1292,24 @@ def create_app(
                 source_type=request.source_type,
             ),
         )
-        documents = evidence_retriever.retrieve(
-            RetrievalRequest(
-                query=request.query,
-                scope=scope,
-                k=request.k,
-            )
+        execution = retrieval_plan_executor.execute(
+            query=request.query,
+            scope=scope,
+            k=request.k,
         )
+        documents = list(execution.documents)
         log_event(
             RUNTIME_LOGGER,
             "retrieval_completed",
             route="/api/evidence/search",
             retrieval_mode=retriever_runtime.retrieval_mode,
             result_count=len(documents),
+            query_route=execution.diagnostics["route"],
+            candidate_count=execution.diagnostics["candidate_count"],
             fallback=(
                 retriever_runtime.vector_degraded
                 or retriever_runtime.lexical_degraded
+                or execution.diagnostics["evidence_unavailable"]
             ),
         )
         return {
@@ -1303,6 +1317,8 @@ def create_app(
             "count": len(documents),
             "answer_source": retriever_runtime.retrieval_mode,
             "scope": scope.to_search_kwargs(),
+            "routing": execution.diagnostics,
+            "structured_result": execution.structured_result,
         }
 
     @app.post("/api/terminology/search")

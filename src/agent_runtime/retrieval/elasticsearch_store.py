@@ -168,6 +168,9 @@ class ElasticsearchHandbookStore:
         discipline_id: str | None = None,
         program_code: str | None = None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
         k: int = 10,
     ) -> list[dict[str, Any]]:
@@ -192,6 +195,44 @@ class ElasticsearchHandbookStore:
                             {"term": {"program_codes": program_code.upper()}},
                         ],
                         "minimum_should_match": 1,
+                    }
+                }
+            )
+        if candidate_course_codes:
+            filters.append(
+                {"terms": {"identifiers": list(candidate_course_codes)}}
+            )
+        if candidate_program_codes:
+            filters.append(
+                {
+                    "bool": {
+                        "should": [
+                            {
+                                "terms": {
+                                    "program_code": list(
+                                        candidate_program_codes
+                                    )
+                                }
+                            },
+                            {
+                                "terms": {
+                                    "program_codes": list(
+                                        candidate_program_codes
+                                    )
+                                }
+                            },
+                        ],
+                        "minimum_should_match": 1,
+                    }
+                }
+            )
+        if candidate_specialisation_codes:
+            filters.append(
+                {
+                    "terms": {
+                        "specialisation_codes": list(
+                            candidate_specialisation_codes
+                        )
                     }
                 }
             )

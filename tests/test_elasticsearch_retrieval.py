@@ -140,6 +140,9 @@ class ElasticsearchRetrievalTest(unittest.TestCase):
             university_id="monash",
             discipline_id="computing",
             program_code="C6001",
+            candidate_course_codes=("FIT9136",),
+            candidate_program_codes=("C6001",),
+            candidate_specialisation_codes=("AI",),
             source_type="unit_handbook",
             k=3,
         )
@@ -153,6 +156,14 @@ class ElasticsearchRetrievalTest(unittest.TestCase):
         self.assertIn({"term": {"handbook_year": 2026}}, bool_query["filter"])
         self.assertIn(
             {"term": {"source_type": "unit_handbook"}},
+            bool_query["filter"],
+        )
+        self.assertIn(
+            {"terms": {"identifiers": ["FIT9136"]}},
+            bool_query["filter"],
+        )
+        self.assertIn(
+            {"terms": {"specialisation_codes": ["AI"]}},
             bool_query["filter"],
         )
         self.assertEqual(results[0]["document_id"], "fit9136-chunk")

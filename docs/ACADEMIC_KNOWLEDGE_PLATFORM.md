@@ -37,6 +37,38 @@ query + conversation context
 Business code sends a `RetrievalRequest`; Elasticsearch and Milvus remain
 behind lexical/dense interfaces and composition code.
 
+### Deterministic retrieval planning
+
+Routing happens after scope resolution and does not require an LLM:
+
+| Query signal | Planned capabilities |
+| --- | --- |
+| prerequisites, offerings, credits, exclusions, plan validity | Structured + Lexical |
+| exact identifiers or official wording | Lexical |
+| career fit, interests, descriptions, learning outcomes | Lexical + Semantic |
+| program-scoped eligible course discovery with preferences | Structured + Lexical + Semantic |
+
+`STRUCTURED`, `LEXICAL`, and `SEMANTIC` are independent capabilities; hybrid
+evidence retrieval is represented by selecting both evidence channels. Route
+reasons remain visible in diagnostics and an LLM is not used as the primary
+router.
+
+For mixed queries, a PostgreSQL-backed structured resolver can be injected and
+then runs first, returning candidate course, program, or specialisation codes.
+These identifiers are applied inside Elasticsearch, Milvus, or local BM25
+filters. Candidate constraints only come from this explicit resolver; the
+scope resolver continues to produce ordinary university, program, year, and
+specialisation filters and never promotes them into candidates. An empty
+candidate set therefore leaves normal scope filtering unchanged. If required
+candidates are unavailable, global semantic discovery is skipped rather than
+asking retrieval or an LLM to infer eligibility.
+
+Execution diagnostics distinguish the planned and effective route and report
+structured, lexical, and semantic usage, normalized scope, candidate count,
+route reasons, fallback use, and safe degradation categories. A Milvus failure
+retains Structured + Lexical execution; complete evidence failure preserves any
+structured result.
+
 ### Semantic subset
 
 Milvus is a semantic candidate index, not a second Handbook store. A

@@ -9,6 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
+from .router import CandidateConstraints, RetrievalPlan
 from .scope import RetrievalScope
 
 
@@ -19,6 +20,23 @@ class RetrievalRequest:
     query: str
     scope: RetrievalScope = field(default_factory=RetrievalScope)
     k: int = 3
+    candidates: CandidateConstraints = field(
+        default_factory=CandidateConstraints
+    )
+    plan: RetrievalPlan | None = None
+
+    def to_search_kwargs(self) -> dict[str, Any]:
+        """Combine normalized academic scope and structured candidates."""
+
+        kwargs: dict[str, Any] = self.scope.to_search_kwargs()
+        kwargs.update(
+            {
+                name: values
+                for name, values in self.candidates.to_search_kwargs().items()
+                if values
+            }
+        )
+        return kwargs
 
 
 class EvidenceRetriever(Protocol):
@@ -39,6 +57,9 @@ class LexicalRetriever(Protocol):
         discipline_id: str | None = None,
         program_code: str | None = None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
         k: int = 10,
     ) -> list[dict[str, Any]]: ...
@@ -56,6 +77,9 @@ class DenseRetriever(Protocol):
         discipline_id: str | None = None,
         program_code: str | None = None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
         k: int = 10,
     ) -> list[dict[str, Any]]: ...

@@ -7,6 +7,7 @@ belong to PostgreSQL; this module owns neither responsibility.
 from __future__ import annotations
 
 from pathlib import Path
+import re
 from typing import Any, Callable, Iterable, Protocol, TYPE_CHECKING
 
 from .interfaces import RetrievalRequest
@@ -23,11 +24,21 @@ MILVUS_VARCHAR_LIMITS = {
     "university_id": 48,
     "program_code": 64,
     "program_codes": 2048,
+    "course_codes": 4096,
     "source_type": 64,
     "discipline_ids": 256,
     "specialisation_codes": 1024,
     "semantic_category": 64,
 }
+
+DENSE_IDENTIFIER_PATTERN = re.compile(r"\b[A-Z]{1,5}\d{3,5}[A-Z]?\b")
+
+
+def _course_codes(chunk: HandbookChunk) -> tuple[str, ...]:
+    identity_text = " ".join(
+        (chunk.source_id, chunk.title, chunk.heading, chunk.content)
+    ).upper()
+    return tuple(sorted(set(DENSE_IDENTIFIER_PATTERN.findall(identity_text))))
 
 
 class DenseEmbedder(Protocol):
@@ -46,6 +57,11 @@ def validate_milvus_chunks(chunks: Iterable[HandbookChunk]) -> None:
             "source_id": chunk.source_id,
             "university_id": chunk.university_id,
             "program_code": chunk.program_code,
+            "course_codes": (
+                "|" + "|".join(_course_codes(chunk)) + "|"
+                if _course_codes(chunk)
+                else ""
+            ),
             "source_type": chunk.source_type,
             "discipline_ids": "|".join(chunk.discipline_ids),
             "specialisation_codes": (
@@ -179,6 +195,7 @@ class CampusPilotMilvusStore:
             "university_id",
             "program_code",
             "program_codes",
+            "course_codes",
             "source_type",
             "discipline_ids",
             "specialisation_codes",
@@ -273,6 +290,11 @@ class CampusPilotMilvusStore:
                 "university_id": chunk.university_id,
                 "handbook_year": chunk.handbook_year,
                 "program_code": chunk.program_code,
+                "course_codes": (
+                    "|" + "|".join(_course_codes(chunk)) + "|"
+                    if _course_codes(chunk)
+                    else ""
+                ),
                 "source_type": chunk.source_type,
                 "discipline_ids": "|".join(chunk.discipline_ids),
                 "specialisation_codes": (
@@ -317,6 +339,9 @@ class CampusPilotMilvusStore:
         discipline_id: str | None = None,
         program_code: str | None = None,
         specialisation_code: str | None = None,
+        candidate_course_codes: tuple[str, ...] = (),
+        candidate_program_codes: tuple[str, ...] = (),
+        candidate_specialisation_codes: tuple[str, ...] = (),
         source_type: str | None = None,
         k: int = 10,
     ) -> list[dict[str, Any]]:
@@ -330,8 +355,9 @@ class CampusPilotMilvusStore:
             )
         if program_code:
             filters.append(
-                "program_codes like "
-                f'"%|{self._escape(program_code)}|%"'
+                "(program_code == "
+                f'"{self._escape(program_code)}" or program_codes like '
+                f'"%|{self._escape(program_code)}|%")'
             )
         if discipline_id:
             filters.append(
@@ -345,6 +371,31 @@ class CampusPilotMilvusStore:
             filters.append(
                 "specialisation_codes like "
                 f'"%|{self._escape(specialisation_code)}|%"'
+            )
+        if candidate_course_codes:
+            filters.append(
+                "(" + " or ".join(
+                    "course_codes like "
+                    f'"%|{self._escape(code)}|%"'
+                    for code in candidate_course_codes
+                ) + ")"
+            )
+        if candidate_program_codes:
+            filters.append(
+                "(" + " or ".join(
+                    "(program_code == "
+                    f'"{self._escape(code)}" or program_codes like '
+                    f'"%|{self._escape(code)}|%")'
+                    for code in candidate_program_codes
+                ) + ")"
+            )
+        if candidate_specialisation_codes:
+            filters.append(
+                "(" + " or ".join(
+                    "specialisation_codes like "
+                    f'"%|{self._escape(code)}|%"'
+                    for code in candidate_specialisation_codes
+                ) + ")"
             )
         result = self.client.search(
             collection_name=self.collection_name,
@@ -360,6 +411,7 @@ class CampusPilotMilvusStore:
                 "handbook_year",
                 "program_code",
                 "program_codes",
+                "course_codes",
                 "source_type",
                 "discipline_ids",
                 "specialisation_codes",
@@ -377,7 +429,7 @@ class CampusPilotMilvusStore:
 
         return self.search(
             request.query,
-            **request.scope.to_search_kwargs(),
+            **request.to_search_kwargs(),
             k=request.k,
         )
 
@@ -389,7 +441,11 @@ class CampusPilotMilvusStore:
         canonical = self.canonical_chunks.get(chunk_id)
         document = canonical.to_dict() if canonical is not None else {}
         document.update(entity)
-        for field in ("program_codes", "specialisation_codes"):
+        for field in (
+            "program_codes",
+            "course_codes",
+            "specialisation_codes",
+        ):
             value = document.get(field)
             if isinstance(value, str):
                 document[field] = [item for item in value.split("|") if item]

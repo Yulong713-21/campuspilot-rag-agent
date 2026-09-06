@@ -445,6 +445,9 @@ class CampusPilotMilvusStoreTest(unittest.TestCase):
             university_id="monash",
             discipline_id="computing",
             program_code="C6001",
+            candidate_course_codes=("FIT9136", "FIT5145"),
+            candidate_program_codes=("C6001",),
+            candidate_specialisation_codes=("AI",),
             k=5,
         )
 
@@ -455,8 +458,14 @@ class CampusPilotMilvusStoreTest(unittest.TestCase):
             client.last_search["filter"],
             (
                 'handbook_year == 2026 and university_id == "monash" '
-                'and program_codes like "%|C6001|%" '
-                'and discipline_ids like "%computing%"'
+                'and (program_code == "C6001" or program_codes like '
+                '"%|C6001|%") '
+                'and discipline_ids like "%computing%" '
+                'and (course_codes like "%|FIT9136|%" or '
+                'course_codes like "%|FIT5145|%") '
+                'and ((program_code == "C6001" or program_codes like '
+                '"%|C6001|%")) '
+                'and (specialisation_codes like "%|AI|%")'
             ),
         )
         self.assertEqual(client.last_search["limit"], 5)

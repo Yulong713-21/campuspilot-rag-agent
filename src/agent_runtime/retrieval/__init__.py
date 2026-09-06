@@ -20,6 +20,13 @@ from .evaluation import (
     RetrievalScenarioEvaluator,
     load_retrieval_cases,
 )
+from .execution import (
+    PlannedEvidenceRetriever,
+    RetrievalExecutionResult,
+    RetrievalPlanExecutor,
+    StructuredCandidateResolver,
+    StructuredResolution,
+)
 from .hybrid import CampusPilotHybridRetriever, SentenceTransformerReranker
 from .interfaces import (
     DenseRetriever,
@@ -36,6 +43,12 @@ from .indexing import (
     plan_incremental_index,
 )
 from .lexical import FallbackLexicalRetriever, InMemoryBM25Retriever
+from .router import (
+    CandidateConstraints,
+    QueryRouter,
+    RetrievalPlan,
+    RouteCapability,
+)
 from .scope import RetrievalScope, RetrievalScopeResolver
 from .semantic import (
     SEMANTIC_POLICY_VERSION,
@@ -50,6 +63,7 @@ __all__ = [
     "BGEM3DenseEmbedder",
     "CampusPilotHybridRetriever",
     "CampusPilotMilvusStore",
+    "CandidateConstraints",
     "DenseEmbedder",
     "DenseRetriever",
     "EvidenceRetriever",
@@ -73,11 +87,19 @@ __all__ = [
     "SourceIndexState",
     "RetrievalEvaluationCase",
     "RetrievalEvaluationReport",
+    "RetrievalExecutionResult",
+    "RetrievalPlan",
+    "RetrievalPlanExecutor",
     "RetrievalScenario",
     "RetrievalScenarioEvaluator",
     "RetrievalRequest",
     "RetrievalScope",
     "RetrievalScopeResolver",
+    "RouteCapability",
+    "QueryRouter",
+    "PlannedEvidenceRetriever",
+    "StructuredCandidateResolver",
+    "StructuredResolution",
     "apply_incremental_plan",
     "classify_semantic_eligibility",
     "create_dense_embedder",

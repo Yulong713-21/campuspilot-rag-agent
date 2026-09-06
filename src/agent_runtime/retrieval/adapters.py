@@ -16,7 +16,7 @@ class LexicalEvidenceRetriever:
     def retrieve(self, request: RetrievalRequest) -> list[dict[str, Any]]:
         return self.backend.search(
             request.query,
-            **request.scope.to_search_kwargs(),
+            **request.to_search_kwargs(),
             k=request.k,
         )
 
@@ -30,6 +30,6 @@ class SemanticEvidenceRetriever:
     def retrieve(self, request: RetrievalRequest) -> list[dict[str, Any]]:
         return self.backend.search(
             request.query,
-            **request.scope.to_search_kwargs(),
+            **request.to_search_kwargs(),
             k=request.k,
         )

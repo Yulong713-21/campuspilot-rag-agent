@@ -63,6 +63,16 @@ function renderTrace(list, count, trace = []) {
   }));
 }
 
+function renderRuleChecks(container, allValid) {
+  const checks = ["Credits", "Prerequisites", "Availability", "Capstone"];
+  container.replaceChildren(...checks.map((label) => {
+    const item = document.createElement("span");
+    item.className = `rule-check${allValid ? "" : " review"}`;
+    item.textContent = `${allValid ? "✓" : "!"} ${label}`;
+    return item;
+  }));
+}
+
 export function createPlanResultRenderer(elements) {
   let selectedPlan = null;
 
@@ -94,10 +104,12 @@ export function createPlanResultRenderer(elements) {
       button.type = "button";
       button.role = "tab";
       button.dataset.planId = plan.plan_id;
+      button.dataset.routeLabel = `Route ${String(plans.indexOf(plan) + 1).padStart(2, "0")}`;
       button.textContent = plan.name;
       button.addEventListener("click", () => selectPlan(plan));
       return button;
     }));
+    renderRuleChecks(elements.ruleChecks, payload.validation.all_valid);
     renderTrace(elements.traceList, elements.traceCount, payload.trace);
     if (plans.length) selectPlan(plans[0]);
     elements.plannerEmpty.classList.add("hidden");

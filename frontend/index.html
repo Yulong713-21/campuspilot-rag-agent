@@ -3,178 +3,187 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CampusPilot C6001 可验证毕业路径演示">
-    <title>CampusPilot · C6001 Planner Demo</title>
+    <meta name="description" content="CampusPilot AI Workspace：申请、课程与可验证学业规划">
+    <title>CampusPilot · AI Workspace</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="/static/planner.css?v=20260823-demo-first-1">
+    <link rel="preload" as="image" href="/static/assets/campuspilot-campus.png">
+    <link rel="stylesheet" href="/static/planner.css?v=20260824-open-workspace-3">
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="/" aria-label="CampusPilot C6001 Planner">
+      <a class="brand" href="/" aria-label="CampusPilot 首页">
         <span class="brand-mark" aria-hidden="true">C</span>
-        <span><strong>CampusPilot</strong><small>C6001 Planner</small></span>
+        <span><strong>CampusPilot</strong><small>AI planning workspace</small></span>
       </a>
       <div class="top-actions">
-        <span class="dataset-badge">Monash · 2026</span>
         <span id="serviceState" class="service-state" aria-live="polite">
-          <i></i><span id="serviceLabel">正在检查核心服务</span>
+          <i></i><span id="serviceLabel">正在检查服务</span>
         </span>
+        <a href="/health" target="_blank" rel="noreferrer">服务状态</a>
         <a href="/docs" target="_blank" rel="noreferrer">API</a>
       </div>
     </header>
 
-    <main>
-      <section class="hero" aria-labelledby="pageTitle">
-        <div class="hero-copy">
-          <p class="eyebrow"><span></span>DETERMINISTIC PLANNER DEMO</p>
-          <h1 id="pageTitle">三套可校验的 C6001<br>毕业路径，不靠模型猜。</h1>
-          <p class="hero-lead">
-            选择 Entry Level、Study Stream 和已修课程。CampusPilot 会计算剩余学分、
-            安排开课学期并校验先修、负荷与 Capstone，最后把官方证据放在结果旁边。
-          </p>
-          <div class="hero-actions">
-            <button id="runDemoButton" class="primary-button hero-button" type="button" disabled>运行推荐演示</button>
-            <a class="text-link" href="#planner">自定义约束 <span>↓</span></a>
-          </div>
+    <main class="workspace-shell">
+      <aside class="sidebar">
+        <nav aria-label="CampusPilot 功能导航">
+          <p class="nav-label">WORKSPACE</p>
+          <a class="nav-item active" href="#pia" aria-current="page"><span aria-hidden="true">✦</span>Pia</a>
+          <a class="nav-item" href="#verifiedWorkflow"><span aria-hidden="true">⌁</span>Planner</a>
+          <span class="nav-item muted" aria-disabled="true"><span aria-hidden="true">◎</span>Admission<small>Beta</small></span>
+          <span class="nav-item muted" aria-disabled="true"><span aria-hidden="true">⇄</span>Compare<small>Beta</small></span>
+        </nav>
+        <div class="sidebar-note">
+          <span>Verified coverage</span>
+          <strong>Monash C6001</strong>
+          <small>Handbook 2026</small>
         </div>
-        <aside class="proof-panel" aria-label="演示能力">
-          <p class="proof-label">WHAT THIS DEMO PROVES</p>
-          <div class="proof-item"><strong>01</strong><span><b>Rules first</b>学分与课程顺序由确定性规则计算</span></div>
-          <div class="proof-item"><strong>02</strong><span><b>Evidence linked</b>每次规划都展示 Handbook 官方依据</span></div>
-          <div class="proof-item"><strong>03</strong><span><b>AI optional</b>LLM 不可用时核心 Planner 仍然工作</span></div>
-        </aside>
-      </section>
+      </aside>
 
-      <section class="capability-strip" aria-label="核心能力">
-        <div><span>项目</span><strong>Monash C6001</strong></div>
-        <div><span>输出</span><strong>3 条有效路径</strong></div>
-        <div><span>校验</span><strong>Credits · Prerequisites · Capstone</strong></div>
-        <div><span>证据</span><strong>Handbook · Course Map</strong></div>
-      </section>
-
-      <section id="planner" class="planner-section">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">BUILD A VERIFIED ROUTE</p>
-            <h2>设置你的真实约束</h2>
+      <section id="pia" class="workspace" aria-labelledby="workspaceTitle">
+        <header class="workspace-heading workspace-hero">
+          <div class="workspace-heading-copy">
+            <p class="eyebrow">PIA ASSISTANT</p>
+            <h1 id="workspaceTitle">你好，我是 Pia。</h1>
+            <p>我可以帮你理解课程规则、检查学分，并把目标变成可以验证的学习路径。</p>
+            <span class="context-chip">Monash · C6001 · 2026</span>
           </div>
-          <p id="catalogMeta">正在加载 2026 培养方案…</p>
-        </div>
+          <img
+            class="pia-portrait"
+            src="/static/assets/pia-avatar.png"
+            alt="Pia，CampusPilot 的 AI 规划助手"
+            width="260"
+            height="260"
+          >
+        </header>
 
-        <div class="planner-layout">
-          <form id="planForm" class="control-card">
-            <div class="card-heading">
-              <div><span>INPUT</span><h3>规划条件</h3></div>
-              <button id="resetPlanButton" class="quiet-button" type="button">恢复推荐值</button>
-            </div>
-
-            <label for="programVariant">Entry Level</label>
-            <select id="programVariant" required disabled><option>加载中…</option></select>
-
-            <label for="studyStream">Study Stream</label>
-            <select id="studyStream" required disabled><option>加载中…</option></select>
-
-            <div class="field-grid">
-              <div>
-                <label for="startSemester">开始学期</label>
-                <select id="startSemester">
-                  <option value="2026-S2">2026 S2</option>
-                  <option value="2027-S1">2027 S1</option>
-                  <option value="2027-S2">2027 S2</option>
-                </select>
-              </div>
-              <div>
-                <label for="maxLoad">单学期上限</label>
-                <select id="maxLoad">
-                  <option value="4">4 门 · 最快</option>
-                  <option value="3">3 门 · 均衡</option>
-                  <option value="2">2 门 · 低负荷</option>
-                </select>
-              </div>
-            </div>
-
-            <fieldset>
-              <legend>已完成课程 <small>可多选</small></legend>
-              <div id="completedCourses" class="course-options" aria-live="polite"></div>
-            </fieldset>
-
-            <label class="toggle-row" for="policyFlexibility">
-              <span><strong>保留时间弹性</strong><small>延长路径以分散负荷，不判断签证资格</small></span>
-              <input id="policyFlexibility" type="checkbox" role="switch" checked>
-            </label>
-
-            <div class="scenario-row" aria-label="快速场景">
-              <button type="button" data-scenario="el1">无相关背景</button>
-              <button type="button" data-scenario="el2">相关背景</button>
-              <button type="button" data-scenario="balanced">均衡负荷</button>
-            </div>
-
-            <button id="generateButton" class="primary-button full-width" type="submit" disabled>生成并校验三套方案</button>
-          </form>
-
-          <section class="result-card" aria-live="polite" aria-busy="false">
-            <div id="plannerEmpty" class="empty-state">
-              <div class="route-preview" aria-hidden="true">
-                <span>ENTRY</span><i></i><span>RULES</span><i></i><span>3 ROUTES</span>
-              </div>
-              <h3>推荐演示已经准备好</h3>
-              <p>点击“运行推荐演示”，约 1 秒后查看三条路径、逐学期课程和对应官方证据。</p>
-            </div>
-
-            <div id="plannerMessage" class="planner-message hidden" role="alert"></div>
-
-            <div id="planResults" class="hidden">
-              <div class="result-heading">
-                <div><p class="eyebrow">VALIDATED OUTPUT</p><h3>规划结果</h3></div>
-                <span id="confidenceBadge" class="confidence-badge">高置信度</span>
-              </div>
-
-              <div class="summary-grid">
-                <div><span>Entry Level</span><strong id="summaryEntry">-</strong></div>
-                <div><span>待完成</span><strong id="summaryCredits">-</strong></div>
-                <div><span>有效方案</span><strong id="summaryValid">-</strong></div>
-                <div><span>规则结论</span><strong id="summaryRules">-</strong></div>
-              </div>
-
-              <div id="warningList" class="warning-list"></div>
-              <div id="planTabs" class="plan-tabs" role="tablist" aria-label="规划方案"></div>
-
-              <article class="selected-plan">
-                <div class="selected-plan-heading">
-                  <div><span>SELECTED ROUTE</span><h3 id="selectedPlanName">-</h3></div>
-                  <strong id="selectedPlanSemesters">-</strong>
+        <div class="conversation-layout">
+          <section class="chat-panel" aria-label="与 Pia 对话">
+            <div id="conversation" class="conversation" role="log" aria-live="polite" aria-relevant="additions">
+              <article class="message assistant-message">
+                <img class="avatar" src="/static/assets/pia-avatar.png" alt="" aria-hidden="true">
+                <div>
+                  <strong>Pia</strong>
+                  <p>告诉我你的课程或毕业目标。我会结合官方原文检索与版本化规则引擎，并把规划依据一起展示。</p>
                 </div>
-                <p id="selectedPlanDescription">-</p>
-                <div id="semesterTimeline" class="semester-timeline"></div>
               </article>
+            </div>
 
-              <section class="trace-panel">
-                <div class="subheading"><h3>为什么这条路径有效</h3><span id="traceCount">0 steps</span></div>
-                <ol id="traceList" class="trace-list"></ol>
+            <form id="chatForm" class="chat-composer open-composer">
+              <label class="sr-only" for="chatInput">给 Pia 发送消息</label>
+              <textarea id="chatInput" rows="2" maxlength="4000" placeholder="问问课程、申请、学校比较，或告诉 Pia 你的目标…" required></textarea>
+              <button id="sendButton" type="submit" aria-label="发送消息"><span aria-hidden="true">↑</span></button>
+              <p>直接描述你的问题；涉及毕业规则时，Pia 会调用 deterministic Planner 生成规划。</p>
+            </form>
+
+            <div class="starter-grid" aria-label="Pia 能力与快捷场景">
+              <button class="starter-card" type="button" data-prompt="FIT5120 的先修、开课学期和课程要求是什么？">
+                <span class="starter-icon" aria-hidden="true">⌕</span>
+                <span><strong>课程与规则</strong><small>先修、学分与开课信息</small></span>
+              </button>
+              <button class="starter-card" type="button" data-prompt="请帮我梳理申请 Monash 信息技术硕士需要准备的材料和步骤。">
+                <span class="starter-icon" aria-hidden="true">＋</span>
+                <span><strong>申请建议</strong><small>材料、流程与下一步</small></span>
+              </button>
+              <button class="starter-card" type="button" data-prompt="请从课程方向、学制和官方信息角度比较 Monash 与 UNSW 的信息技术硕士。">
+                <span class="starter-icon" aria-hidden="true">⇄</span>
+                <span><strong>项目比较</strong><small>学校与项目差异</small></span>
+              </button>
+              <section id="verifiedWorkflow" class="starter-card verified-workflow" aria-labelledby="verifiedTitle">
+                <div class="verified-copy">
+                  <div class="verified-kicker"><span>Verified</span></div>
+                  <h2 id="verifiedTitle">C6001 规划</h2>
+                  <p>三套路径 · 确定性规划 · 官方依据</p>
+                </div>
+                <button id="runVerifiedButton" class="starter-action" type="button" disabled aria-label="试试 C6001 规划" aria-controls="planResults">
+                  开始 <span aria-hidden="true">→</span>
+                </button>
               </section>
             </div>
+
+            <section id="planningOutput" class="planning-output" aria-live="polite" aria-busy="false">
+              <div id="plannerEmpty" class="planner-empty">
+                <strong>规划结果会在这里展开</strong>
+                <p>从 Verified workflow 开始，或在下方调整规划条件。</p>
+              </div>
+              <div id="plannerMessage" class="planner-message hidden" role="alert"></div>
+              <div id="planResults" class="hidden">
+                <div class="result-heading">
+                  <div><p class="eyebrow">VERIFIED PLAN OUTPUT</p><h2>三套有效路径</h2></div>
+                  <span id="confidenceBadge" class="confidence-badge">高置信度</span>
+                </div>
+                <div class="summary-grid">
+                  <div><span>Entry Level</span><strong id="summaryEntry">-</strong></div>
+                  <div><span>待完成</span><strong id="summaryCredits">-</strong></div>
+                  <div><span>有效方案</span><strong id="summaryValid">-</strong></div>
+                  <div><span>规则结论</span><strong id="summaryRules">-</strong></div>
+                </div>
+                <div id="ruleChecks" class="rule-checks" aria-label="确定性规划结果"></div>
+                <div id="warningList" class="warning-list"></div>
+                <div id="planTabs" class="plan-tabs" role="tablist" aria-label="规划方案"></div>
+                <article class="selected-plan">
+                  <div class="selected-plan-heading">
+                    <div><span>SELECTED ROUTE</span><h3 id="selectedPlanName">-</h3></div>
+                    <strong id="selectedPlanSemesters">-</strong>
+                  </div>
+                  <p id="selectedPlanDescription">-</p>
+                  <div id="semesterTimeline" class="semester-timeline"></div>
+                </article>
+                <section class="trace-panel">
+                  <div class="subheading"><h3>为什么这条路径有效</h3><span id="traceCount">0 steps</span></div>
+                  <ol id="traceList" class="trace-list"></ol>
+                </section>
+              </div>
+            </section>
+
+            <section id="evidenceSection" class="evidence-section hidden" aria-labelledby="evidenceTitle">
+              <div class="evidence-heading">
+                <div><p class="eyebrow">OFFICIAL EVIDENCE</p><h2 id="evidenceTitle">官方依据</h2></div>
+                <p><strong id="evidenceCount">0</strong> 条来源</p>
+              </div>
+              <div id="evidenceGrid" class="evidence-grid"></div>
+            </section>
           </section>
+
+          <aside class="workspace-aside">
+            <section class="recent-card">
+              <p class="eyebrow">RECENT PLANNING</p>
+              <strong>C6001 推荐场景</strong>
+              <span>EL 2 · Industry Experience</span>
+              <small id="catalogMeta">正在加载培养方案…</small>
+            </section>
+
+            <details class="planner-controls">
+              <summary>调整规划条件 <span>＋</span></summary>
+              <form id="planForm">
+                <div class="form-heading">
+                  <strong>Planner constraints</strong>
+                  <button id="resetPlanButton" class="quiet-button" type="button">恢复推荐值</button>
+                </div>
+                <label for="programVariant">Entry Level</label>
+                <select id="programVariant" required disabled><option>加载中…</option></select>
+                <label for="studyStream">Study Stream</label>
+                <select id="studyStream" required disabled><option>加载中…</option></select>
+                <div class="field-grid">
+                  <div><label for="startSemester">开始学期</label><select id="startSemester"><option value="2026-S2">2026 S2</option><option value="2027-S1">2027 S1</option><option value="2027-S2">2027 S2</option></select></div>
+                  <div><label for="maxLoad">单学期上限</label><select id="maxLoad"><option value="4">4 门</option><option value="3">3 门</option><option value="2">2 门</option></select></div>
+                </div>
+                <fieldset><legend>已完成课程 <small>可多选</small></legend><div id="completedCourses" class="course-options" aria-live="polite"></div></fieldset>
+                <label class="toggle-row" for="policyFlexibility"><span><strong>保留时间弹性</strong><small>分散负荷，不判断签证资格</small></span><input id="policyFlexibility" type="checkbox" role="switch" checked></label>
+                <div class="scenario-row" aria-label="快速场景"><button type="button" data-scenario="el1">无相关背景</button><button type="button" data-scenario="el2">相关背景</button><button type="button" data-scenario="balanced">均衡负荷</button></div>
+                <button id="generateButton" class="primary-button full-width" type="submit" disabled>生成并校验方案</button>
+              </form>
+            </details>
+          </aside>
         </div>
       </section>
-
-      <section id="evidenceSection" class="evidence-section hidden" aria-labelledby="evidenceTitle">
-        <div class="evidence-heading">
-          <div>
-            <p class="eyebrow">OFFICIAL EVIDENCE</p>
-            <h2 id="evidenceTitle">不是一句“根据官网”，而是可打开的依据。</h2>
-          </div>
-          <p><strong id="evidenceCount">0</strong> 条本次规划证据</p>
-        </div>
-        <div id="evidenceGrid" class="evidence-grid"></div>
-      </section>
-
-      <footer>
-        <p>CampusPilot 只展示已校验的 C6001 2026 样本。课程和政策可能变化，请以学校最新信息为准。</p>
-        <span id="retrievedDate">Data snapshot · -</span>
-      </footer>
     </main>
 
+    <footer class="site-footer">
+      <p>CampusPilot 当前验证范围为 Monash C6001 2026。课程和政策可能变化，请以学校最新信息为准。</p>
+      <span id="retrievedDate">Data snapshot · -</span>
+    </footer>
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
-    <script type="module" src="/static/js/planner-page.js?v=20260823-demo-first-1"></script>
+    <script type="module" src="/static/js/workspace-page.js?v=20260824-open-workspace-3"></script>
   </body>
 </html>

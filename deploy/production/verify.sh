@@ -64,7 +64,7 @@ frontend = (root / "frontend.html").read_text(encoding="utf-8")
 assert live.get("status") == "alive", live
 assert ready.get("status") == "ready", ready
 assert health.get("status") == "ok", health
-assert "C6001 Planner Demo" in frontend, "Demo-first frontend marker missing"
+assert "CampusPilot · AI Workspace" in frontend, "Pia workspace frontend marker missing"
 
 plans = planner.get("plans") or []
 validation = planner.get("validation") or {}
@@ -99,4 +99,3 @@ print(
 )
 print(f"VECTOR_STATUS={vector_status} {vector_note}")
 PY
-

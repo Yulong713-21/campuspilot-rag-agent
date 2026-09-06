@@ -12,7 +12,7 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from agent_runtime.handbook_vector import (
+from agent_runtime.handbook_vector import (  # noqa: E402
     CampusPilotHybridRetriever,
     CampusPilotMilvusStore,
     HandbookChunk,
@@ -48,13 +48,11 @@ class FakeMilvusClient:
                         "university_id": "monash",
                         "handbook_year": 2026,
                         "program_code": "C6001",
+                        "program_codes": "|C6001|",
                         "source_type": "program_handbook",
                         "discipline_ids": "computing",
-                        "title": "Master of Information Technology",
-                        "heading": "Requirements",
-                        "content": "Complete 96 credit points.",
-                        "parent_content": "Requirements: 96 credit points.",
-                        "source_url": "https://handbook.monash.edu",
+                        "specialisation_codes": "",
+                        "semantic_category": "program_description",
                     },
                 }
             ]
@@ -163,16 +161,17 @@ Complete the core courses listed below.
             source_type="program_handbook",
             discipline_ids=["computing"],
             title="Test Program",
-            heading="x" * 2049,
+            heading="A normal heading",
             content="valid content",
             parent_content="valid parent content",
             source_url="https://example.edu/program",
             source_sha256="abc",
+            program_codes=["X" * 2049],
         )
 
         with self.assertRaisesRegex(
             ValueError,
-            "field heading has length 2049",
+            "field program_codes has length 2051",
         ):
             validate_milvus_chunks([chunk])
 
@@ -272,24 +271,35 @@ class CampusPilotMilvusStoreTest(unittest.TestCase):
         )
         self.assertEqual(result[0]["rerank_score"], 0.5)
 
-    def test_reranker_rank_is_blended_without_overriding_hybrid_consensus(
-        self,
-    ) -> None:
-        reranked = [
-            {"chunk_id": "weak", "rrf_score": 0.02, "rerank_score": 0.9},
-            {"chunk_id": "strong", "rrf_score": 0.04, "rerank_score": 0.2},
+    def test_reranker_fully_reorders_only_the_bounded_rrf_prefix(self) -> None:
+        class ReverseReranker:
+            def rerank(self, query, documents):
+                return list(reversed(documents))
+
+        class EmptyLexicalRetriever:
+            def search(self, query, **kwargs):
+                return []
+
+        retriever = CampusPilotHybridRetriever(
+            chunks=[],
+            vector_store=None,
+            reranker=ReverseReranker(),
+            lexical_retriever=EmptyLexicalRetriever(),
+        )
+        ranked = [
+            {"chunk_id": "one", "fusion_rank": 1},
+            {"chunk_id": "two", "fusion_rank": 2},
+            {"chunk_id": "three", "fusion_rank": 3},
         ]
 
-        blended = CampusPilotHybridRetriever._blend_reranker_rank(
-            reranked,
-            rrf_constant=60,
-        )
+        reranked = retriever._rerank_bounded("query", ranked, limit=2)
 
-        self.assertEqual(blended[0]["chunk_id"], "strong")
-        self.assertGreater(
-            blended[0]["rrf_score"],
-            blended[1]["rrf_score"],
+        self.assertEqual(
+            [item["chunk_id"] for item in reranked],
+            ["two", "one", "three"],
         )
+        self.assertEqual(reranked[0]["rerank_rank"], 1)
+        self.assertNotIn("rerank_rank", reranked[2])
 
     def test_bm25_only_search_uses_full_chunks_without_vector_store(self) -> None:
         class FakeReranker:
@@ -407,6 +417,10 @@ class CampusPilotMilvusStoreTest(unittest.TestCase):
         self.assertEqual(inserted, 3)
         self.assertEqual(progress, [(2, 1), (3, 0)])
         self.assertEqual(len(client.inserted_rows), 3)
+        self.assertEqual(client.inserted_rows[0]["chunk_id"], "chunk-0")
+        self.assertNotIn("content", client.inserted_rows[0])
+        self.assertNotIn("parent_content", client.inserted_rows[0])
+        self.assertNotIn("source_url", client.inserted_rows[0])
 
     def test_program_scope_query_is_detected_without_matching_unit_query(self) -> None:
         self.assertTrue(
@@ -442,17 +456,27 @@ class CampusPilotMilvusStoreTest(unittest.TestCase):
             university_id="monash",
             discipline_id="computing",
             program_code="C6001",
+            candidate_course_codes=("FIT9136", "FIT5145"),
+            candidate_program_codes=("C6001",),
+            candidate_specialisation_codes=("AI",),
             k=5,
         )
 
         self.assertEqual(result[0]["document_id"], "chunk-1")
         self.assertEqual(result[0]["dense_score"], 0.91)
+        self.assertEqual(result[0]["rank"], 1)
         self.assertEqual(
             client.last_search["filter"],
             (
                 'handbook_year == 2026 and university_id == "monash" '
-                'and program_codes like "%|C6001|%" '
-                'and discipline_ids like "%computing%"'
+                'and (program_code == "C6001" or program_codes like '
+                '"%|C6001|%") '
+                'and discipline_ids like "%computing%" '
+                'and (course_codes like "%|FIT9136|%" or '
+                'course_codes like "%|FIT5145|%") '
+                'and ((program_code == "C6001" or program_codes like '
+                '"%|C6001|%")) '
+                'and (specialisation_codes like "%|AI|%")'
             ),
         )
         self.assertEqual(client.last_search["limit"], 5)

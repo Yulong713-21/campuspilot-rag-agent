@@ -38,7 +38,7 @@ Monash Handbook 语料共有 2,157 个来源，覆盖商科、计算机、工程
 并且都可以输出带官方来源的规划建议。内部仍记录两种证据强度，但不要求用户先理解技术分层：
 
 - `OFFICIAL_SOURCE_ADVISORY`：根据官方原文生成建议并给来源；
-- `RULE_VALIDATED`：在官方原文基础上，额外通过结构化学分和先修规则校验。
+- `RULE_VALIDATED`：在官方原文基础上，由版本化规则引擎完成学分、先修和路径计算。
 
 当前 Monash 商科和计算机项目都可以给出 `OFFICIAL_SOURCE_ADVISORY`；C6001 额外达到
 `RULE_VALIDATED`。建议下一条纵向链路选择商科 B6004（Master of
@@ -51,7 +51,7 @@ Banking and Finance）或 B6022（Master of Business Analytics），完成课程
 2. **官方要求问答**：FAQ 仅在高精确匹配时命中，其余进入 Handbook RAG，自然语言回答并给来源；
 3. **录取路径比较**：展示 21 个商科、6 个计算机项目的公开路径；只有 C6001 参与硬判断；
 4. **学习路径建议**：商科和计算机均可基于官方原文给建议；C6001 还支持成绩单、学分进度、
-   课程角色和多方案规则校验。
+   课程角色识别和多方案 deterministic planning。
 
 这已经不再是“一条链路”。结构化规则是提高建议可靠性的内部升级，不作为其他项目拒绝回答的门槛。
 部署后第一个数据迭代任务仍建议把一个商科项目升级为 `RULE_VALIDATED`。
@@ -240,7 +240,7 @@ docker run --rm \
 2. Monash 计算机返回 6 个唯一项目范围；
 3. “B6022 怎么安排学习路径”能根据官方原文给建议、风险提示和来源，不伪装成学校确认结果；
 4. “C6001 没有 IT 背景读几年”命中 96/72 points 证据；
-5. C6001 规划返回 4/5/7 学期方案并通过规则校验；
+5. C6001 版本化规则引擎返回 4/5/7 学期方案及规划结果；
 6. Prompt Injection 用例不能触发越权工具；
 7. 删除或损坏 chunks 后 readiness 必须暴露异常，不能静默退回少量样例；
 8. API Key 不出现在浏览器 Network、日志和 Git。
@@ -282,7 +282,7 @@ docker compose --env-file .env.production up -d agent
 -> 核心课、选修、Capstone、开课学期
 -> 黄金测试
 -> RULE_VALIDATED
--> 建议中同时展示官方来源和规则校验结果
+-> 建议中同时展示官方来源和 deterministic planning 结果
 ```
 
 ### 第二轮：部署丰富前端

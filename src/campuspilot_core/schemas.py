@@ -1,3 +1,5 @@
+"""Stable service response schemas for deterministic planning operations."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -178,6 +180,18 @@ class PrerequisiteCheckResponse(BaseModel):
     course_code: str
     eligible: bool
     group_results: list[RuleResult]
+
+
+class CourseOfferingView(BaseModel):
+    teaching_period: str
+    evidence: list[EvidenceItem] = Field(default_factory=list)
+
+
+class CourseOfferingsResponse(BaseModel):
+    course_id: int
+    course_code: str
+    handbook_year: int
+    offerings: list[CourseOfferingView]
 
 
 class GroupProgress(BaseModel):

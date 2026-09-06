@@ -1,6 +1,7 @@
-# CampusPilot 确定性领域核心
+# CampusPilot 版本化规则引擎
 
-该目录实现课程培养方案的结构化建模与规则校验，不调用 LLM，也不依赖前端。
+该目录实现课程培养方案的版本化建模与 deterministic planning，覆盖规则读取、
+课程作用域、先修与开课判断、学分计算、路径生成和结果验证。
 LLM/RAG 后续只能负责理解问题、检索原文和解释结果，不能代替这里的学分计算。
 
 ## 能力
@@ -30,10 +31,24 @@ cd D:\agentdev\edurag-agent-lab
 .\.venv\Scripts\python.exe -m pip install -r requirements-persistence.txt
 ```
 
-## 轻量 SQLite 演示
+## PostgreSQL 生产配置
+
+PostgreSQL 是结构化学术规则的生产权威数据源。启动、迁移、种子和 smoke
+命令见 `deploy/postgres/README.md`。应用优先读取 `DATABASE_URL`：
 
 ```powershell
-$env:CAMPUSPILOT_DATABASE_URL="sqlite:///logs/campuspilot_domain.sqlite3"
+$env:DATABASE_URL="postgresql+psycopg://campuspilot:campuspilot@localhost:5432/campuspilot"
+.\.venv\Scripts\alembic.exe upgrade head
+.\.venv\Scripts\python.exe scripts\seed_campuspilot_domain.py
+```
+
+旧变量 `CAMPUSPILOT_DATABASE_URL` 仍受支持，但仅在 `DATABASE_URL` 未设置时
+生效。
+
+## 轻量 SQLite 测试
+
+```powershell
+$env:DATABASE_URL="sqlite:///logs/campuspilot_domain.sqlite3"
 .\.venv\Scripts\alembic.exe upgrade head
 .\.venv\Scripts\python.exe scripts\seed_campuspilot_domain.py
 .\.venv\Scripts\python.exe experiments\campuspilot\domain_rule_core_demo.py
@@ -41,9 +56,10 @@ $env:CAMPUSPILOT_DATABASE_URL="sqlite:///logs/campuspilot_domain.sqlite3"
 
 种子数据是明确标记的 `synthetic_test`，仅用于验证规则，不代表任何澳洲高校的官方培养方案。
 
-## MySQL 迁移
+## 旧 MySQL 兼容
 
-先创建空数据库和账号，再设置连接串：
+PyMySQL 暂时保留给已有部署，但 MySQL 不再是默认生产迁移目标。旧连接串仍可
+通过兼容变量使用：
 
 ```sql
 CREATE DATABASE campuspilot

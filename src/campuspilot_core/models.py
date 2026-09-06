@@ -1,3 +1,9 @@
+"""SQLAlchemy models for versioned academic rules and student plans.
+
+Rule-bearing records point to explicit program/course versions so different
+Handbook years and specialisations can coexist without ambiguous lookups.
+"""
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -433,6 +439,7 @@ class Course(TimestampMixin, Base):
 
 
 class CourseVersion(TimestampMixin, Base):
+    """Year-scoped authoritative facts for one canonical course."""
     __tablename__ = "course_versions"
     __table_args__ = (
         UniqueConstraint("course_id", "handbook_year"),
@@ -464,9 +471,46 @@ class CourseVersion(TimestampMixin, Base):
     )
 
     course: Mapped[Course] = relationship(back_populates="versions")
+    offerings: Mapped[list["CourseOffering"]] = relationship(
+        back_populates="course_version",
+        cascade="all, delete-orphan",
+    )
+
+
+class CourseOffering(TimestampMixin, Base):
+    """A teaching period attached to an exact Handbook course version.
+
+    The year comes from `CourseVersion`; duplicating it here would permit
+    contradictory offering/year combinations.
+    """
+    __tablename__ = "course_offerings"
+    __table_args__ = (
+        UniqueConstraint(
+            "course_version_id",
+            "teaching_period",
+            name="uq_course_offerings_version_period",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    course_version_id: Mapped[int] = mapped_column(
+        ForeignKey("course_versions.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    teaching_period: Mapped[str] = mapped_column(String(32), nullable=False)
+    evidence: Mapped[dict[str, Any]] = mapped_column(
+        JSON,
+        nullable=False,
+        default=dict,
+    )
+
+    course_version: Mapped[CourseVersion] = relationship(
+        back_populates="offerings"
+    )
 
 
 class RequirementGroup(TimestampMixin, Base):
+    """Program-wide or specialisation-scoped degree requirement bucket."""
     __tablename__ = "requirement_groups"
     __table_args__ = (
         UniqueConstraint(
@@ -802,8 +846,16 @@ class StudyPlan(TimestampMixin, Base):
 class StudyPlanTerm(TimestampMixin, Base):
     __tablename__ = "study_plan_terms"
     __table_args__ = (
-        UniqueConstraint("study_plan_id", "sequence_number"),
-        UniqueConstraint("study_plan_id", "term_code"),
+        UniqueConstraint(
+            "study_plan_id",
+            "sequence_number",
+            name="uq_study_plan_terms_plan_sequence",
+        ),
+        UniqueConstraint(
+            "study_plan_id",
+            "term_code",
+            name="uq_study_plan_terms_plan_term",
+        ),
         CheckConstraint(
             "sequence_number > 0",
             name="positive_sequence_number",
@@ -860,3 +912,35 @@ Index(
     StudentCourseRecord.student_id,
     StudentCourseRecord.status,
 )
+Index(
+    "ix_prerequisite_groups_scope_course",
+    PrerequisiteGroup.program_version_id,
+    PrerequisiteGroup.specialisation_id,
+    PrerequisiteGroup.course_id,
+)
+Index(
+    "uq_requirement_groups_program_rule",
+    RequirementGroup.program_version_id,
+    RequirementGroup.code,
+    unique=True,
+    postgresql_where=RequirementGroup.specialisation_id.is_(None),
+    sqlite_where=RequirementGroup.specialisation_id.is_(None),
+).ddl_if(dialect=("postgresql", "sqlite"))
+Index(
+    "uq_prerequisite_groups_program_rule",
+    PrerequisiteGroup.program_version_id,
+    PrerequisiteGroup.course_id,
+    PrerequisiteGroup.group_index,
+    unique=True,
+    postgresql_where=PrerequisiteGroup.specialisation_id.is_(None),
+    sqlite_where=PrerequisiteGroup.specialisation_id.is_(None),
+).ddl_if(dialect=("postgresql", "sqlite"))
+Index(
+    "uq_course_exclusions_program_rule",
+    CourseExclusion.program_version_id,
+    CourseExclusion.course_id,
+    CourseExclusion.excluded_course_id,
+    unique=True,
+    postgresql_where=CourseExclusion.specialisation_id.is_(None),
+    sqlite_where=CourseExclusion.specialisation_id.is_(None),
+).ddl_if(dialect=("postgresql", "sqlite"))

@@ -19,6 +19,7 @@ data/
 | `data/admissions/*.json` | catalog | 是 | 版本化院校、项目和人工审核规则 |
 | `data/admissions/vector_docs/` | samples/catalog text | 是 | 可复现的轻量官方文本 |
 | `data/*catalog*.json` | catalog | 是 | 结构化公开目录 |
+| `data/academic_coverage.json` | catalog | 是 | 全澳院校能力成熟度 registry |
 | `data/handbook_source_manifest.json` | manifests | 是 | 官方来源清单与检索范围 |
 | `data/*sample*.json`、`data/campuspilot_faq.json` | samples | 是 | 演示与回归样例 |
 | `data/official_sources/raw/` | runtime | 否 | 原始 HTML、MHTML、DOCX 快照 |
@@ -28,9 +29,9 @@ data/
 
 ## Source-of-truth rules
 
-1. 确定性 Planner 只读取经过版本化和审核的结构数据。
-2. RAG 文本用于证据、解释与引用，不能覆盖确定性学分或先修规则。
-3. 原始来源先进入 ignored runtime 路径；审核、解析和回归测试通过后才能更新版本化数据。
+1. 版本化规则引擎读取结构化课程、学分、先修和开课数据。
+2. 检索文本用于官方证据发现、解释与引用。
+3. 原始来源先进入 runtime pipeline，再逐步沉淀为 Catalog、Structured 和 Verified 数据。
 4. 所有规则必须携带学校、项目、Handbook Year、适用路径和官方来源标识。
 5. 不提交运行数据库、模型权重、缓存、抓取凭据、私有文件或无法复现的大型语料。
 

@@ -13,7 +13,7 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from agent_runtime.handbook_vector import (
+from agent_runtime.handbook_vector import (  # noqa: E402
     CampusPilotHybridRetriever,
     CampusPilotMilvusStore,
     SentenceTransformerReranker,
@@ -99,6 +99,7 @@ def main() -> None:
             uri=args.milvus_uri,
             collection_name=args.collection,
             embedder=embedder,
+            canonical_chunks=chunks,
         ),
         reranker=reranker,
     )

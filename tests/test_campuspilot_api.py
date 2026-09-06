@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import sys
 from tempfile import TemporaryDirectory
@@ -15,7 +16,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from agent_runtime.api import create_app  # noqa: E402
-from agent_runtime.handbook_vector import HandbookChunk  # noqa: E402
+from agent_runtime.handbook_vector import HandbookChunk, read_chunks  # noqa: E402
 
 
 class FakeSemesterAdvisor:
@@ -134,6 +135,38 @@ class CampusPilotAPITest(unittest.TestCase):
         self.assertEqual(
             response.json()["answer_source"],
             "catalog_bm25",
+        )
+        self.assertEqual(response.json()["routing"]["route"], ["lexical"])
+        self.assertFalse(
+            response.json()["routing"]["router_fallback_used"]
+        )
+
+    def test_evidence_search_does_not_invent_candidates_from_scope(self) -> None:
+        response = self.client.post(
+            "/api/evidence/search",
+            json={
+                "query": (
+                    "Which course can I take that fits my interest in "
+                    "industry projects?"
+                ),
+                "university_id": "monash",
+                "program_code": "C6001",
+                "k": 2,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        routing = response.json()["routing"]
+        self.assertEqual(
+            routing["planned_route"],
+            ["structured", "lexical", "semantic"],
+        )
+        self.assertEqual(routing["route"], ["structured", "lexical"])
+        self.assertFalse(routing["structured_used"])
+        self.assertEqual(routing["candidate_count"], 0)
+        self.assertIn(
+            "semantic_skipped_without_candidate_scope",
+            routing["router_reason"],
         )
 
     def test_compare_programs(self) -> None:
@@ -575,10 +608,98 @@ class CampusPilotAPITest(unittest.TestCase):
         self.assertTrue(ready.json()["catalog_loaded"])
         self.assertTrue(ready.json()["retriever_ready"])
 
+    def test_health_exposes_deployment_and_academic_coverage_models(self) -> None:
+        payload = self.client.get("/health").json()
+
+        self.assertEqual(payload["deployment_profile"], "lite")
+        self.assertEqual(
+            payload["academic_coverage"]["model"],
+            "CATALOG -> STRUCTURED -> VERIFIED",
+        )
+
+    def test_coverage_endpoint_resolves_verified_program_override(self) -> None:
+        response = self.client.get(
+            "/api/coverage/capabilities",
+            params={
+                "university_id": "monash",
+                "program_code": "c6001",
+                "handbook_year": 2026,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["coverage"]["level"], "VERIFIED")
+        self.assertTrue(
+            response.json()["coverage"]["capabilities"][
+                "deterministic_planning"
+            ]
+        )
+
     def test_vector_startup_failure_degrades_to_bm25(self) -> None:
         logs_dir = REPO_ROOT / "logs"
         with TemporaryDirectory(dir=logs_dir) as temp_dir:
             database = Path(temp_dir) / "vector-degraded.sqlite3"
+            corpus_path = Path(temp_dir) / "handbook-chunks.jsonl"
+            chunk = HandbookChunk(
+                chunk_id="c6001-credit",
+                parent_id="c6001-credit-parent",
+                source_id="monash-c6001-2026",
+                university_id="monash",
+                handbook_year=2026,
+                program_code="C6001",
+                source_type="program_handbook",
+                discipline_ids=["computing"],
+                title="Master of Information Technology C6001",
+                heading="Credit requirements",
+                content="C6001 学分要求为 96 credit points.",
+                parent_content="C6001 requires 96 credit points.",
+                source_url="https://example.edu/c6001",
+                source_sha256="fixture-hash",
+                program_codes=["C6001"],
+            )
+            # A realistic lexical fixture needs more than one document so BM25
+            # can assign useful inverse-document-frequency weights. Keeping the
+            # distractors in the canonical corpus also exercises scope filtering.
+            corpus_chunks = [
+                chunk,
+                HandbookChunk(
+                    **{
+                        **chunk.to_dict(),
+                        "chunk_id": "b6022-overview",
+                        "parent_id": "b6022-overview-parent",
+                        "source_id": "monash-b6022-2026",
+                        "program_code": "B6022",
+                        "title": "Master of Business B6022",
+                        "heading": "Course overview",
+                        "content": "B6022 develops advanced business practice.",
+                        "parent_content": "B6022 program overview.",
+                        "source_url": "https://example.edu/b6022",
+                        "program_codes": ["B6022"],
+                    }
+                ),
+                HandbookChunk(
+                    **{
+                        **chunk.to_dict(),
+                        "chunk_id": "e6001-overview",
+                        "parent_id": "e6001-overview-parent",
+                        "source_id": "monash-e6001-2026",
+                        "program_code": "E6001",
+                        "title": "Master of Engineering E6001",
+                        "heading": "Course overview",
+                        "content": "E6001 develops advanced engineering practice.",
+                        "parent_content": "E6001 program overview.",
+                        "source_url": "https://example.edu/e6001",
+                        "program_codes": ["E6001"],
+                    }
+                ),
+            ]
+            corpus_path.write_text(
+                "".join(
+                    json.dumps(item.to_dict(), ensure_ascii=False) + "\n"
+                    for item in corpus_chunks
+                ),
+                encoding="utf-8",
+            )
             with (
                 patch.dict(
                     "os.environ",
@@ -592,15 +713,20 @@ class CampusPilotAPITest(unittest.TestCase):
                     return_value=object(),
                 ),
                 patch(
+                    "agent_runtime.api.read_chunks",
+                    side_effect=lambda: read_chunks(corpus_path),
+                ),
+                patch(
                     "agent_runtime.api.CampusPilotMilvusStore",
                     side_effect=RuntimeError("milvus unavailable"),
                 ),
                 TestClient(create_app(database_path=database)) as client,
             ):
                 ready = client.get("/health/ready")
+                health = client.get("/health")
                 evidence = client.post(
                     "/api/evidence/search",
-                    json={"query": "C6001 学分要求", "k": 2},
+                    json={"query": "C6001 credit points requirement", "k": 2},
                 )
 
         payload = ready.json()
@@ -610,7 +736,58 @@ class CampusPilotAPITest(unittest.TestCase):
         self.assertFalse(payload["vector_search_enabled"])
         self.assertTrue(payload["vector_search_degraded"])
         self.assertEqual(payload["vector_search_error"], "RuntimeError")
+        self.assertEqual(
+            health.json()["retrieval_mode"],
+            "full_corpus_bm25_degraded",
+        )
         self.assertEqual(evidence.status_code, 200)
+        self.assertGreater(evidence.json()["count"], 0)
+        self.assertEqual(
+            evidence.json()["documents"][0]["source_id"],
+            "monash-c6001-2026",
+        )
+
+    def test_missing_canonical_corpus_degrades_to_catalog_bm25(self) -> None:
+        logs_dir = REPO_ROOT / "logs"
+        with TemporaryDirectory(dir=logs_dir) as temp_dir:
+            database = Path(temp_dir) / "corpus-missing.sqlite3"
+            missing_corpus = Path(temp_dir) / "does-not-exist.jsonl"
+            with (
+                patch.dict(
+                    "os.environ",
+                    {
+                        "CAMPUSPILOT_VECTOR_SEARCH_ENABLED": "1",
+                        "CAMPUSPILOT_EMBEDDING_MODEL_PATH": "fake-model",
+                    },
+                ),
+                patch(
+                    "agent_runtime.api.read_chunks",
+                    side_effect=lambda: read_chunks(missing_corpus),
+                ),
+                TestClient(create_app(database_path=database)) as client,
+            ):
+                ready = client.get("/health/ready")
+                health = client.get("/health")
+                evidence = client.post(
+                    "/api/evidence/search",
+                    json={
+                        "query": "FIT5120 capstone final semester",
+                        "k": 2,
+                    },
+                )
+
+        payload = ready.json()
+        self.assertEqual(ready.status_code, 200)
+        self.assertEqual(payload["status"], "ready")
+        self.assertTrue(payload["retriever_ready"])
+        self.assertTrue(payload["vector_search_degraded"])
+        self.assertEqual(payload["vector_search_error"], "FileNotFoundError")
+        self.assertEqual(
+            health.json()["retrieval_mode"],
+            "catalog_bm25_degraded",
+        )
+        self.assertEqual(evidence.status_code, 200)
+        self.assertGreater(evidence.json()["count"], 0)
 
     def test_hybrid_runtime_exposes_reranked_retrieval_mode(self) -> None:
         class FakeVectorStore:
@@ -680,6 +857,175 @@ class CampusPilotAPITest(unittest.TestCase):
             "bm25_sentence_transformer_milvus_rrf_reranked",
         )
         self.assertTrue(ready.json()["vector_search_enabled"])
+
+    def test_reranker_startup_failure_preserves_milvus_rrf(self) -> None:
+        class FakeVectorStore:
+            def search(self, query, **kwargs):
+                return []
+
+        chunk = HandbookChunk(
+            chunk_id="hybrid-1",
+            parent_id="hybrid-parent",
+            source_id="hybrid-source",
+            university_id="monash",
+            handbook_year=2026,
+            program_code="C6001",
+            source_type="program_handbook",
+            discipline_ids=["computing"],
+            title="Information Technology",
+            heading="Overview",
+            content="Information technology career outcomes.",
+            parent_content="Official information technology overview.",
+            source_url="https://example.edu/c6001",
+            source_sha256="abc",
+            program_codes=["C6001"],
+        )
+        logs_dir = REPO_ROOT / "logs"
+        with TemporaryDirectory(dir=logs_dir) as temp_dir:
+            database = Path(temp_dir) / "reranker-degraded.sqlite3"
+            with (
+                patch.dict(
+                    "os.environ",
+                    {
+                        "CAMPUSPILOT_VECTOR_SEARCH_ENABLED": "1",
+                        "CAMPUSPILOT_EMBEDDING_MODEL_PATH": "embedding-model",
+                        "CAMPUSPILOT_RERANKER_ENABLED": "1",
+                        "CAMPUSPILOT_RERANKER_MODEL_PATH": "missing-model",
+                    },
+                ),
+                patch(
+                    "agent_runtime.api.create_dense_embedder",
+                    return_value=object(),
+                ),
+                patch(
+                    "agent_runtime.api.CampusPilotMilvusStore",
+                    return_value=FakeVectorStore(),
+                ),
+                patch(
+                    "agent_runtime.api.SentenceTransformerReranker",
+                    side_effect=RuntimeError("model unavailable"),
+                ),
+                patch("agent_runtime.api.read_chunks", return_value=[chunk]),
+                TestClient(create_app(database_path=database)) as client,
+            ):
+                health = client.get("/health")
+                ready = client.get("/health/ready")
+
+        self.assertEqual(
+            health.json()["retrieval_mode"],
+            "bm25_sentence_transformer_milvus_rrf",
+        )
+        self.assertTrue(ready.json()["vector_search_enabled"])
+        self.assertTrue(ready.json()["reranker_requested"])
+        self.assertFalse(ready.json()["reranker_enabled"])
+        self.assertTrue(ready.json()["reranker_degraded"])
+        self.assertEqual(ready.json()["reranker_error"], "RuntimeError")
+
+    def test_elasticsearch_runtime_exposes_lexical_health(self) -> None:
+        class FakeElasticsearchStore:
+            def __init__(self, **kwargs):
+                self.options = kwargs
+
+            def ensure_ready(self):
+                return None
+
+            def search(self, query, **kwargs):
+                return []
+
+        chunk = HandbookChunk(
+            chunk_id="fit9136-1",
+            parent_id="fit9136-parent",
+            source_id="monash-fit9136-2026",
+            university_id="monash",
+            handbook_year=2026,
+            program_code="C6001",
+            source_type="unit_handbook",
+            discipline_ids=["computing"],
+            title="FIT9136 Introduction to Python programming",
+            heading="Availability",
+            content="FIT9136 is available in Semester 2.",
+            parent_content="Official FIT9136 availability evidence.",
+            source_url="https://example.edu/fit9136",
+            source_sha256="abc",
+            program_codes=["C6001"],
+        )
+        logs_dir = REPO_ROOT / "logs"
+        with TemporaryDirectory(dir=logs_dir) as temp_dir:
+            database = Path(temp_dir) / "elasticsearch-active.sqlite3"
+            with (
+                patch.dict(
+                    "os.environ",
+                    {
+                        "CAMPUSPILOT_VECTOR_SEARCH_ENABLED": "0",
+                        "CAMPUSPILOT_LEXICAL_BACKEND": "elasticsearch",
+                        "ELASTICSEARCH_URL": "http://elasticsearch:9200",
+                        "ELASTICSEARCH_INDEX": "handbook-test",
+                    },
+                ),
+                patch(
+                    "agent_runtime.api.ElasticsearchHandbookStore",
+                    FakeElasticsearchStore,
+                ),
+                patch("agent_runtime.api.read_chunks", return_value=[chunk]),
+                TestClient(create_app(database_path=database)) as client,
+            ):
+                health = client.get("/health")
+                ready = client.get("/health/ready")
+
+        self.assertEqual(health.json()["retrieval_mode"], "elasticsearch_bm25")
+        self.assertEqual(
+            health.json()["lexical_search_backend"],
+            "elasticsearch",
+        )
+        self.assertTrue(ready.json()["lexical_search_enabled"])
+        self.assertFalse(ready.json()["lexical_search_degraded"])
+
+    def test_elasticsearch_startup_failure_degrades_to_memory_bm25(self) -> None:
+        chunk = HandbookChunk(
+            chunk_id="fit9136-1",
+            parent_id="fit9136-parent",
+            source_id="monash-fit9136-2026",
+            university_id="monash",
+            handbook_year=2026,
+            program_code="C6001",
+            source_type="unit_handbook",
+            discipline_ids=["computing"],
+            title="FIT9136 Introduction to Python programming",
+            heading="Availability",
+            content="FIT9136 is available in Semester 2.",
+            parent_content="Official FIT9136 availability evidence.",
+            source_url="https://example.edu/fit9136",
+            source_sha256="abc",
+            program_codes=["C6001"],
+        )
+        logs_dir = REPO_ROOT / "logs"
+        with TemporaryDirectory(dir=logs_dir) as temp_dir:
+            database = Path(temp_dir) / "elasticsearch-degraded.sqlite3"
+            with (
+                patch.dict(
+                    "os.environ",
+                    {
+                        "CAMPUSPILOT_VECTOR_SEARCH_ENABLED": "0",
+                        "CAMPUSPILOT_LEXICAL_BACKEND": "elasticsearch",
+                        "ELASTICSEARCH_URL": "http://elasticsearch:9200",
+                    },
+                ),
+                patch(
+                    "agent_runtime.api.ElasticsearchHandbookStore",
+                    side_effect=ConnectionError("elasticsearch unavailable"),
+                ),
+                patch("agent_runtime.api.read_chunks", return_value=[chunk]),
+                TestClient(create_app(database_path=database)) as client,
+            ):
+                ready = client.get("/health/ready")
+
+        payload = ready.json()
+        self.assertEqual(ready.status_code, 200)
+        self.assertTrue(payload["retriever_ready"])
+        self.assertTrue(payload["lexical_search_requested"])
+        self.assertFalse(payload["lexical_search_enabled"])
+        self.assertTrue(payload["lexical_search_degraded"])
+        self.assertEqual(payload["lexical_search_error"], "ConnectionError")
 
     def test_full_bm25_mode_uses_runtime_handbook_chunks(self) -> None:
         chunk = HandbookChunk(

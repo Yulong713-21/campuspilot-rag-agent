@@ -7,7 +7,7 @@ export class ApiError extends Error {
   }
 }
 
-export async function requestJson(path, options = {}) {
+export async function requestJsonWithMeta(path, options = {}) {
   const headers = new Headers(options.headers || {});
   if (options.body && !(options.body instanceof FormData)) {
     headers.set("Content-Type", "application/json");
@@ -23,7 +23,15 @@ export async function requestJson(path, options = {}) {
       requestId: response.headers.get("X-Request-ID") || payload.error?.request_id || "",
     });
   }
-  return payload;
+  return {
+    payload,
+    requestId: response.headers.get("X-Request-ID") || "",
+  };
+}
+
+export async function requestJson(path, options = {}) {
+  const result = await requestJsonWithMeta(path, options);
+  return result.payload;
 }
 
 export async function runButtonTask(button, pendingLabel, task) {

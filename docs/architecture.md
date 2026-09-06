@@ -1,5 +1,34 @@
 # EduRAG 架构理解笔记
 
+> CampusPilot 当前生产边界：PostgreSQL 保存权威的结构化学术规则；Rule
+> Engine 只依据这些结构化规则作确定性判断；RAG 负责检索官方原文证据和解释，
+> 不能覆盖或改写 Rule Engine 的结论。Milvus、embedding、reranker 或 LLM
+> 不可用时，确定性规划能力仍须工作。
+
+## CampusPilot Phase 3 retrieval boundary
+
+```text
+PostgreSQL    eligibility, prerequisites, offerings, credits, rule truth
+Elasticsearch official Handbook lexical evidence (BM25)
+Milvus        semantic evidence retrieval
+LLM           explanation with citations, never rule adjudication
+```
+
+Elasticsearch is an evidence dependency, not a rule dependency. Its startup or
+request-time failure falls back to the published in-process Handbook corpus and
+must never change the result of `is_course_offered()` or `get_prerequisites()`.
+
+Build the lexical index from the same immutable chunk corpus used by Milvus:
+
+```powershell
+python scripts/build_handbook_lexical_index.py --recreate
+```
+
+Runtime configuration uses `ELASTICSEARCH_URL`, `ELASTICSEARCH_INDEX`, and
+`CAMPUSPILOT_LEXICAL_BACKEND=elasticsearch`. `/health` and `/health/ready`
+expose the selected lexical backend and degraded state without making evidence
+availability a readiness gate for deterministic planning.
+
 日期：2026-07-08
 
 当前目标：先理解原项目，不急着魔改。

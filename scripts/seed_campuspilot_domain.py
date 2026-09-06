@@ -1,7 +1,8 @@
+"""Seed the synthetic deterministic-domain fixture for local verification."""
+
 from __future__ import annotations
 
 import argparse
-import os
 from pathlib import Path
 import sys
 
@@ -13,36 +14,46 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from campuspilot_core.db import create_session_factory
-from campuspilot_core.models import Course, StudentProfile, University
-from campuspilot_core.seed import seed_minimal_domain_data
+from campuspilot_core.db import (  # noqa: E402
+    create_session_factory,
+    resolve_database_url,
+)
+from campuspilot_core.models import Course, StudentProfile  # noqa: E402
+from campuspilot_core.seed import (  # noqa: E402
+    inspect_minimal_seed_fixture,
+    seed_minimal_domain_data,
+)
 
 
 DEFAULT_DATABASE_URL = "sqlite:///logs/campuspilot_domain.sqlite3"
 
 
 def main() -> None:
+    """Seed once, accept a complete fixture, and reject partial fixture state."""
     parser = argparse.ArgumentParser(
         description="写入 CampusPilot 合成领域测试数据。",
     )
     parser.add_argument(
         "--database-url",
-        default=os.getenv(
-            "CAMPUSPILOT_DATABASE_URL",
-            DEFAULT_DATABASE_URL,
+        default=resolve_database_url(default=DEFAULT_DATABASE_URL),
+        help=(
+            "SQLAlchemy 数据库 URL；优先读取 DATABASE_URL，兼容旧的 "
+            "CAMPUSPILOT_DATABASE_URL，本地缺省使用 SQLite。"
         ),
-        help="SQLAlchemy 数据库 URL；默认写入本地 SQLite。",
     )
     args = parser.parse_args()
     factory = create_session_factory(args.database_url)
 
     with factory() as session:
-        university_count = session.scalar(
-            select(func.count()).select_from(University)
-        )
-        if university_count:
-            print("数据库已有大学数据，本次未重复写入。")
+        fixture_state, fixture_counts = inspect_minimal_seed_fixture(session)
+        if fixture_state == "complete":
+            print("目标合成 fixture 已完整存在，本次未重复写入。")
             return
+        if fixture_state == "incomplete":
+            raise RuntimeError(
+                "检测到不完整的 CPTU 合成 fixture；为避免混合规则，"
+                f"未自动修复。当前计数：{fixture_counts}"
+            )
         ids = seed_minimal_domain_data(session)
         course_count = session.scalar(
             select(func.count()).select_from(Course)

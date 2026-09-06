@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "country_code": "AU",
+  "maturity_model": ["CATALOG", "STRUCTURED", "VERIFIED"],
+  "records": [
+    {"university_id": "monash", "level": "STRUCTURED"},
+    {"university_id": "monash", "program_code": "C6001", "handbook_year": 2026, "level": "VERIFIED", "source_ids": ["monash-c6001-2026", "MONASH-C6001-COURSE-MAP-2026"]},
+    {"university_id": "melbourne", "level": "CATALOG"},
+    {"university_id": "sydney", "level": "CATALOG"},
+    {"university_id": "unsw", "level": "CATALOG"},
+    {"university_id": "anu", "level": "CATALOG"},
+    {"university_id": "uq", "level": "CATALOG"},
+    {"university_id": "uwa", "level": "CATALOG"},
+    {"university_id": "adelaide", "level": "CATALOG"}
+  ]
+}

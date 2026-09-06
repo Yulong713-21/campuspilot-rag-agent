@@ -1,6 +1,58 @@
 name: campuspilot
 
 services:
+  postgres:
+    image: postgres:16
+    container_name: campuspilot-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: campuspilot
+      POSTGRES_USER: campuspilot
+      POSTGRES_PASSWORD: ${CAMPUSPILOT_POSTGRES_PASSWORD:?set in server .env}
+    expose:
+      - "5432"
+    volumes:
+      - campuspilot_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U campuspilot -d campuspilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.3
+    container_name: campuspilot-elasticsearch
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      xpack.ml.enabled: "false"
+      ES_JAVA_OPTS: "-Xms384m -Xmx384m"
+    expose:
+      - "9200"
+    volumes:
+      - campuspilot_elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          curl --fail --silent http://127.0.0.1:9200/_cluster/health
+          >/dev/null
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    mem_limit: 768m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
   agent:
     image: ${CAMPUSPILOT_IMAGE:-campuspilot:latest}
     container_name: campuspilot
@@ -11,6 +63,11 @@ services:
       # The public server never exposes the local configuration surface.
       CAMPUSPILOT_ADMIN_ENABLED: "0"
       CAMPUSPILOT_ADMIN_LOCAL_ONLY: "1"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     ports:
       - "127.0.0.1:8010:8010"
     volumes:
@@ -36,3 +93,7 @@ services:
         max-size: "10m"
         max-file: "5"
     stop_grace_period: 30s
+
+volumes:
+  campuspilot_postgres_data:
+  campuspilot_elasticsearch_data:

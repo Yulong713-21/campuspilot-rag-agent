@@ -8,9 +8,7 @@ ENV_FILE="$REPO_DIR/.env"
 STATE_DIR="${CAMPUSPILOT_STATE_DIR:-/opt/campuspilot/deploy-state}"
 STATE_FILE="$STATE_DIR/previous.env"
 RUNTIME_DIR="$SCRIPT_DIR/runtime-data"
-NGINX_TEMPLATE="$SCRIPT_DIR/nginx.conf"
 NGINX_SITE="/etc/nginx/sites-available/campuspilot"
-NGINX_ENABLED="/etc/nginx/sites-enabled/campuspilot"
 PUBLIC_URL="${CAMPUSPILOT_PUBLIC_URL:-http://43.108.32.225}"
 APP_NAME="campuspilot"
 CANDIDATE_STARTED=0
@@ -76,6 +74,10 @@ MISSING_ENV=()
 require_env_name CAMPUSPILOT_CLOUD_LLM_ENABLED
 require_env_name CAMPUSPILOT_VECTOR_SEARCH_ENABLED
 require_env_name CAMPUSPILOT_RERANKER_ENABLED
+require_env_name CAMPUSPILOT_DEPLOYMENT_PROFILE
+require_env_name CAMPUSPILOT_POSTGRES_PASSWORD
+require_env_name DATABASE_URL
+require_env_name ELASTICSEARCH_URL
 if [[ "$(read_env_value CAMPUSPILOT_CLOUD_LLM_ENABLED)" =~ ^(1|true|yes|on)$ ]]; then
   require_env_name CAMPUSPILOT_OPENAI_BASE_URL
   require_env_name CAMPUSPILOT_OPENAI_MODEL
@@ -104,10 +106,23 @@ mkdir -p "$BACKUP_DIR/logs"
 PREVIOUS_IMAGE=""
 if docker inspect "$APP_NAME" >/dev/null 2>&1; then
   CURRENT_IMAGE_ID="$(docker inspect "$APP_NAME" --format '{{.Image}}')"
+  IMAGE_REVISION="$(docker inspect "$APP_NAME" --format '{{index .Config.Labels "org.opencontainers.image.revision"}}')"
+  if [[ -n "$IMAGE_REVISION" && "$IMAGE_REVISION" != "<no value>" ]]; then
+    PREVIOUS_SHA="$IMAGE_REVISION"
+  fi
   PREVIOUS_IMAGE="campuspilot:${PREVIOUS_SHA:0:12}"
   docker tag "$CURRENT_IMAGE_ID" "$PREVIOUS_IMAGE"
   docker cp "$APP_NAME:/app/logs/." "$BACKUP_DIR/logs/" >/dev/null 2>&1 || true
   cp -a "$BACKUP_DIR/logs/." "$RUNTIME_DIR/logs/"
+fi
+cp -a "$ENV_FILE" "$BACKUP_DIR/server.env"
+chmod 0600 "$BACKUP_DIR/server.env"
+mkdir -p "$BACKUP_DIR/vector"
+cp -a "$RUNTIME_DIR/vector/." "$BACKUP_DIR/vector/"
+if docker inspect campuspilot-postgres >/dev/null 2>&1; then
+  docker exec campuspilot-postgres \
+    pg_dump -U campuspilot -d campuspilot -Fc \
+    >"$BACKUP_DIR/campuspilot.dump"
 fi
 
 PREVIOUS_NGINX_BACKUP=""
@@ -144,6 +159,30 @@ else
 fi
 
 export CAMPUSPILOT_IMAGE="$CANDIDATE_IMAGE"
+docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up -d postgres
+for _ in $(seq 1 30); do
+  if [[ "$(docker inspect campuspilot-postgres --format '{{.State.Health.Status}}')" == "healthy" ]]; then
+    break
+  fi
+  sleep 2
+done
+docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" run --rm --no-deps \
+  agent alembic upgrade head
+docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" run --rm --no-deps \
+  agent python scripts/seed_campuspilot_domain.py
+docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" run --rm --no-deps \
+  agent python scripts/smoke_postgres_rules.py
+
+docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up -d elasticsearch
+for _ in $(seq 1 60); do
+  if [[ "$(docker inspect campuspilot-elasticsearch --format '{{.State.Health.Status}}')" == "healthy" ]]; then
+    break
+  fi
+  sleep 2
+done
+docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" run --rm --no-deps \
+  agent python scripts/build_handbook_lexical_index.py --recreate
+
 docker compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up -d agent
 
 for _ in $(seq 1 30); do
@@ -155,16 +194,9 @@ done
 
 "$SCRIPT_DIR/verify.sh" http://127.0.0.1:8010
 
-install -m 0644 "$NGINX_TEMPLATE" "$NGINX_SITE"
-ln -sfn "$NGINX_SITE" "$NGINX_ENABLED"
-if ! nginx -t; then
-  if [[ -n "$PREVIOUS_NGINX_BACKUP" ]]; then
-    install -m 0644 "$PREVIOUS_NGINX_BACKUP" "$NGINX_SITE"
-    nginx -t
-  fi
-  false
-fi
-systemctl reload nginx
+# This rollout preserves the active Nginx configuration. The local and public
+# gates verify that the existing proxy continues to route to loopback FastAPI.
+nginx -t
 
 "$SCRIPT_DIR/verify.sh" http://127.0.0.1
 if "$SCRIPT_DIR/verify.sh" "$PUBLIC_URL"; then

@@ -46,7 +46,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 30
-    mem_limit: 768m
+    # The 384 MiB JVM heap still needs native and mmap headroom during startup.
+    # A 1 GiB container cap prevents GC thrashing on the single-server profile.
+    mem_limit: 1024m
     logging:
       driver: json-file
       options:
